@@ -19,9 +19,12 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
 
+        $route = request()->is('admin/login') ? RouteServiceProvider::ADMIN_DASHBOARD : RouteServiceProvider::HOME;
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+//                return redirect(RouteServiceProvider::HOME);
+                return redirect($route);
             }
         }
 
