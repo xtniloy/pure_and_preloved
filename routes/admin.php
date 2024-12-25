@@ -21,9 +21,9 @@ Route::middleware('guest:admin')
         Route::post('/login', 'AuthController@login')->name('admin.auth');
     });
 
-Route::middleware('auth:super_admin')->group(function () {
+Route::middleware('auth:admin')->group(function () {
     Route::get('/logout',[\App\Http\Controllers\Admin\Auth\AuthController::class,'logout'])->name('admin.logout');
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin.dashboard');
-    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin.home');
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class,'home'])->name('admin.home');
 });
 

@@ -20,8 +20,8 @@ class AuthController extends Controller
     {
         $rememberMe = isset($request->remember_me);
 
-        if (auth()->guard('super_admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $rememberMe)) {
-            return redirect()->route('super_admin.dashboard')->with('success', "Login Successful");
+        if (auth()->guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $rememberMe)) {
+            return redirect()->route('admin.dashboard')->with('success', "Login Successful");
         } else {
             return back()->with('error', 'Email or Password not matching');
         }
@@ -29,8 +29,8 @@ class AuthController extends Controller
 
     public function logout(): RedirectResponse
     {
-        Auth::guard('super_admin')->logout();
+        Auth::guard('admin')->logout();
 
-        return redirect()->route('super_admin.login')->with('success', 'Logout Successful');
+        return redirect()->route('admin.login')->with('success', 'Logout Successful');
     }
 }
