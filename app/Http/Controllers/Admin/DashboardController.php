@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index(){
-        return 1;
+        return view('admin.sections.dashboard.index');
+    }
+
+    public function home(){
+        return redirect()->route('admin.dashboard');
     }
 }
