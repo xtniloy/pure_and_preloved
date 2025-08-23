@@ -27,3 +27,15 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class,'home'])->name('admin.home');
 });
 
+Route::middleware('auth:admin')->as('admin.')->group(function () {
+    Route::get('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'edit'])->name('profile');
+    Route::post('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'update'])->name('profile');
+
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::get('/users/{user}/email_resend', [\App\Http\Controllers\Admin\UserController::class,'resend_email'])->name('users.email.resend');
+    Route::get('/users/{user}/verify_toggle', [\App\Http\Controllers\Admin\UserController::class,'verification_toggle'])
+        ->name('users.verification_toggle');
+
+
+});
+

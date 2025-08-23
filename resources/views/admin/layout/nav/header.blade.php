@@ -224,14 +224,22 @@
                         <svg class="icon me-2">
                             <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-comment-square') }}"></use>
                         </svg><span data-coreui-i18n="comments">Comments</span><span class="badge badge-sm bg-warning-gradient ms-2">42</span></a>
-                    <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2" data-coreui-i18n="settings">Settings</div><a class="dropdown-item" href="#">
+                    <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2" data-coreui-i18n="settings">Settings</div>
+                    <a class="dropdown-item" href="{{route('admin.profile')}}">
                         <svg class="icon me-2">
                             <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
-                        </svg><span data-coreui-i18n="profile">Profile</span></a><a class="dropdown-item') }}" href="#">
+                        </svg>
+                        <span data-coreui-i18n="profile">Profile</span>
+                    </a>
+
+                    <a class="dropdown-item" href="#">
                         <svg class="icon me-2">
                             <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-settings') }}"></use>
-                        </svg><span data-coreui-i18n="settings">Settings</span></a><a class="dropdown-item" href="#">
-                        <svg class="icon me-2">
+                        </svg>
+                        <span data-coreui-i18n="settings">Settings</span>
+                    </a>
+
+                    <a class="dropdown-item" href="#"><svg class="icon me-2">
                             <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-credit-card') }}"></use>
                         </svg><span data-coreui-i18n="payments">Payments</span><span class="badge badge-sm bg-secondary-gradient text-dark ms-2">42</span></a><a class="dropdown-item" href="#">
                         <svg class="icon me-2">
