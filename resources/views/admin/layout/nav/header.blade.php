@@ -248,10 +248,12 @@
                     <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
                         <svg class="icon me-2">
                             <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
-                        </svg><span data-coreui-i18n="lockAccount">Lock Account</span></a><a class="dropdown-item" href="#">
+                        </svg><span data-coreui-i18n="lockAccount">Lock Account</span></a>
+                    <a class="dropdown-item" href="{{route('admin.logout')}}">
                         <svg class="icon me-2">
                             <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-account-logout') }}"></use>
-                        </svg><span data-coreui-i18n="logout">Logout</span></a>
+                        </svg><span data-coreui-i18n="logout">Logout</span>
+                    </a>
                 </div>
             </li>
         </ul>
