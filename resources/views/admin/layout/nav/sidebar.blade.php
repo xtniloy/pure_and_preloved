@@ -12,10 +12,20 @@
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
     </div>
     <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
+
         <li class="nav-item"><a class="nav-link" href="index.html">
                 <svg class="nav-icon">
                     <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
                 </svg><span data-coreui-i18n="dashboard">Dashboard</span></a></li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('admin.users.index')}}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
+                </svg><span data-coreui-i18n="dashboard">Users</span>
+            </a>
+        </li>
+
         <li class="nav-title" data-coreui-i18n="theme">Theme</li>
         <li class="nav-item"><a class="nav-link" href="colors.html">
                 <svg class="nav-icon">
