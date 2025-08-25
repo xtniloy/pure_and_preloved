@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enum\General;
 use App\Jobs\ConfirmRegistrationEmailJob;
 use App\Jobs\EmailVerificationMailJob;
-use App\Jobs\SetPasswordEmailJob;
 use App\Models\User;
 use App\Models\UserAccessToken;
 use App\Repositories\UserRepository;
@@ -14,106 +13,77 @@ use Illuminate\Support\Facades\Hash;
 
 class UserAuthService
 {
-    protected User $user;
+    private User $user;
+    private UserRepository $userRepository;
 
-    protected static ?string $password;
-    protected UserRepository $userRepository;
-
-    public function __construct(User $user){
+    public function __construct(User $user, UserRepository $userRepository)
+    {
         $this->user = $user;
-        $this->userRepository = new UserRepository;
+        $this->userRepository = $userRepository;
     }
 
-    public function sendConfirmRegistrationEmail(string $use_for = "new_registration"): int
+    public function sendConfirmRegistrationEmail(string $use_for = "new_registration"): void
     {
-        $user = $this->user;
-
         $token = $this->getAccessToken('password_update');
-
         $link = route('set_password', ['token' => $token->token]);
 
-        if ($use_for == 'forget_password'){
-            ConfirmRegistrationEmailJob::dispatch(
-                email: $user->email,
-                link: $link,
-                subject: 'You are requested to reset your password【'.config('app.name').'】',
-                use_for: $use_for
-            );
-        }
-        else{
-            ConfirmRegistrationEmailJob::dispatch(email: $user->email, link: $link);
-
-        }
-
-
-        return 0;
+        ConfirmRegistrationEmailJob::dispatch(
+            email: $this->user->email,
+            link: $link,
+            subject: $use_for === 'forget_password'
+                ? 'You are requested to reset your password【'.config('app.name').'】'
+                : null,
+            use_for: $use_for
+        );
     }
 
-    public function sendEmailVerification(): int
+    public function sendEmailVerification(): void
     {
-        $user = $this->user;
-
         $token = $this->getAccessToken('email_verification');
-
         $link = route('email_verify', ['token' => $token->token]);
 
-        EmailVerificationMailJob::dispatch(email: $user->email, link: $link);
-
-        return 0;
+        EmailVerificationMailJob::dispatch(email: $this->user->email, link: $link);
     }
 
     private function getAccessToken(string $type): UserAccessToken
     {
         $use_for = General::$access_token_types[$type];
 
-        $user = $this->user;
-
-        $token = UserAccessTokenService::generate(
-            email: $user->email,
+        return UserAccessTokenService::generate(
+            email: $this->user->email,
             use_for: $use_for
         );
-
-        return $token;
     }
 
-    public function set_password(string $password, UserAccessToken $userAccessToken = null): void
+    public function setPassword(string $password, ?UserAccessToken $userAccessToken = null): void
     {
-        $user = $this->user;
+        $hashedPassword = Hash::make($password);
 
-        $hashed_password = static::$password ??= Hash::make($password);
-
-        $this->userRepository->updateUserPassword($hashed_password, $user);
+        $this->userRepository->updateUserPassword($hashedPassword, $this->user);
 
         if ($userAccessToken) {
             UserAccessToken::where('token', $userAccessToken->token)->delete();
         }
     }
 
-    public function user_login(bool $remember = false): bool
+    public function login(bool $remember = false): bool
     {
-        $user = $this->user;
-
-        if ($user->status != 0) {
-            \Auth::login($user, $remember);
-
-            $this->userRepository->lastLogin($user);
-
+        if ($this->user->status != 0) {
+            \Auth::login($this->user, $remember);
+            $this->userRepository->lastLogin($this->user);
             return true;
         }
 
         return false;
     }
 
-    public function verifyUserEmail(UserAccessToken $token): User
+    public function verifyEmail(UserAccessToken $token): User
     {
-        $user = $this->user;
-
-        $user->email_verified_at = Carbon::now();
-        $user->save();
+        $this->user->email_verified_at = Carbon::now();
+        $this->user->save();
 
         UserAccessToken::where('token', $token->token)->delete();
 
-        return $user;
+        return $this->user;
     }
-
 }
