@@ -6,7 +6,6 @@ use App\Http\Requests\Admin\UserStoreRequest;
 use App\Http\Requests\Admin\UserUpdateRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Hash;
 
 class UserService
 {

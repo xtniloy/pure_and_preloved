@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_access_tokens', function (Blueprint $table) {
-            $table->id();
             $table->string('email')->primary();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('token', 64)->unique();
