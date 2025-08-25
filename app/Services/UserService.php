@@ -6,67 +6,60 @@ use App\Http\Requests\Admin\UserStoreRequest;
 use App\Http\Requests\Admin\UserUpdateRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    protected $userRepository;
+    protected UserRepository $userRepository;
 
-    public function __construct(UserRepository $userRepository){
+    public function __construct(UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
     }
 
-    public function storeUser(Request $request):User
+    public function storeUser(UserStoreRequest $request): User
     {
-        $user = $this->userRepository->storeUser($request);
+        $data = $request->validated();
+
+        $user = $this->userRepository->storeUser($data);
 
         $this->sendSetPasswordEmail($user);
 
         return $user;
     }
 
-    public function register(Request $request): User
+    public function register(UserStoreRequest $request): User
     {
-        $user = $this->userRepository->storeUser($request);
+        $data = $request->validated();
 
-        $userAuth = new UserAuthService($user);
+        $user = $this->userRepository->storeUser($data);
 
-        $userAuth->set_password($request->password);
-
+        $userAuth = new UserAuthService($user, $this->userRepository);
+        $userAuth->setPassword($data['password']);
         $userAuth->sendEmailVerification();
 
         return $user;
     }
 
-    public function sendSetPasswordEmail(User $user):User
+    public function sendSetPasswordEmail(User $user): void
     {
-        $userAuth = new UserAuthService($user);
-
+        $userAuth = new UserAuthService($user, $this->userRepository);
         $userAuth->sendConfirmRegistrationEmail();
-
-        return $user;
     }
 
-    public function verification_toggle(User $user): string
+    public function updateUser(UserUpdateRequest $request, User $user): User
     {
-        $result = $this->userRepository->verification_toggle($user);
-
-        return $result ? 'User verification success':'User verification revoke';
+        $data = $request->validated();
+        return $this->userRepository->updateUser($data, $user);
     }
 
-    public function updateUser(Request $request, User $user)
+    public function updatePassword(User $user, string $newPassword): void
     {
-        return $this->userRepository->updateUser($request, $user);
+        $userAuth = new UserAuthService($user, $this->userRepository);
+        $userAuth->setPassword($newPassword);
     }
 
-    public function updatePassword(Request $request, User $user): void
-    {
-        $userAuth = new UserAuthService($user);
-
-        $userAuth->set_password($request->password);
-    }
-
-    public function deleteUser(User $user)
+    public function deleteUser(User $user): void
     {
         $this->userRepository->deleteUser($user);
     }
