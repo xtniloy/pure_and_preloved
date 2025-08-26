@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\UserStoreRequest;
 use App\Http\Requests\Admin\UserUpdateRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Http\Request;
 
 class UserService
 {
@@ -27,7 +28,7 @@ class UserService
         return $user;
     }
 
-    public function register(UserStoreRequest $request): User
+    public function register(Request $request): User
     {
         $data = $request->validated();
 
