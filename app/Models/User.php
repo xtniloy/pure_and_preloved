@@ -2,15 +2,28 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+//class User extends Authenticatable implements MustVerifyEmail
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
+    public function getRouteKeyName():string
+    {
+        return 'uuid';
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +33,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'new_email',
+        'phone',
         'password',
+        'status',
+        'verified_by',
+        'last_login',
     ];
 
     /**
@@ -42,4 +60,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function verifiedBy():BelongsTo
+    {
+        return $this->belongsTo(Admin::class,'verified_by','id');
+    }
+
+
+    // Define an accessor for the 'is_verified' attribute
+    public function getIsVerifiedAttribute(): bool
+    {
+        return !empty($this->verified_by);
+    }
+
 }
