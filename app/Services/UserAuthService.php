@@ -13,22 +13,22 @@ use Illuminate\Support\Facades\Hash;
 
 class UserAuthService
 {
-    private User $user;
+//    private User $user;
     private UserRepository $userRepository;
 
-    public function __construct(User $user, UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->user = $user;
+//        $this->user = $user;
         $this->userRepository = $userRepository;
     }
 
-    public function sendConfirmRegistrationEmail(string $use_for = "new_registration"): void
+    public function sendConfirmRegistrationEmail(User $user, string $use_for = "new_registration"): void
     {
-        $token = $this->getAccessToken('password_update');
+        $token = $this->getAccessToken($user, 'password_update');
         $link = route('set_password', ['token' => $token->token]);
 
         ConfirmRegistrationEmailJob::dispatch(
-            email: $this->user->email,
+            email: $user->email,
             link: $link,
             subject: $use_for === 'forget_password'
                 ? 'You are requested to reset your password【'.config('app.name').'】'
@@ -37,53 +37,53 @@ class UserAuthService
         );
     }
 
-    public function sendEmailVerification(): void
+    public function sendEmailVerification(User $user): void
     {
-        $token = $this->getAccessToken('email_verification');
+        $token = $this->getAccessToken($user,'email_verification');
         $link = route('email_verify', ['token' => $token->token]);
 
-        EmailVerificationMailJob::dispatch(email: $this->user->email, link: $link);
+        EmailVerificationMailJob::dispatch(email: $user->email, link: $link);
     }
 
-    private function getAccessToken(string $type): UserAccessToken
+    private function getAccessToken(User $user, string $type): UserAccessToken
     {
         $use_for = General::$access_token_types[$type];
 
         return UserAccessTokenService::generate(
-            email: $this->user->email,
+            email: $user->email,
             use_for: $use_for
         );
     }
 
-    public function setPassword(string $password, ?UserAccessToken $userAccessToken = null): void
+    public function setPassword(User $user, string $password, ?UserAccessToken $userAccessToken = null): void
     {
         $hashedPassword = Hash::make($password);
 
-        $this->userRepository->updateUserPassword($hashedPassword, $this->user);
+        $this->userRepository->updateUserPassword($hashedPassword, $user);
 
         if ($userAccessToken) {
             UserAccessToken::where('token', $userAccessToken->token)->delete();
         }
     }
 
-    public function login(bool $remember = false): bool
+    public function login(User $user, bool $remember = false): bool
     {
-        if ($this->user->status != 0) {
-            \Auth::login($this->user, $remember);
-            $this->userRepository->lastLogin($this->user);
+        if ($user->status != 0) {
+            \Auth::login($user, $remember);
+            $this->userRepository->lastLogin($user);
             return true;
         }
 
         return false;
     }
 
-    public function verifyEmail(UserAccessToken $token): User
+    public function verifyEmail(User $user, UserAccessToken $token): User
     {
-        $this->user->email_verified_at = Carbon::now();
-        $this->user->save();
+        $user->email_verified_at = Carbon::now();
+        $user->save();
 
         UserAccessToken::where('token', $token->token)->delete();
 
-        return $this->user;
+        return $user;
     }
 }

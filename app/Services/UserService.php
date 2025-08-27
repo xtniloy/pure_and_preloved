@@ -11,10 +11,12 @@ use Illuminate\Http\Request;
 class UserService
 {
     protected UserRepository $userRepository;
+    protected UserAuthService $userAuthService;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, UserAuthService $userAuthService)
     {
         $this->userRepository = $userRepository;
+        $this->userAuthService = $userAuthService;
     }
 
     public function storeUser(UserStoreRequest $request): User
@@ -34,17 +36,17 @@ class UserService
 
         $user = $this->userRepository->storeUser($data);
 
-        $userAuth = new UserAuthService($user, $this->userRepository);
-        $userAuth->setPassword($data['password']);
-        $userAuth->sendEmailVerification();
+        $userAuth = $this->userAuthService;
+        $userAuth->setPassword($user, $data['password']);
+        $userAuth->sendEmailVerification($user);
 
         return $user;
     }
 
     public function sendSetPasswordEmail(User $user): void
     {
-        $userAuth = new UserAuthService($user, $this->userRepository);
-        $userAuth->sendConfirmRegistrationEmail();
+        $userAuth = $this->userAuthService;
+        $userAuth->sendConfirmRegistrationEmail($user);
     }
 
     public function updateUser(UserUpdateRequest $request, User $user): User
@@ -55,8 +57,8 @@ class UserService
 
     public function updatePassword(User $user, string $newPassword): void
     {
-        $userAuth = new UserAuthService($user, $this->userRepository);
-        $userAuth->setPassword($newPassword);
+        $userAuth = $this->userAuthService;
+        $userAuth->setPassword($user, $newPassword);
     }
 
     public function deleteUser(User $user): void
