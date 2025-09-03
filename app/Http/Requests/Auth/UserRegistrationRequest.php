@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserRegistrationRequest extends FormRequest
 {
@@ -28,7 +28,11 @@ class UserRegistrationRequest extends FormRequest
                 'required',
                 'email:rfc,dns,filter',
                 'regex:/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/',
-                'unique:users,email'
+//                'unique:users,email'
+                Rule::unique('users', 'email')->where(function ($query) {
+                    return $query->whereNotNull('email_verified_at');
+                }),
+
             ],
             'phone' => ['required', 'regex:/^(\+8801[3-9][0-9]{8}|01[3-9][0-9]{8})$/'],
             'password' => [
