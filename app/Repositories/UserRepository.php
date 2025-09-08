@@ -32,9 +32,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function updateUserPassword(string $hashedPassword, User $user): User
     {
-        if (!$user->email_verified_at) {
-            $user->email_verified_at = Carbon::now();
-        }
+//        if (!$user->email_verified_at) {
+//            $user->email_verified_at = Carbon::now();
+//        }
 
         $user->password = $hashedPassword;
         $user->save();
@@ -51,5 +51,20 @@ class UserRepository implements UserRepositoryInterface
     public function deleteUser(User $user): void
     {
         $user->delete();
+    }
+
+    public function verification_toggle(User $user):bool
+    {
+        if ($user->verified_by == null){
+            $user->verified_by = auth()->guard('admin')->user()->id;
+            $result = true;
+        }
+        else{
+            $user->verified_by = null;
+            $result = false;
+        }
+        $user->save();
+
+        return $result;
     }
 }

@@ -65,4 +65,11 @@ class UserService
     {
         $this->userRepository->deleteUser($user);
     }
+
+    public function verification_toggle(User $user): string
+    {
+        $result = $this->userRepository->verification_toggle($user);
+
+        return $result ? 'User verification success':'User verification revoke';
+    }
 }
