@@ -110,7 +110,7 @@ class UserController extends Controller
 
             try {
 
-                $this->userService->sendSetPasswordEmail($user);;
+                $this->userService->sendSetPasswordEmail($user);
 
                 return  redirect()->route('admin.users.edit',['user'=>$user])->with('success','Email resend successful');
 

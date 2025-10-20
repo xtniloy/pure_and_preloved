@@ -38,15 +38,22 @@ class UserService
 
         $userAuth = $this->userAuthService;
         $userAuth->setPassword($user, $data['password']);
-        $userAuth->sendEmailVerification($user);
+//        $userAuth->sendEmailVerification($user);
+        $this->sendEmailVerificationEmail($user);
 
         return $user;
     }
 
-    public function sendSetPasswordEmail(User $user): void
+    public function sendEmailVerificationEmail(User $user): void
     {
         $userAuth = $this->userAuthService;
-        $userAuth->sendConfirmRegistrationEmail($user);
+        $userAuth->sendEmailVerification($user);
+    }
+
+    public function sendSetPasswordEmail(User $user, string $use_for = "new_registration"): void
+    {
+        $userAuth = $this->userAuthService;
+        $userAuth->sendConfirmRegistrationEmail($user, $use_for);
     }
 
     public function updateUser(UserUpdateRequest $request, User $user): User

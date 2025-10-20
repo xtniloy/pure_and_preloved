@@ -22,7 +22,7 @@ class UserAuthService
         $this->userRepository = $userRepository;
     }
 
-    public function sendConfirmRegistrationEmail(User $user, string $use_for = "new_registration"): void
+    public function sendConfirmRegistrationEmail(User $user, string $use_for): void
     {
         $token = $this->getAccessToken($user, 'password_update');
         $link = route('set_password', ['token' => $token->token]);
@@ -62,6 +62,7 @@ class UserAuthService
         $this->userRepository->updateUserPassword($hashedPassword, $user);
 
         if ($userAccessToken) {
+            $this->userRepository->email_verified_at($user);
             UserAccessToken::where('token', $userAccessToken->token)->delete();
         }
     }
@@ -79,8 +80,7 @@ class UserAuthService
 
     public function verifyEmail(User $user, UserAccessToken $token): User
     {
-        $user->email_verified_at = Carbon::now();
-        $user->save();
+        $this->userRepository->email_verified_at($user);
 
         UserAccessToken::where('token', $token->token)->delete();
 

@@ -42,8 +42,7 @@
                                 <p class="text-body-secondary mb-3">
                                     Still haven't received the email?
                                 </p>
-                                <form action="#" method="post" class="d-inline">
-{{--                                <form action="{{ route('resend.email') }}" method="post" class="d-inline">--}}
+                                <form action="{{route('verification.send',$user)}}" method="post" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-outline-primary" id="resend-btn">
                                         <svg class="icon me-2">
@@ -65,14 +64,6 @@
                                     Back to Login
                                 </a>
                             </div>
-{{--                            <div class="col-auto">--}}
-{{--                                <a href="mailto:" class="btn btn-outline-secondary px-4">--}}
-{{--                                    <svg class="icon me-2">--}}
-{{--                                        <use xlink:href="http://localhost/admin-panel/public/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-open"></use>--}}
-{{--                                    </svg>--}}
-{{--                                    Open Email App--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
                         </div>
                     </div>
                 </div>
@@ -113,11 +104,12 @@
             // Disable button temporarily to prevent spam
             this.disabled = true;
             this.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Sending...';
-
+            this.closest('form').submit();
             // Re-enable after form submission (you can modify this based on your needs)
             setTimeout(() => {
                 this.disabled = false;
                 this.innerHTML = '<svg class="icon me-2"><use xlink:href="http://localhost/admin-panel/public/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-closed"></use></svg>Resend Email';
+
             }, 3000);
         });
 

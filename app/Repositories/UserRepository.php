@@ -42,6 +42,15 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    public function email_verified_at(User $user): bool
+    {
+        if (!$user->email_verified_at) {
+            $user->email_verified_at = Carbon::now();
+            return true;
+        }
+        return false;
+    }
+
     public function lastLogin(User $user): bool
     {
         $user->last_login = Carbon::now();

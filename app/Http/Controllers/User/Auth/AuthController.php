@@ -13,8 +13,11 @@ use App\Models\UserAccessToken;
 
 use App\Services\UserAuthService;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -36,6 +39,57 @@ class AuthController extends Controller
         return view('user.auth.register', compact('code'));
     }
 
+    public function email_success(User $user): View
+    {
+        $userAccessToken = $user->userAccessToken;
+        if (!$userAccessToken) {
+            abort(404);
+        }
+
+        $now = Carbon::now();
+        $expiryTime = $userAccessToken->updated_at->addMinutes(3);
+        $remainingTime =  0;
+
+        // Check if current time is less than expiry time
+        if ($now->lessThan($expiryTime)) {
+            $remainingTime = $now->diffInSeconds($expiryTime);
+        }
+
+        return view('user.auth.success', compact('remainingTime','user'));
+    }
+
+    public function email_resend(User $user)
+    {
+        $userAccessToken = $user->userAccessToken;
+
+        if (!$userAccessToken || now()->lessThan($userAccessToken->updated_at->addMinutes(3))) {
+            abort(404);
+        }
+
+        try {
+            if ($userAccessToken->use_for == 1 && !$user->email_verified_at) {
+                $this->userService->sendEmailVerificationEmail($user);
+                return redirect()
+                    ->route('email.success', $user)
+                    ->with('success', 'Email resend successful');
+            }
+
+            if ($userAccessToken->use_for == 2) {
+                $this->userService->sendSetPasswordEmail($user, 'forget_password');
+                return redirect()
+                    ->route('email.success', $user)
+                    ->with('success', 'Confirmation email resend successful');
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()
+                ->route('admin.users.edit')
+                ->with('error', $e->getMessage());
+        }
+
+        abort(404);
+    }
+
     public function login(UserLoginRequest $request): RedirectResponse
     {
         $credentials = $request->only('email', 'password');
@@ -46,7 +100,7 @@ class AuthController extends Controller
 
             if (!$user->hasVerifiedEmail()) {
                 Auth::logout();
-                return redirect()->route('login')->with('warning', 'You must verify your email address before logging in.');
+                return redirect()->route('email.success',$user)->with('warning', 'You must verify your email address before logging in.');
             }
 
             if (intval($user->status) !== 1) {
@@ -56,7 +110,7 @@ class AuthController extends Controller
 
             $user->update(['last_login' => now()]);
 
-            return redirect()->route('user.dashboard')->with('success', 'Login Successful');
+            return redirect()->route('user.home')->with('success', 'Login Successful');
         }
 
         return redirect()->route('login')->with('error', 'Email or Password not matching');
@@ -65,10 +119,17 @@ class AuthController extends Controller
 
     public function registration(UserRegistrationRequest $request)
     {
+        $unverified_user = User::where('email', $request->email)
+            ->whereNull('email_verified_at')
+            ->first();
+        if ($unverified_user) {
+            return redirect()->route('email.success',$unverified_user)->with('warning', 'User already exist, You can not change any information until you verify the email');
+        }
 
-        $this->userService->register($request);
+        $user = $this->userService->register($request);
 
-        return redirect()->route('login')->with('success', 'Your registration is successful. Please check your email and verify your email !');
+        return redirect()->route('email.success',$user);
+//        return redirect()->route('login')->with('success', 'Your registration is successful. Please check your email and verify your email !');
     }
 
     public function email_verify(string $token = null)
@@ -87,7 +148,7 @@ class AuthController extends Controller
 
             $userAuthService->login($user);
 
-            return redirect()->route('user.dashboard')->with('success', 'Email verified successful');
+            return redirect()->route('user.home')->with('success', 'Email verified successful');
         }
 
         return redirect()->route('login')->with('error', 'Token not found');
@@ -141,12 +202,18 @@ class AuthController extends Controller
 
     public function request_forget_password(ForgetPasswordRequest $request){
 
+        $unverified_user = User::where('email', $request->email)
+            ->whereNull('email_verified_at')
+            ->first();
+        if ($unverified_user) {
+            return redirect()->route('email.success',$unverified_user)->with('warning', 'You can not request forget-password until you verify the email');
+        }
+
         $user = User::where('email',$request->email)->first();
-        $userAuth = $this->userAuthService;
 
-        $userAuth->sendConfirmRegistrationEmail($user, 'forget_password');
+        $this->userService->sendSetPasswordEmail($user, 'forget_password');
 
-        return redirect()->route('forget_password')
+        return redirect()->route('email.success',$user)
             ->with('success','Forget password email has been send. Check your email.');
     }
 
