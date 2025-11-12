@@ -644,5 +644,9 @@
     </div>
 @endsection
 
+@push('js')
+    <script src="{{ asset('assets/js/dashboard-chart.js') }}"></script>
+@endpush
+
 
 

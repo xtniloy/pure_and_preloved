@@ -82,5 +82,7 @@
 <script>
 </script>
 
+@stack('js')
+
 </body>
 </html>
