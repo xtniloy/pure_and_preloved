@@ -27,6 +27,6 @@ class AdminProfileController extends Controller
 
         $this->adminProfileService->update($request);
 
-        return redirect()->route('admin.profile')->with('success','Profile updated');
+        return redirect()->route('admin.profile.view')->with('success','Profile updated');
     }
 }
