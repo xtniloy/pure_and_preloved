@@ -16,7 +16,7 @@
                         <div class="input-group mb-3">
                         <span class="input-group-text">
                             <svg class="icon">
-                              <use xlink:href="{{asset('assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked')}}"></use>
+                              <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked')}}"></use>
                             </svg>
                         </span>
                             <input aria-label="Password" name="password" class="form-control" type="password" placeholder="Password">
@@ -24,7 +24,7 @@
                         <div class="input-group mb-4">
                         <span class="input-group-text">
                             <svg class="icon">
-                              <use xlink:href="{{asset('assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked')}}"></use>
+                              <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked')}}"></use>
                             </svg>
                         </span>
                             <input aria-label="Repeat password" name="confirm_password" class="form-control" type="password" placeholder="Repeat password">

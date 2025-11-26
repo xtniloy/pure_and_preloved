@@ -16,7 +16,7 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text">
                                   <svg class="icon">
-                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
+                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
                                   </svg>
                                 </span>
                                 <input aria-label="Email" class="form-control" type="email" name="email" placeholder="Email" required>
@@ -24,7 +24,7 @@
                             <div class="input-group mb-4">
                                 <span class="input-group-text">
                                   <svg class="icon"><use
-                                        xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
+                                        xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
                                   </svg>
                                 </span>
                                 <input aria-label="Password" class="form-control" type="password" name="password" placeholder="Password" required>

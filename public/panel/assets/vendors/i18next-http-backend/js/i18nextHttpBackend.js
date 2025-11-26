@@ -40,8 +40,8 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var getDefaults = function getDefaults() {
   return {
-    loadPath: '/assets/locales/{{lng}}/{{ns}}.json',
-    addPath: '/assets/locales/add/{{lng}}/{{ns}}',
+    loadPath: '/panel/assets/locales/{{lng}}/{{ns}}.json',
+    addPath: '/panel/assets/locales/add/{{lng}}/{{ns}}',
     parse: function parse(data) {
       return JSON.parse(data);
     },
@@ -290,7 +290,7 @@ var fetchIt = function fetchIt(url, fetchOptions, callback, altFetch) {
     }
   }
   if (typeof fetch === 'function') {
-      url = "/assets/"+url;
+      url = "/panel/assets/"+url;
     fetch(url, fetchOptions).then(resolver).catch(callback);
   } else {
     fetchApi(url, fetchOptions).then(resolver).catch(callback);

@@ -16,7 +16,7 @@
                         <div class="input-group mb-3">
                         <span class="input-group-text">
                     <svg class="icon">
-                      <use xlink:href="{{asset('assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-open')}}"></use>
+                      <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-open')}}"></use>
                     </svg></span>
                             <input aria-label="Email" value="{{old('email')}}" class="form-control" name="email" type="email" placeholder="Email">
                         </div>

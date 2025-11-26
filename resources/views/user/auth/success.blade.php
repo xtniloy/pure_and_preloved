@@ -13,7 +13,7 @@
                         <!-- Success Icon -->
                         <div class="mb-4">
                             <svg class="icon icon-5xl text-success" style="width: 80px; height: 80px;">
-                                <use xlink:href="http://localhost/admin-panel/public/assets/vendors/@coreui/icons/svg/free.svg#cil-check-circle"></use>
+                                <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-check-circle')}}"></use>
                             </svg>
                         </div>
 
@@ -46,7 +46,7 @@
                                     @csrf
                                     <button type="submit" class="btn btn-outline-primary" id="resend-btn">
                                         <svg class="icon me-2">
-                                            <use xlink:href="http://localhost/admin-panel/public/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-closed"></use>
+                                            <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-closed')}}"></use>
                                         </svg>
                                         Resend Email
                                     </button>
@@ -59,7 +59,7 @@
                             <div class="col-auto">
                                 <a href="{{route('login')}}" class="btn btn-primary px-4">
                                     <svg class="icon me-2">
-                                        <use xlink:href="http://localhost/admin-panel/public/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-left"></use>
+                                        <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-left')}}"></use>
                                     </svg>
                                     Back to Login
                                 </a>
@@ -108,7 +108,7 @@
             // Re-enable after form submission (you can modify this based on your needs)
             setTimeout(() => {
                 this.disabled = false;
-                this.innerHTML = '<svg class="icon me-2"><use xlink:href="http://localhost/admin-panel/public/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-closed"></use></svg>Resend Email';
+                this.innerHTML = '<svg class="icon me-2"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-closed')}}"></use></svg>Resend Email';
 
             }, 3000);
         });
