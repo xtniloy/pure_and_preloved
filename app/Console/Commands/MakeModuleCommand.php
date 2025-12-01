@@ -46,6 +46,7 @@ class MakeModuleCommand extends Command
         $this->makeRoutes($name, $modulePath);
         $this->makeServiceProvider($name, $modulePath);
         $this->makeModuleJson($name, $modulePath);
+        $this->makeBladeView($name, $modulePath);
 
         $this->info("Module {$name} created successfully!");
         $this->info("Register {$name}ServiceProvider in config/app.php");
@@ -60,6 +61,7 @@ class MakeModuleCommand extends Command
 
     protected function makeController($name, $path)
     {
+        $lower_name =  strtolower($name);
         $controller = <<<PHP
 <?php
 
@@ -71,7 +73,10 @@ class {$name}Controller extends Controller
 {
     public function index()
     {
-        return response()->json(['message' => '{$name} module working!']);
+
+        return view('{$lower_name}::index');
+
+        //return response()->json(['message' => '{$name} module working!']);
     }
 }
 PHP;
@@ -138,6 +143,13 @@ class {$name}ServiceProvider extends ServiceProvider
 PHP;
 
         $this->files->put("{$path}/Providers/{$name}ServiceProvider.php", $provider);
+    }
+
+    protected function makeBladeView($name, $path)
+    {
+        $blade = "{$name} Index Page";
+
+        $this->files->put("{$path}/Resources/views/index.blade.php", $blade);
     }
 
     protected function makeModuleJson($name, $path)
