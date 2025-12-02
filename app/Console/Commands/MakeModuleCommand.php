@@ -86,6 +86,7 @@ PHP;
 
     protected function makeRoutes($name, $path)
     {
+        $lower_name =  strtolower($name);
         $web = <<<PHP
 <?php
 
@@ -93,7 +94,7 @@ use Illuminate\\Support\\Facades\\Route;
 use Modules\\{$name}\\Http\\Controllers\\{$name}Controller;
 
 Route::middleware('web')
-    ->prefix(strtolower('{$name}'))
+    ->prefix('{$lower_name}')
     ->group(function () {
         Route::get('/', [{$name}Controller::class, 'index']);
     });
@@ -106,7 +107,7 @@ use Illuminate\\Support\\Facades\\Route;
 use Modules\\{$name}\\Http\\Controllers\\{$name}Controller;
 
 Route::middleware('api')
-    ->prefix('api/' . strtolower('{$name}'))
+    ->prefix('api/{$lower_name}')
     ->group(function () {
         Route::get('/', [{$name}Controller::class, 'index']);
     });
@@ -118,6 +119,7 @@ PHP;
 
     protected function makeServiceProvider($name, $path)
     {
+        $lower_name =  strtolower($name);
         $provider = <<<PHP
 <?php
 
@@ -137,7 +139,7 @@ class {$name}ServiceProvider extends ServiceProvider
         \$this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
         \$this->loadRoutesFrom(__DIR__.'/../Routes/api.php');
         \$this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
-        \$this->loadViewsFrom(__DIR__.'/../Resources/views', strtolower('{$name}'));
+        \$this->loadViewsFrom(__DIR__.'/../Resources/views', '{$lower_name}');
     }
 }
 PHP;
