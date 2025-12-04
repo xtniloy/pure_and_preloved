@@ -44,6 +44,8 @@
 
     <!-- End Google Tag Manager-->
     <link href="{{ asset('panel/assets/vendors/@coreui/chartjs/css/coreui-chartjs.css') }}" rel="stylesheet">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
 <!-- Google Tag Manager (noscript)-->

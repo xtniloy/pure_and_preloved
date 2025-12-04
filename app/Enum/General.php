@@ -30,9 +30,14 @@ class General
         2 => 'desc'
     ];
 
-    public static array $chat_status = [
+    public static array $files_status = [
         1 => 'Active',
-        0 => 'Closed'
+        0 => 'Restricted',
+    ];
+
+    public static array $files_status_code = [
+        'Active'=> 1,
+        'Restricted' => 0,
     ];
 
 
