@@ -2,10 +2,10 @@
     <div class="sidebar-header border-bottom">
         <div class="sidebar-brand">
             <svg class="sidebar-brand-full" width="110" height="32" alt="CoreUI Logo">
-                <use xlink:href="{{ asset('assets/brand/logoui.svg#full') }}"></use>
+                <use xlink:href="{{ asset('panel/assets/brand/logoui.svg#full') }}"></use>
             </svg>
             <svg class="sidebar-brand-narrow" width="32" height="32" alt="CoreUI Logo">
-                <use xlink:href="{{ asset('assets/brand/logoui.svg#signet') }}"></use>
+                <use xlink:href="{{ asset('panel/assets/brand/logoui.svg#signet') }}"></use>
             </svg>
         </div>
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
@@ -15,13 +15,13 @@
 
         <li class="nav-item"><a class="nav-link" href="index.html">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
                 </svg><span data-coreui-i18n="dashboard">Dashboard</span></a></li>
 
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.users.index')}}">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
                 </svg><span data-coreui-i18n="dashboard">Users</span>
             </a>
         </li>
@@ -29,16 +29,16 @@
         <li class="nav-title" data-coreui-i18n="theme">Theme</li>
         <li class="nav-item"><a class="nav-link" href="colors.html">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-drop') }}"></use>
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-drop') }}"></use>
                 </svg><span data-coreui-i18n="colors">Colors</span></a></li>
         <li class="nav-item"><a class="nav-link" href="typography.html">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-pencil') }}"></use>
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-pencil') }}"></use>
                 </svg><span data-coreui-i18n="typography">Typography</span></a></li>
         <li class="nav-title" data-coreui-i18n="components">Components</li>
         <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-puzzle') }}"></use>
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-puzzle') }}"></use>
                 </svg><span data-coreui-i18n="base">Base</span></a>
             <ul class="nav-group-items compact">
                 <li class="nav-item"><a class="nav-link" href="base/accordion.html"><span class="nav-icon"><span class="nav-icon-bullet"></span></span><span data-coreui-i18n="accordion">Accordion</span></a></li>

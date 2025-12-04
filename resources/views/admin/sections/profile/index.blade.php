@@ -28,7 +28,7 @@
                             @enderror
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><svg class="icon"><use
-                                            xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use></svg></span>
+                                            xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use></svg></span>
                                 <input class="form-control"
                                        type="text" name="name"
                                        value="{{ old('name', $user ? $user->name : '') }}"
@@ -41,7 +41,7 @@
                             @enderror
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><svg class="icon"><use
-                                            xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-open') }}"></use></svg></span>
+                                            xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-open') }}"></use></svg></span>
                                 <input class="form-control" type="email"
                                        value="{{ old('email', $user ? $user->email : '') }}"
                                        name="email" placeholder="Email" required>
@@ -52,7 +52,7 @@
                             @enderror
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><svg class="icon"><use
-                                            xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use></svg></span>
+                                            xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use></svg></span>
                                 <input class="form-control" type="password" name="password" placeholder="Password">
                             </div>
 
@@ -61,7 +61,7 @@
                             @enderror
                             <div class="input-group mb-4">
                                 <span class="input-group-text"><svg class="icon"><use
-                                            xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use></svg></span>
+                                            xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use></svg></span>
                                 <input class="form-control" type="password" name="confirm_password" placeholder="Repeat password">
                             </div>
                             <button class="btn btn-block btn-success" type="submit">Update Account</button>

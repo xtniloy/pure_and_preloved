@@ -52,7 +52,7 @@
                                                     type="reset">
                                                 <svg class="icon me-2 ">
                                                     <use
-                                                        xlink:href="{{asset('assets/vendors/@coreui/icons/svg/free.svg#cil-x')}}"></use>
+                                                        xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-x')}}"></use>
                                                 </svg>
                                                 Reset
                                             </button>
@@ -61,7 +61,7 @@
                                             <button class="btn btn-outline-secondary" type="submit">
                                                 <svg class="icon me-2 ">
                                                     <use
-                                                        xlink:href="{{asset('assets/vendors/@coreui/icons/svg/free.svg#cil-search')}}"></use>
+                                                        xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-search')}}"></use>
                                                 </svg>
                                                 Search
                                             </button>
@@ -74,7 +74,7 @@
                                     <button class="btn btn-outline-secondary">
                                         <svg class="icon me-2">
                                             <use
-                                                xlink:href="{{asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user-follow')}}"></use>
+                                                xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user-follow')}}"></use>
                                         </svg>
                                         Add
                                     </button>

@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="fs-4 fw-semibold pb-3">44.725</div><small class="text-danger">(-12.4%
                                     <svg class="icon">
-                                        <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom') }}"></use>
+                                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom') }}"></use>
                                     </svg>)</small>
                             </div>
                         </div>
@@ -57,13 +57,13 @@
                                     <h6 class="card-title text-body-secondary text-truncate" data-coreui-i18n="orders">Orders</h6>
                                     <div class="bg-primary bg-opacity-25 text-primary p-2 rounded ms-2">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-cart') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-cart') }}"></use>
                                         </svg>
                                     </div>
                                 </div>
                                 <div class="fs-4 fw-semibold pb-3">385</div><small class="text-success">(17.2%
                                     <svg class="icon">
-                                        <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
+                                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
                                     </svg>)</small>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                             <div class="col-auto ms-auto">
                                 <button class="btn btn-secondary">
                                     <svg class="icon me-2">
-                                        <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user-plus') }}"></use>
+                                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user-plus') }}"></use>
                                     </svg><span data-coreui-i18n="addNewUser">Add new user</span>
                                 </button>
                             </div>
@@ -105,7 +105,7 @@
                                 <tr class="align-middle">
                                     <th class="text-center">
                                         <svg class="icon">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-people') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-people') }}"></use>
                                         </svg>
                                     </th>
                                     <th data-coreui-i18n="user">User</th>
@@ -126,7 +126,7 @@
                                     </td>
                                     <td class="text-center">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/flag.svg#cif-us') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/flag.svg#cif-us') }}"></use>
                                         </svg>
                                     </td>
                                     <td>
@@ -146,7 +146,7 @@
                                         <div class="dropdown">
                                             <button class="btn btn-transparent p-0 dark:text-high-emphasis" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg class="icon">
-                                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="info">Info</a><a class="dropdown-item" href="#" data-coreui-i18n="edit">Edit</a><a class="dropdown-item text-danger" href="#" data-coreui-i18n="delete">Delete</a></div>
@@ -163,7 +163,7 @@
                                     </td>
                                     <td class="text-center">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/flag.svg#cif-br') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/flag.svg#cif-br') }}"></use>
                                         </svg>
                                     </td>
                                     <td>
@@ -183,7 +183,7 @@
                                         <div class="dropdown">
                                             <button class="btn btn-transparent p-0 dark:text-high-emphasis" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg class="icon">
-                                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="info">Info</a><a class="dropdown-item" href="#" data-coreui-i18n="edit">Edit</a><a class="dropdown-item text-danger" href="#" data-coreui-i18n="delete">Delete</a></div>
@@ -200,7 +200,7 @@
                                     </td>
                                     <td class="text-center">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/flag.svg#cif-in') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/flag.svg#cif-in') }}"></use>
                                         </svg>
                                     </td>
                                     <td>
@@ -220,7 +220,7 @@
                                         <div class="dropdown">
                                             <button class="btn btn-transparent p-0 dark:text-high-emphasis" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg class="icon">
-                                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="info">Info</a><a class="dropdown-item" href="#" data-coreui-i18n="edit">Edit</a><a class="dropdown-item text-danger" href="#" data-coreui-i18n="delete">Delete</a></div>
@@ -237,7 +237,7 @@
                                     </td>
                                     <td class="text-center">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/flag.svg#cif-fr') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/flag.svg#cif-fr') }}"></use>
                                         </svg>
                                     </td>
                                     <td>
@@ -257,7 +257,7 @@
                                         <div class="dropdown">
                                             <button class="btn btn-transparent p-0 dark:text-high-emphasis" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg class="icon">
-                                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="info">Info</a><a class="dropdown-item" href="#" data-coreui-i18n="edit">Edit</a><a class="dropdown-item text-danger" href="#" data-coreui-i18n="delete">Delete</a></div>
@@ -274,7 +274,7 @@
                                     </td>
                                     <td class="text-center">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/flag.svg#cif-es') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/flag.svg#cif-es') }}"></use>
                                         </svg>
                                     </td>
                                     <td>
