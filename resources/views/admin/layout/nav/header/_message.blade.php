@@ -5,7 +5,7 @@
     <div class="dropdown-menu dropdown-menu-end dropdown-menu-lg py-0" style="min-width: 24rem">
         <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold rounded-top mb-2" data-coreui-i18n="messagesCounter, { 'counter': 7 }">You have 4 messages</div><a class="dropdown-item" href="#">
             <div class="d-flex">
-                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('assets/img/avatars/1.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/1.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 <div class="message text-wrap">
                     <div class="d-flex justify-content-between mt-1">
                         <div class="small text-body-secondary">Jessica Williams</div>
@@ -17,7 +17,7 @@
             </div>
         </a><a class="dropdown-item" href="#">
             <div class="d-flex">
-                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('assets/img/avatars/2.jpg') }}" alt="user@email.com"><span class="avatar-status bg-warning"></span></div>
+                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/2.jpg') }}" alt="user@email.com"><span class="avatar-status bg-warning"></span></div>
                 <div class="message text-wrap">
                     <div class="d-flex justify-content-between mt-1">
                         <div class="small text-body-secondary">Richard Johnson</div>
@@ -29,7 +29,7 @@
             </div>
         </a><a class="dropdown-item" href="#">
             <div class="d-flex">
-                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('assets/img/avatars/4.jpg') }}" alt="user@email.com"><span class="avatar-status bg-secondary"></span></div>
+                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/4.jpg') }}" alt="user@email.com"><span class="avatar-status bg-secondary"></span></div>
                 <div class="message text-wrap">
                     <div class="d-flex justify-content-between mt-1">
                         <div class="small text-body-secondary">Angela Rodriguez</div>
@@ -41,7 +41,7 @@
             </div>
         </a><a class="dropdown-item" href="#">
             <div class="d-flex">
-                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('assets/img/avatars/5.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/5.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 <div class="message text-wrap">
                     <div class="d-flex justify-content-between mt-1">
                         <div class="small text-body-secondary">Jane Lewis</div>
@@ -53,7 +53,7 @@
             </div>
         </a><a class="dropdown-item" href="#">
             <div class="d-flex">
-                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('assets/img/avatars/3.jpg') }}" alt="user@email.com"><span class="avatar-status bg-secondary"></span></div>
+                <div class="avatar flex-shrink-0 my-3 me-3"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/3.jpg') }}" alt="user@email.com"><span class="avatar-status bg-secondary"></span></div>
                 <div class="message text-wrap">
                     <div class="d-flex justify-content-between mt-1">
                         <div class="small text-body-secondary">Ryan Miller</div>

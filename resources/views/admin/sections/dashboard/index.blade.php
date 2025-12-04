@@ -39,7 +39,7 @@
                                     <h6 class="card-title text-body-secondary text-truncate" data-coreui-i18n="customers">Customers</h6>
                                     <div class="bg-primary bg-opacity-25 text-primary p-2 rounded ms-2">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-people') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-people') }}"></use>
                                         </svg>
                                     </div>
                                 </div>
@@ -118,7 +118,7 @@
                                 <tbody>
                                 <tr class="align-middle">
                                     <td class="text-center">
-                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('assets/img/avatars/1.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/1.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">Yiorgos Avraamu</div>
@@ -155,7 +155,7 @@
                                 </tr>
                                 <tr class="align-middle">
                                     <td class="text-center">
-                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('assets/img/avatars/2.jpg') }}" alt="user@email.com"><span class="avatar-status bg-danger-gradient"></span></div>
+                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/2.jpg') }}" alt="user@email.com"><span class="avatar-status bg-danger-gradient"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">Avram Tarasios</div>
@@ -192,7 +192,7 @@
                                 </tr>
                                 <tr class="align-middle">
                                     <td class="text-center">
-                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('assets/img/avatars/3.jpg') }}" alt="user@email.com"><span class="avatar-status bg-warning-gradient"></span></div>
+                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/3.jpg') }}" alt="user@email.com"><span class="avatar-status bg-warning-gradient"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">Quintin Ed</div>
@@ -229,7 +229,7 @@
                                 </tr>
                                 <tr class="align-middle">
                                     <td class="text-center">
-                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('assets/img/avatars/4.jpg') }}" alt="user@email.com"><span class="avatar-status bg-secondary-gradient"></span></div>
+                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/4.jpg') }}" alt="user@email.com"><span class="avatar-status bg-secondary-gradient"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">Enéas Kwadwo</div>
@@ -266,7 +266,7 @@
                                 </tr>
                                 <tr class="align-middle">
                                     <td class="text-center">
-                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('assets/img/avatars/5.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/5.jpg') }}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">Agapetus Tadeáš</div>
@@ -294,7 +294,7 @@
                                         <div class="dropdown dropup">
                                             <button class="btn btn-transparent p-0 dark:text-high-emphasis" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg class="icon">
-                                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="info">Info</a><a class="dropdown-item" href="#" data-coreui-i18n="edit">Edit</a><a class="dropdown-item text-danger" href="#" data-coreui-i18n="delete">Delete</a></div>
@@ -303,7 +303,7 @@
                                 </tr>
                                 <tr class="align-middle">
                                     <td class="text-center">
-                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('assets/img/avatars/6.jpg') }}" alt="user@email.com"><span class="avatar-status bg-danger-gradient"></span></div>
+                                        <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/6.jpg') }}" alt="user@email.com"><span class="avatar-status bg-danger-gradient"></span></div>
                                     </td>
                                     <td>
                                         <div class="text-nowrap">Friderik Dávid</div>
@@ -311,7 +311,7 @@
                                     </td>
                                     <td class="text-center">
                                         <svg class="icon icon-xl">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/flag.svg#cif-pl') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/flag.svg#cif-pl') }}"></use>
                                         </svg>
                                     </td>
                                     <td>
@@ -331,7 +331,7 @@
                                         <div class="dropdown dropup">
                                             <button class="btn btn-transparent p-0 dark:text-high-emphasis" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <svg class="icon">
-                                                    <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                                 </svg>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="info">Info</a><a class="dropdown-item" href="#" data-coreui-i18n="edit">Edit</a><a class="dropdown-item text-danger" href="#" data-coreui-i18n="delete">Delete</a></div>
@@ -352,14 +352,14 @@
                                 <div>
                                     <div class="fs-4 fw-semibold">26K <span class="fs-6 fw-normal">(-12.4%
                             <svg class="icon">
-                              <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom') }}"></use>
+                              <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom') }}"></use>
                             </svg>)</span></div>
                                     <div data-coreui-i18n="users">Users</div>
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <svg class="icon">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                         </svg>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="action">Action</a><a class="dropdown-item" href="#" data-coreui-i18n="anotherAction">Another action</a><a class="dropdown-item" href="#" data-coreui-i18n="somethingElseHere">Something else here</a></div>
@@ -376,14 +376,14 @@
                                 <div>
                                     <div class="fs-4 fw-semibold">2.49% <span class="fs-6 fw-normal">(84.7%
                             <svg class="icon">
-                              <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
+                              <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use>
                             </svg>)</span></div>
                                     <div data-coreui-i18n="conversionRate">Conversion Rate</div>
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <svg class="icon">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                         </svg>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="action">Action</a><a class="dropdown-item" href="#" data-coreui-i18n="anotherAction">Another action</a><a class="dropdown-item" href="#" data-coreui-i18n="somethingElseHere">Something else here</a></div>
@@ -400,14 +400,14 @@
                                 <div>
                                     <div class="fs-4 fw-semibold">44K <span class="fs-6 fw-normal">(-23.6%
                             <svg class="icon">
-                              <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom') }}"></use>
+                              <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom') }}"></use>
                             </svg>)</span></div>
                                     <div data-coreui-i18n="sessions">Sessions</div>
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn btn-transparent text-white p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <svg class="icon">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-options') }}"></use>
                                         </svg>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item" href="#" data-coreui-i18n="action">Action</a><a class="dropdown-item" href="#" data-coreui-i18n="anotherAction">Another action</a><a class="dropdown-item" href="#" data-coreui-i18n="somethingElseHere">Something else here</a></div>
@@ -546,7 +546,7 @@
                                 <div class="progress-group mb-4 pt-4 border-top">
                                     <div class="progress-group-header">
                                         <svg class="icon icon-lg me-2">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
                                         </svg>
                                         <div data-coreui-i18n="male">Male</div>
                                         <div class="ms-auto fw-semibold">43%</div>
@@ -560,7 +560,7 @@
                                 <div class="progress-group mb-5">
                                     <div class="progress-group-header">
                                         <svg class="icon icon-lg me-2">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/free.svg#cil-user-female') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user-female') }}"></use>
                                         </svg>
                                         <div data-coreui-i18n="female">Female</div>
                                         <div class="ms-auto fw-semibold">37%</div>
@@ -574,7 +574,7 @@
                                 <div class="progress-group">
                                     <div class="progress-group-header">
                                         <svg class="icon icon-lg me-2">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/brand.svg#cib-google') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/brand.svg#cib-google') }}"></use>
                                         </svg>
                                         <div data-coreui-i18n="organicSearch">Organic Search</div>
                                         <div class="ms-auto fw-semibold me-2">191.235</div>
@@ -589,7 +589,7 @@
                                 <div class="progress-group">
                                     <div class="progress-group-header">
                                         <svg class="icon icon-lg me-2">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/brand.svg#cib-facebook-f') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/brand.svg#cib-facebook-f') }}"></use>
                                         </svg>
                                         <div>Facebook</div>
                                         <div class="ms-auto fw-semibold me-2">51.223</div>
@@ -604,7 +604,7 @@
                                 <div class="progress-group">
                                     <div class="progress-group-header">
                                         <svg class="icon icon-lg me-2">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/brand.svg#cib-twitter') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/brand.svg#cib-twitter') }}"></use>
                                         </svg>
                                         <div>Twitter</div>
                                         <div class="ms-auto fw-semibold me-2">37.564</div>
@@ -619,7 +619,7 @@
                                 <div class="progress-group">
                                     <div class="progress-group-header">
                                         <svg class="icon icon-lg me-2">
-                                            <use xlink:href="{{ asset('assets/vendors/@coreui/icons/svg/brand.svg#cib-linkedin') }}"></use>
+                                            <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/brand.svg#cib-linkedin') }}"></use>
                                         </svg>
                                         <div>LinkedIn</div>
                                         <div class="ms-auto fw-semibold me-2">27.319</div>
@@ -645,7 +645,7 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('assets/js/dashboard-chart.js') }}"></script>
+    <script src="{{ asset('panel/assets/js/dashboard-chart.js') }}"></script>
 @endpush
 
 

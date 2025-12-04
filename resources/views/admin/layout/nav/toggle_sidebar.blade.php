@@ -22,7 +22,7 @@
             <div class="list-group list-group-flush">
                 <div class="list-group-item border-start-4 border-start-secondary bg-body-tertiary text-center fw-bold text-body-secondary text-uppercase small" data-coreui-i18n="today">Today</div>
                 <div class="list-group-item border-start-4 border-start-warning list-group-item-divider">
-                    <div class="avatar avatar-lg float-end"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"></div>
+                    <div class="avatar avatar-lg float-end"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"></div>
                     <div>Meeting with <strong>Lucas</strong></div><small class="text-body-secondary me-3">
                         <svg class="icon">
                             <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-calendar') }}"></use>
@@ -32,7 +32,7 @@
                         </svg> Palo Alto, CA</small>
                 </div>
                 <div class="list-group-item border-start-4 border-start-info">
-                    <div class="avatar avatar-lg float-end"><img class="avatar-img" src="{{ asset('assets/img/avatars/4.jpg')}}" alt="user@email.com"></div>
+                    <div class="avatar avatar-lg float-end"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/4.jpg')}}" alt="user@email.com"></div>
                     <div>Skype with <strong>Megan</strong></div><small class="text-body-secondary me-3">
                         <svg class="icon">
                             <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-calendar') }}"></use>
@@ -51,11 +51,11 @@
                             <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-home') }}"></use>
                         </svg> creativeLabs HQ</small>
                     <div class="avatars-stack mt-2">
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/2.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/3.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/4.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/5.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/6.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/2.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/3.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/4.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/5.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/6.jpg')}}" alt="user@email.com"></div>
                     </div>
                 </div>
                 <div class="list-group-item border-start-4 border-start-success list-group-item-divider">
@@ -76,13 +76,13 @@
                             <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-home') }}"></use>
                         </svg> creativeLabs HQ</small>
                     <div class="avatars-stack mt-2">
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/2.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/3.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/4.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/5.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/6.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"></div>
-                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('assets/img/avatars/8.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/2.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/3.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/4.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/5.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/6.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"></div>
+                        <div class="avatar avatar-xs"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/8.jpg')}}" alt="user@email.com"></div>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
         <div class="tab-pane p-3" id="messages" role="tabpanel">
             <div class="message">
                 <div class="py-3 pb-5 me-3 float-start">
-                    <div class="avatar"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                    <div class="avatar"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 </div>
                 <div><small class="text-body-secondary">Lukasz Holeczek</small><small class="text-body-secondary float-end mt-1">1:52 PM</small></div>
                 <div class="text-truncate fw-bold">Lorem ipsum dolor sit amet</div><small class="text-body-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
@@ -98,7 +98,7 @@
             <hr>
             <div class="message">
                 <div class="py-3 pb-5 me-3 float-start">
-                    <div class="avatar"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                    <div class="avatar"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 </div>
                 <div><small class="text-body-secondary">Lukasz Holeczek</small><small class="text-body-secondary float-end mt-1">1:52 PM</small></div>
                 <div class="text-truncate fw-bold">Lorem ipsum dolor sit amet</div><small class="text-body-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
@@ -106,7 +106,7 @@
             <hr>
             <div class="message">
                 <div class="py-3 pb-5 me-3 float-start">
-                    <div class="avatar"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                    <div class="avatar"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 </div>
                 <div><small class="text-body-secondary">Lukasz Holeczek</small><small class="text-body-secondary float-end mt-1">1:52 PM</small></div>
                 <div class="text-truncate fw-bold">Lorem ipsum dolor sit amet</div><small class="text-body-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
@@ -114,7 +114,7 @@
             <hr>
             <div class="message">
                 <div class="py-3 pb-5 me-3 float-start">
-                    <div class="avatar"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                    <div class="avatar"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 </div>
                 <div><small class="text-body-secondary">Lukasz Holeczek</small><small class="text-body-secondary float-end mt-1">1:52 PM</small></div>
                 <div class="text-truncate fw-bold">Lorem ipsum dolor sit amet</div><small class="text-body-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
@@ -122,7 +122,7 @@
             <hr>
             <div class="message">
                 <div class="py-3 pb-5 me-3 float-start">
-                    <div class="avatar"><img class="avatar-img" src="{{ asset('assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
+                    <div class="avatar"><img class="avatar-img" src="{{ asset('panel/assets/img/avatars/7.jpg')}}" alt="user@email.com"><span class="avatar-status bg-success"></span></div>
                 </div>
                 <div><small class="text-body-secondary">Lukasz Holeczek</small><small class="text-body-secondary float-end mt-1">1:52 PM</small></div>
                 <div class="text-truncate fw-bold">Lorem ipsum dolor sit amet</div><small class="text-body-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
