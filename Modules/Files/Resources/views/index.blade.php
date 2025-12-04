@@ -816,28 +816,18 @@
                         const speed = formatSpeed(uploadedBytes / elapsedTime);
                         updateSpeed(fileData.id, speed);
 
-                        console.log(result.completed);
-
                         if (result.completed) {
                             fileData.status = 'completed';
                             fileData.serverPath = result.path;
                             fileData.db_id = result.fileId;
                             fileData.serverThumbnailUrl = result.thumbnailUrl;
 
-                            // Update row/grid IDs
                             updateElementIds(fileData);
 
-                            updateFileStatus(fileData.id, 'Completed', 'success');
-                            showGridOverlay(fileData.db_id, false);
-
-                            const progressBar = document.getElementById(`progress-${fileData.id}`);
-                            if (progressBar) {
-                                progressBar.id = `progress-${fileData.db_id}`;
-                                progressBar.classList.remove('progress-bar-animated', 'progress-bar-striped');
-                                progressBar.classList.add('bg-success');
-                            }
-
                             fileData.id = fileData.db_id;
+                            updateFileStatus(fileData.id, 'Completed', 'success');
+                            updateProgressBarCompleted(fileData.id);
+                            showGridOverlay(fileData.db_id, false);
                         }
                     }
                 } catch (error) {
@@ -858,6 +848,12 @@
 
                 const oldGrid = document.getElementById(`grid-file-${fileData.id}`);
                 if (oldGrid) oldGrid.id = `grid-file-${fileData.db_id}`;
+
+                const oldProgressBarId = document.getElementById(`progress-${fileData.id}`);
+                if (oldProgressBarId) oldProgressBarId.id = `progress-${fileData.db_id}`;
+
+                const oldOverlayId = document.getElementById(`grid-overlay-${fileData.id}`);
+                if (oldOverlayId) oldOverlayId.id = `grid-overlay-${fileData.db_id}`;
 
                 const progressText = document.getElementById(`progress-text-${fileData.id}`);
                 const speed = document.getElementById(`speed-${fileData.id}`);
@@ -1027,6 +1023,14 @@
                 const overlay = document.getElementById(`grid-overlay-${fileId}`);
                 if (overlay) {
                     overlay.classList.toggle('d-none', !show);
+                }
+            }
+
+            function updateProgressBarCompleted(fileId){
+                const progressBar = document.getElementById(`progress-${fileId}`);
+                if (progressBar) {
+                    progressBar.classList.remove('progress-bar-animated', 'progress-bar-striped');
+                    progressBar.classList.add('bg-success');
                 }
             }
 
