@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Modules\Files\Models\Asset;
+use Illuminate\Support\Facades\Cache;
 
 class FilesController extends Controller
 {
@@ -152,14 +153,6 @@ class FilesController extends Controller
             }
             fclose($out);
 
-//            // Validate JSON using streaming parser
-//            if (!$this->isValidJson($finalTempPath)) {
-//                // delete .part (optional), keep chunk dir for debugging
-//                @unlink($finalTempPath);
-//                Log::error("Uploaded JSON failed validation for uploadIdentifier={$uploadIdentifier}, file={$finalFileName}");
-//                return response()->json(['error' => 'Invalid JSON file'], 422);
-//            }
-
             // Everything validated: atomically rename part -> final
             if (!rename($finalTempPath, $finalFilePath)) {
                 // if rename fails, try copy+unlink
@@ -180,13 +173,10 @@ class FilesController extends Controller
                 'mime_type' => $mimeType,
                 'status' => General::$files_status_code['Active'],
                 'size' => filesize($finalFilePath),
-//                'uploaded_at' => now()
             ]);
 
             // Clean up temp chunks AFTER DB write + validation (helps debug if something goes wrong)
             $this->deleteDirectory($tempDir);
-
-//            DataPreProcessJob::dispatch($fileRecord);
 
             return response()->json([
                 'completed' => true,
@@ -308,6 +298,29 @@ class FilesController extends Controller
         $uniqueName = $cleanName . '_' . uniqid('', true) . '.' . $extension;
 
         return $uniqueName;
+    }
+
+    public function uploaded_asset(string $stored_name)
+    {
+        $file = Cache::remember("asset_{$stored_name}", now()->addHours(6), function () use ($stored_name) {
+            return Asset::where('stored_name', $stored_name)->first();
+        });
+
+        if (!$file) {
+            abort(404);
+        }
+
+        $filePath = storage_path("app/{$file->path}");
+        if (is_null($file->path) || !file_exists($filePath)) {
+            abort(404);
+        }
+
+        $mimeType = $file->mime_type;
+
+        return response()->file($filePath, [
+            'Content-Type' => $mimeType,
+        ]);
+
     }
 
 
