@@ -828,6 +828,19 @@
                             updateFileStatus(fileData.id, 'Completed', 'success');
                             updateProgressBarCompleted(fileData.id);
                             showGridOverlay(fileData.db_id, false);
+
+                            if (fileData.thumbnailUrl) {
+                                try {
+                                    const thumbRes = await uploadThumbnail(fileData);
+                                    if (thumbRes && thumbRes.thumbnailUrl) {
+                                        fileData.serverThumbnailUrl = thumbRes.thumbnailUrl;
+                                        fileData.thumbnailUrl = thumbRes.thumbnailUrl;
+                                        updateThumbnails(fileData);
+                                    }
+                                } catch (e) {
+                                    console.error('Thumbnail upload failed', e);
+                                }
+                            }
                         }
                     }
                 } catch (error) {
@@ -840,6 +853,25 @@
                     activeUploads--;
                     processUploadQueue();
                 }
+            }
+
+            async function uploadThumbnail(fileData) {
+                const formData = new FormData();
+                formData.append('fileId', fileData.db_id || fileData.id);
+                formData.append('thumbnail', fileData.thumbnailUrl);
+
+                const response = await fetch('{{ route("admin.file.upload.thumbnail") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                });
+                if (!response.ok) {
+                    throw new Error(`Thumbnail upload failed: ${response.statusText}`);
+                }
+                return await response.json();
             }
 
             function updateElementIds(fileData) {

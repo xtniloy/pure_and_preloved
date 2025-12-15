@@ -9,6 +9,8 @@ Route::middleware('web')
         Route::get('/', [FilesController::class, 'index']);
         Route::post('/upload-chunk', [FilesController::class, 'uploadChunk'])
             ->name('admin.file.upload.chunk');
+        Route::post('/upload-thumbnail', [FilesController::class, 'uploadThumbnail'])
+            ->name('admin.file.upload.thumbnail');
         Route::get('/download/{fileId?}', [FilesController::class, 'download'])
             ->name('admin.file.download');
         Route::delete('/delete/{fileId?}', [FilesController::class, 'delete'])
@@ -22,6 +24,8 @@ Route::prefix('files')
     ->group(function () {
         Route::get('/uploaded_asset/{stored_name}', [FilesController::class, 'uploaded_asset'])
             ->name('admin.file.uploaded_asset');
+        Route::get('/thumbnail/{fileId}', [FilesController::class, 'thumbnail'])
+            ->name('admin.file.thumbnail');
     });
 
 

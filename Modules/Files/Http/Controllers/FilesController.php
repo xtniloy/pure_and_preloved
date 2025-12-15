@@ -194,6 +194,60 @@ class FilesController extends Controller
         }
     }
 
+    public function uploadThumbnail(Request $request): ?\Illuminate\Http\JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'fileId' => 'required|integer|exists:assets,id',
+            'thumbnail' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        try {
+            $file = Asset::findOrFail($request->input('fileId'));
+            $dataUrl = $request->input('thumbnail');
+
+            if (!preg_match('/^data:image\/(\w+);base64,/', $dataUrl, $type)) {
+                return response()->json(['error' => 'Invalid thumbnail data'], 422);
+            }
+            $imageType = strtolower($type[1]);
+            $imageData = base64_decode(substr($dataUrl, strpos($dataUrl, ',') + 1));
+            if ($imageData === false) {
+                return response()->json(['error' => 'Base64 decode failed'], 422);
+            }
+
+            $thumbDir = 'uploads/files/thumbnails/' . date('Y/m/d');
+            $fullThumbDir = storage_path('app/' . $thumbDir);
+            if (!file_exists($fullThumbDir)) {
+                if (!mkdir($fullThumbDir, 0755, true) && !is_dir($fullThumbDir)) {
+                    throw new \RuntimeException("Failed to create thumbnail dir: {$fullThumbDir}");
+                }
+            }
+
+            $baseName = pathinfo($file->stored_name, PATHINFO_FILENAME);
+            $thumbName = $baseName . '_thumb_' . uniqid('', true) . '.' . $imageType;
+            $thumbPath = $fullThumbDir . '/' . $thumbName;
+
+            file_put_contents($thumbPath, $imageData);
+
+            $file->thumbnail_path = $thumbDir . '/' . $thumbName;
+            $file->save();
+
+            return response()->json([
+                'success' => true,
+                'thumbnailUrl' => route('admin.file.thumbnail', ['fileId' => $file->id])
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Thumbnail upload failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'fileId' => $request->input('fileId'),
+            ]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function download($fileId)
     {
         $file = Asset::findOrFail($fileId);
@@ -321,6 +375,21 @@ class FilesController extends Controller
             'Content-Type' => $mimeType,
         ]);
 
+    }
+
+    public function thumbnail(int $fileId)
+    {
+        $file = Asset::findOrFail($fileId);
+        if (!$file->thumbnail_path) {
+            abort(404);
+        }
+        $thumbPath = storage_path('app/' . $file->thumbnail_path);
+        if (!file_exists($thumbPath)) {
+            abort(404);
+        }
+        return response()->file($thumbPath, [
+            'Content-Type' => File::mimeType($thumbPath) ?: 'image/jpeg',
+        ]);
     }
 
 
