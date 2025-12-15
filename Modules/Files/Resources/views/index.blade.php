@@ -600,8 +600,24 @@
             function generateImageThumbnail(file, fileData) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    fileData.thumbnailUrl = e.target.result;
-                    updateThumbnails(fileData);
+                    const img = new Image();
+                    img.onload = () => {
+                        const maxWidth = 320;
+                        const maxHeight = 320;
+                        let width = img.naturalWidth || img.width;
+                        let height = img.naturalHeight || img.height;
+                        const ratio = Math.min(maxWidth / width, maxHeight / height, 1);
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(width * ratio);
+                        canvas.height = Math.round(height * ratio);
+                        const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        fileData.thumbnailUrl = canvas.toDataURL('image/jpeg', 0.6);
+                        updateThumbnails(fileData);
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -611,14 +627,15 @@
                 video.preload = 'metadata';
                 video.src = URL.createObjectURL(file);
                 video.currentTime = 1;
-
                 video.onloadeddata = () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = 320;
                     canvas.height = 180;
                     const ctx = canvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    fileData.thumbnailUrl = canvas.toDataURL('image/jpeg');
+                    fileData.thumbnailUrl = canvas.toDataURL('image/jpeg', 0.6);
                     updateThumbnails(fileData);
                     URL.revokeObjectURL(video.src);
                 };

@@ -315,35 +315,6 @@ class FilesController extends Controller
 //    }
 
 
-    public function process_json(Asset $file)
-    {
-        try {
-            $file->status  = 'Pre-Processed';
-
-            $file->save();
-
-            DB::table('jsons')
-                ->where('file_id', $file->id)
-                ->update(['status' => 0]);
-
-            // Dispatch the job for background processing
-            ProcessJsonFileJob::dispatch($file->id);
-
-            $file->status = 'Processing';
-            $file->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'JSON processing has been queued.'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
     private function sanitizeFileName($fileName)
     {
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
