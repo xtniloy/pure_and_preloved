@@ -4,8 +4,6 @@ namespace Modules\Files\Http\Controllers;
 
 use App\Enum\General;
 use App\Http\Controllers\Controller;
-use App\Jobs\DataPreProcessJob;
-use App\Jobs\ProcessJsonFileJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -265,9 +263,14 @@ class FilesController extends Controller
         try {
             $file = Asset::findOrFail($fileId);
             $filePath = storage_path('app/' . $file->path);
+            $thumbnailPath = !empty($file->thumbnail_path) ? storage_path('app/' . $file->thumbnail_path) : null;
 
             if (file_exists($filePath)) {
                 unlink($filePath);
+            }
+
+            if ($thumbnailPath && file_exists($thumbnailPath)) {
+                unlink($thumbnailPath);
             }
 
             $file->delete();
@@ -293,26 +296,6 @@ class FilesController extends Controller
 
         rmdir($dir);
     }
-
-//    private function isValidJson($filePath)
-//    {
-//        ini_set('memory_limit', '2G');
-//
-//        try {
-//            $content = file_get_contents($filePath);
-//            $json = json_decode($content);
-//            $validate = json_last_error() === JSON_ERROR_NONE;
-//
-//            if ($validate){
-//                $this->data_name = $json->name;
-//                $this->data_count = count($json->features);
-//            }
-//
-//            return $validate;
-//        } catch (\Throwable $e) {
-//            return false;
-//        }
-//    }
 
 
     private function sanitizeFileName($fileName)
