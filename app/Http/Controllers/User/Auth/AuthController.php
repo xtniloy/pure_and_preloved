@@ -110,7 +110,7 @@ class AuthController extends Controller
 
             $user->update(['last_login' => now()]);
 
-            return redirect()->route('user.home')->with('success', 'Login Successful');
+            return redirect()->route('user.dashboard')->with('success', 'Login Successful');
         }
 
         return redirect()->route('login')->with('error', 'Email or Password not matching');
@@ -148,7 +148,7 @@ class AuthController extends Controller
 
             $userAuthService->login($user);
 
-            return redirect()->route('user.home')->with('success', 'Email verified successful');
+            return redirect()->route('user.dashboard')->with('success', 'Email verified successful');
         }
 
         return redirect()->route('login')->with('error', 'Token not found');
@@ -182,7 +182,7 @@ class AuthController extends Controller
 
             $userAuthService->login($user);
 
-            return redirect()->route('user.home')->with('success', 'Password update successful');
+            return redirect()->route('user.dashboard')->with('success', 'Password update successful');
 
         }
 

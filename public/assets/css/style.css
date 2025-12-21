@@ -617,7 +617,7 @@ p {
     -webkit-transform: translateY(0);
   }
   0% {
-    -webkit-transform: translateY(-20);
+    -webkit-transform: translateY(-20px);
   }
 }
 @keyframes slideDownIn {
@@ -7891,7 +7891,7 @@ offcanvas-menu > ul > li .menu-expand {
 }
 .module-featured-item img {
   max-width: 100%;
-   
+
 }
 .module-feature-info {
   position: absolute;

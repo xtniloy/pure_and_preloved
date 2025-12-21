@@ -17,16 +17,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
+
+
+
+
+//-------------------------------------------------------------
+
 Route::get('/email/success/{user}', [\App\Http\Controllers\User\Auth\AuthController::class, 'email_success'])->name('email.success');
 // Resend verification link
 Route::post('/email/verification-notification/{user}', [\App\Http\Controllers\User\Auth\AuthController::class, 'email_resend'])
     ->middleware(['throttle:6,1'])->name('verification.send');
-
-//// Resend verification link
-//Route::post('/email/verification-notification', function (Request $request) {
-//    $request->user()->sendEmailVerificationNotification();
-//    return back()->with('message', 'Verification link sent!');
-//})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware('guest')
     ->namespace('App\Http\Controllers\User\Auth')
@@ -49,9 +50,9 @@ Route::middleware('guest')
         Route::post('/forget-password', 'AuthController@request_forget_password')->name('request_forget_password');
     });
 
-Route::get('/home', function () {
+Route::get('/dashboard', function () {
     return "Welcome to dashboard. Your email is verified!";
-})->middleware(['auth', 'verified'])->name('user.home');
+})->middleware(['auth', 'verified'])->name('user.dashboard');
 Route::get('/email/verify', [\App\Http\Controllers\User\Auth\AuthController::class, 'email_not_verify'])->name('verification.notice');
 
 Route::middleware('auth')->group(function () {
