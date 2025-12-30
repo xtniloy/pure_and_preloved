@@ -1,70 +1,75 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en" class="no-js">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Abelo – Electronics eCommerce HTML Template</title>
-    <meta name="robots" content="noindex, follow" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon/favicon.png') }}" />
-    <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Muli:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" media="all">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@yield('title', 'Pure and Preloved')</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, follow">
+    <meta name="description" content="@yield('meta_description', '')">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon/favicon.png') }}">
+
+    <!-- Google Fonts (CDN is correct) -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Muli:wght@200;300;400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap">
+
+    <!-- Vendor CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/ionicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/linearicon.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/font-awesome.min.css') }}">
 
-    <!-- Plugins CSS (All Plugins Files) -->
+    <!-- Plugin CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/jquery-ui.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/slick.css') }}">
 
-    <!-- Main Style CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    @stack('styles')
 </head>
 
 <body>
-<!-- Header Section Start From Here -->
-@include('public.layouts.nav.header')
-<!-- Header Section End Here -->
 
-<!-- Mobile Header Section Start -->
+{{-- Header --}}
+@include('public.layouts.nav.header')
+
+{{-- Mobile Header --}}
 @include('public.layouts.nav.mobile_header')
 
-<!-- Mobile Header Section End -->
+{{-- Page Content --}}
+<main>
+    @yield('content')
+</main>
 
-<!-- Body content Section Start -->
-@yield('content')
-
-<!-- Body content Section End -->
-
-<!-- Footer Area Start -->
+{{-- Footer --}}
 @include('public.layouts.nav.footer')
-<!-- Footer Area End -->
-<!-- Modal -->
-@include('public.modal.product_modal')
-<!-- Modal end -->
-<!-- JS
-============================================ -->
 
-<!-- Vendors JS -->
+{{-- Modals --}}
+@include('public.modal.product_modal')
+
+<!-- Vendor JS -->
 <script src="{{ asset('assets/js/vendor/jquery-3.6.0.min.js') }}"></script>
-<script src="{{ asset('assets/js/vendor/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/js/vendor/jquery-migrate-3.3.2.min.js') }}"></script>
+<script src="{{ asset('assets/js/vendor/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/js/vendor/modernizr-3.11.2.min.js') }}"></script>
 
-<!-- Plugins JS -->
+<!-- Plugin JS -->
 <script src="{{ asset('assets/js/plugins/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/slick.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/elevateZoom.js') }}"></script>
 
-<!-- Main Activation JS -->
+<!-- Main JS -->
 <script src="{{ asset('assets/js/main.js') }}"></script>
+
+@stack('scripts')
 </body>
 </html>

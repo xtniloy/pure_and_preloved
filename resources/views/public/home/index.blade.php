@@ -1,5 +1,5 @@
 @extends('public.layouts.main')
-@section('page-title')
+@section('title')
     Dashboard
 @endsection
 @section('content')

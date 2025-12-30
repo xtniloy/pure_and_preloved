@@ -217,6 +217,11 @@ p {
   display: block;
 }
 
+.img-responsive-footer{
+    max-width: 100px;
+    display: block;
+}
+
 .img-responsive-header {
     max-width: 120px;
     display: block;
