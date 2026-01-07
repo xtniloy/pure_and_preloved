@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Files\Models\Asset;
 
 class Category extends Model
 {
@@ -14,9 +15,14 @@ class Category extends Model
         'slug',
         'parent_id',
         'gender',
-        'image',
+        'asset_id',
         'status',
     ];
+
+    public function asset()
+    {
+        return $this->belongsTo(Asset::class, 'asset_id');
+    }
 
     public function parent()
     {

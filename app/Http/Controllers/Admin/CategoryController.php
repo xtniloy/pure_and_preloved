@@ -72,7 +72,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'parent_id' => 'nullable|exists:categories,id',
             'gender' => 'required|in:man,women,unisex',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'asset_id' => 'nullable|exists:assets,id',
         ]);
 
         if ($request->parent_id) {
@@ -91,14 +91,10 @@ class CategoryController extends Controller
              $category->slug = $slug;
         }
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $category->image = $imagePath;
-        }
-
         $category->name = $request->name;
         $category->parent_id = $request->parent_id;
         $category->gender = $request->gender;
+        $category->asset_id = $request->asset_id;
         $category->status = $request->has('status') ? 1 : 0;
         $category->save();
 

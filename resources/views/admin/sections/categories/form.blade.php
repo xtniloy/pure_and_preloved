@@ -94,14 +94,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="image" class="form-label">Image</label>
-                                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
-                                    @if(isset($category) && $category->image)
-                                        <div class="mt-2">
-                                            <img src="{{ asset('storage/'.$category->image) }}" alt="Current Image" style="max-height: 100px;">
-                                        </div>
-                                    @endif
-                                    @error('image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control @error('asset_id') is-invalid @enderror" id="image_name" value="{{ isset($category) && $category->asset ? $category->asset->original_name : '' }}" readonly placeholder="Select or upload an image">
+                                        <input type="hidden" id="asset_id" name="asset_id" value="{{ old('asset_id', isset($category) ? $category->asset_id : '') }}">
+                                        <button class="btn btn-outline-secondary" type="button" id="btn-file-manager">Choose Image</button>
+                                    </div>
+                                    <div class="mt-2" id="image-preview">
+                                        @if(isset($category) && $category->asset)
+                                            <img src="{{ route('admin.file.uploaded_asset', ['stored_name' => $category->asset->stored_name]) }}" alt="Current Image" style="max-height: 100px;">
+                                        @endif
+                                    </div>
+                                    @error('asset_id')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -124,9 +128,49 @@
             </div>
         </div>
     </div>
+
+    <!-- File Manager Modal -->
+    <div class="modal fade" id="fileManagerModal" tabindex="-1" aria-labelledby="fileManagerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileManagerModalLabel">File Manager</h5>
+                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe id="fileManagerIframe" src="{{ route('admin.file.index') }}" style="width: 100%; height: 600px; border: none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('js')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                const btnFileManager = document.getElementById('btn-file-manager');
+                const fileManagerModal = new coreui.Modal(document.getElementById('fileManagerModal'));
+                const assetIdInput = document.getElementById('asset_id');
+                const imageNameInput = document.getElementById('image_name');
+                const imagePreview = document.getElementById('image-preview');
+
+                btnFileManager.addEventListener('click', function() {
+                    fileManagerModal.show();
+                });
+
+                // Listen for message from iframe
+                window.addEventListener('message', function(event) {
+                    if (event.data.type === 'fileSelected') {
+                        const file = event.data.file;
+                        assetIdInput.value = file.id;
+                        imageNameInput.value = file.original_name;
+                        
+                        // Update preview
+                        imagePreview.innerHTML = `<img src="${file.url}" alt="${file.original_name}" style="max-height: 100px;">`;
+                        
+                        fileManagerModal.hide();
+                    }
+                });
+                
                 const genderSelect = document.getElementById('gender');
                 const parentSelect = document.getElementById('parent_id');
                 const parentOptions = parentSelect.querySelectorAll('option:not([value=""])');
