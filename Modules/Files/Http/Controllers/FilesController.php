@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Cache;
 
 class FilesController extends Controller
 {
+    public string $directory ;
+    public function __construct(){
+//        $this->directory = 'uploads';
+        $this->directory = 'public';
+    }
+
     public function index()
     {
         $files = Asset::orderBy('id','desc')->get();
@@ -28,32 +34,15 @@ class FilesController extends Controller
 
     public function view(Asset $fileId)
     {
-        $file = $fileId;
-
-        $data_count = $file->data_count??0;
-
-        $json = json_decode($file->jsons()->first()?->data);
-
-        $progress = 0;
-        if ($file->status === 'Pre-Processing'){
-            $progress = $data_count ? intval(($file->jsons()->count()/$file->data_count)*100) : 0;
-        }
-        elseif ($file->status === 'Processing'){
-            $progress = $data_count ? intval(($file->jsons()->where('status','=',1)->count()/$file->data_count)*100) : 0;
+        $filePath = storage_path("app/{$fileId->directory}{$fileId->path}");
+        if (is_null($fileId->path) || !file_exists($filePath)) {
+            abort(404);
         }
 
+        $mimeType = $fileId->mime_type;
 
-        return view('admin.sections.uploader.view', [
-            'fileId' => $file->id,
-            'dataCount' => $file->data_count??0,
-            'dataType' => $file->data_type??'Unknown', // 'precinct', 'voter', 'sub-division'
-            'dataTitle' => $file->data_name,
-            'fileName' => $file->original_name,
-            'fileSize' => $file->file_size,
-            'uploadedTime' => $file->upload_time,
-            'status' => $file->status, // 'Uploaded', 'Pre-Processing', etc.
-            'progress' => $progress,
-            'jsonSample' => $json??"File Not processed yet" // First 5 records as sample
+        return response()->file($filePath, [
+            'Content-Type' => $mimeType,
         ]);
 
 
@@ -114,10 +103,12 @@ class FilesController extends Controller
                 ]);
             }
 
+            $directory = $this->directory;
+
             // All chunks present -> merge them into a .part file first
             $finalFileName = $this->sanitizeFileName($fileName);
-            $finalPathDir = 'uploads/files/' . date('Y/m/d');
-            $fullPathDir = storage_path('app/' . $finalPathDir);
+            $finalPathDir = '/files/' . date('Y/m/d');
+            $fullPathDir = storage_path('app/' . $directory.$finalPathDir);
 
             if (!file_exists($fullPathDir)) {
                 if (!mkdir($fullPathDir, 0755, true) && !is_dir($fullPathDir)) {
@@ -165,7 +156,7 @@ class FilesController extends Controller
             $fileRecord = Asset::create([
                 'original_name' => $fileName,
                 'stored_name' => $finalFileName,
-                'directory' => 'uploads',
+                'directory' => $directory,
                 'path' => $finalPathDir . '/' . $finalFileName,
 
                 'mime_type' => $mimeType,
@@ -215,9 +206,10 @@ class FilesController extends Controller
             if ($imageData === false) {
                 return response()->json(['error' => 'Base64 decode failed'], 422);
             }
+            $directory = $this->directory;
 
-            $thumbDir = 'uploads/files/thumbnails/' . date('Y/m/d');
-            $fullThumbDir = storage_path('app/' . $thumbDir);
+            $thumbDir = '/files/thumbnails/' . date('Y/m/d');
+            $fullThumbDir = storage_path('app/' . $directory.$thumbDir);
             if (!file_exists($fullThumbDir)) {
                 if (!mkdir($fullThumbDir, 0755, true) && !is_dir($fullThumbDir)) {
                     throw new \RuntimeException("Failed to create thumbnail dir: {$fullThumbDir}");
@@ -249,7 +241,7 @@ class FilesController extends Controller
     public function download($fileId)
     {
         $file = Asset::findOrFail($fileId);
-        $filePath = storage_path('app/' . $file->path);
+        $filePath = storage_path('app/' . $file->directory.$file->path);
 
         if (!file_exists($filePath)) {
             abort(404, 'File not found');
@@ -318,7 +310,7 @@ class FilesController extends Controller
             abort(404);
         }
 
-        $filePath = storage_path("app/{$file->path}");
+        $filePath = storage_path("app/{$file->directory}{$file->path}");
         if (is_null($file->path) || !file_exists($filePath)) {
             abort(404);
         }
@@ -337,7 +329,7 @@ class FilesController extends Controller
         if (!$file->thumbnail_path) {
             abort(404);
         }
-        $thumbPath = storage_path('app/' . $file->thumbnail_path);
+        $thumbPath = storage_path('app/' . $file->directory.$file->thumbnail_path);
         if (!file_exists($thumbPath)) {
             abort(404);
         }
