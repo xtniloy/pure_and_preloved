@@ -2,6 +2,29 @@
 
 @section('page-title')
     File Uploader
+    @push('js')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Check if running inside iframe
+                if (window.self !== window.top) {
+                    const selectButtons = document.querySelectorAll('.select-file-btn');
+                    selectButtons.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const file = {
+                                id: this.dataset.id,
+                                original_name: this.dataset.originalName,
+                                url: this.dataset.url
+                            };
+                            window.parent.postMessage({ type: 'fileSelected', file: file }, '*');
+                        });
+                    });
+                } else {
+                    // Hide select buttons if not in iframe
+                    document.querySelectorAll('.select-file-btn').forEach(el => el.style.display = 'none');
+                }
+            });
+        </script>
+    @endpush
 @endsection
 
 @section('content')
@@ -98,6 +121,10 @@
                                                     $iconClass = 'text-secondary';
                                                     $mimeType = $file->mime_type ?? '';
                                                 @endphp
+                                                
+                                                <div class="form-check me-2">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary select-file-btn" data-id="{{ $file->id }}" data-original-name="{{ $file->original_name }}" data-url="{{ $file->url }}">Select</button>
+                                                </div>
 
                                                 @if(str_starts_with($mimeType, 'image/'))
                                                     <div class="file-thumbnail me-2" style="width: 32px; height: 32px;">
