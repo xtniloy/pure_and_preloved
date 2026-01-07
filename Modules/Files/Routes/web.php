@@ -6,7 +6,7 @@ use Modules\Files\Http\Controllers\FilesController;
 Route::middleware(['web', 'auth:admin'])->group(function () {})
     ->prefix('admin/files')
     ->group(function () {
-        Route::get('/', [FilesController::class, 'index']);
+        Route::get('/', [FilesController::class, 'index'])->name('admin.file.index');
         Route::post('/upload-chunk', [FilesController::class, 'uploadChunk'])
             ->name('admin.file.upload.chunk');
         Route::post('/upload-thumbnail', [FilesController::class, 'uploadThumbnail'])

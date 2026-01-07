@@ -25,6 +25,15 @@
                 </svg><span data-coreui-i18n="dashboard">Users</span>
             </a>
         </li>
+         @if(Route::has('admin.file.index'))
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('admin.file.index')}}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-file') }}"></use>
+                </svg><span data-coreui-i18n="file">Files</span>
+            </a>
+        </li>
+         @endif
 
         <li class="nav-title" data-coreui-i18n="theme">Theme</li>
         <li class="nav-item"><a class="nav-link" href="colors.html">
