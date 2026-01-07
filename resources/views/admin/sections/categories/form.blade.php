@@ -98,6 +98,7 @@
                                         <input type="text" class="form-control @error('asset_id') is-invalid @enderror" id="image_name" value="{{ isset($category) && $category->asset ? $category->asset->original_name : '' }}" readonly placeholder="Select or upload an image">
                                         <input type="hidden" id="asset_id" name="asset_id" value="{{ old('asset_id', isset($category) ? $category->asset_id : '') }}">
                                         <button class="btn btn-outline-secondary" type="button" id="btn-file-manager">Choose Image</button>
+                                        <button class="btn btn-outline-danger" type="button" id="btn-remove-image" style="{{ isset($category) && $category->asset ? '' : 'display: none;' }}">Remove</button>
                                     </div>
                                     <div class="mt-2" id="image-preview">
                                         @if(isset($category) && $category->asset)
@@ -148,6 +149,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const btnFileManager = document.getElementById('btn-file-manager');
+                const btnRemoveImage = document.getElementById('btn-remove-image');
                 const fileManagerModal = new coreui.Modal(document.getElementById('fileManagerModal'));
                 const assetIdInput = document.getElementById('asset_id');
                 const imageNameInput = document.getElementById('image_name');
@@ -155,6 +157,13 @@
 
                 btnFileManager.addEventListener('click', function() {
                     fileManagerModal.show();
+                });
+
+                btnRemoveImage.addEventListener('click', function() {
+                    assetIdInput.value = '';
+                    imageNameInput.value = '';
+                    imagePreview.innerHTML = '';
+                    this.style.display = 'none';
                 });
 
                 // Listen for message from iframe
@@ -166,6 +175,7 @@
                         
                         // Update preview
                         imagePreview.innerHTML = `<img src="${file.url}" alt="${file.original_name}" style="max-height: 100px;">`;
+                        btnRemoveImage.style.display = '';
                         
                         fileManagerModal.hide();
                     }

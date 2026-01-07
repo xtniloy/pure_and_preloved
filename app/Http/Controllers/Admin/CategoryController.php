@@ -27,7 +27,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'parent_id' => 'nullable|exists:categories,id',
             'gender' => 'required|in:man,women,unisex',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'asset_id' => 'nullable|exists:assets,id',
         ]);
 
         if ($request->parent_id) {
@@ -43,17 +43,12 @@ class CategoryController extends Controller
             $slug = $slug . '-' . ($count + 1);
         }
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-        }
-
         Category::create([
             'name' => $request->name,
             'slug' => $slug,
             'parent_id' => $request->parent_id,
             'gender' => $request->gender,
-            'image' => $imagePath,
+            'asset_id' => $request->asset_id,
             'status' => $request->has('status') ? 1 : 0,
         ]);
 
