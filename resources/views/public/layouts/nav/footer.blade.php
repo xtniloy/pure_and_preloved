@@ -8,11 +8,11 @@
                             <div class="footer-logo">
                                 <a href="index.html"><img class="img-responsive-footer" src="assets/images/logo/logo.jpg.png" alt="logo.jpg" /></a>
                             </div>
-                            <p class="text-infor">We are a team of designers and developers that create high quality HTML template</p>
+                            <p class="text-infor">Preloved Jewellery | Gold Diamond Silver | Rings Pendants Bracelets Earrings | Free Nationwide Delivery | Evri & Royal Mail 📮🇬🇧</p>
                             <div class="need_help">
-                                <p class="add"><span class="address">Address:</span> 4710-4890 Breckinridge St, Fayetteville</p>
-                                <p class="mail"><span class="email">Email:</span> <a href="mailto:support@hasthemes.com">support@hasthemes.com</a></p>
-                                <p class="phone"><span class="call us">Call Us:</span> <a href="tel:(+800)123456789"> (+800)123456789</a></p>
+                                <p class="add"><span class="address">Address:</span> Dixon Street, Lincoln, United Kingdom</p>
+                                <p class="mail"><span class="email">Email:</span> <a href="mailto:support@pureandpreloved.co.uk">support@pureandpreloved.co.uk</a></p>
+                                <p class="phone"><span class="call us">Call Us:</span> <a href="tel:+44 7396 823194"> +44 7396 823194</a></p>
                             </div>
                         </div>
                     </div>
@@ -57,14 +57,14 @@
                                             <div class="footer-blog-post-top">
                                                 <div class="post-thumbnail">
                                                     <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/blog-image/blog-8.jpg" alt="">
+                                                        <img src="assets/images/product-image/homeengraving.jpg" alt="">
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is First Post For XipBlog</a></h4>
+                                                <h4><a href="blog-single-left-sidebar.html">This is First Post For Jewellery</a></h4>
                                                 <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo Hasthemes</a> </span>
+                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
                                                     <span class="date">Jun 29,2022</span>
                                                 </div>
                                             </div>
@@ -73,14 +73,14 @@
                                             <div class="footer-blog-post-top">
                                                 <div class="post-thumbnail">
                                                     <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/blog-image/blog-9.jpg" alt="">
+                                                        <img src="assets/images/product-image/6.jpg" alt="">
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is Secound Post For XipBlog</a></h4>
+                                                <h4><a href="blog-single-left-sidebar.html">This is Secound Post For Jewellery</a></h4>
                                                 <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo Hasthemes</a> </span>
+                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
                                                     <span class="date">Jun 29,2022</span>
                                                 </div>
                                             </div>
@@ -92,14 +92,14 @@
                                             <div class="footer-blog-post-top">
                                                 <div class="post-thumbnail">
                                                     <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/blog-image/blog-10.jpg" alt="">
+                                                        <img src="aassets/images/product-image/6.jpg" alt="">
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is Third Post For XipBlog</a></h4>
+                                                <h4><a href="blog-single-left-sidebar.html">This is Third Post For Jewellery</a></h4>
                                                 <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo Hasthemes</a> </span>
+                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
                                                     <span class="date">Jun 29,2022</span>
                                                 </div>
                                             </div>
@@ -108,14 +108,14 @@
                                             <div class="footer-blog-post-top">
                                                 <div class="post-thumbnail">
                                                     <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/blog-image/blog-11.jpg" alt="">
+                                                        <img src="assets/images/product-image/homeengraving.jpg" alt="">
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is Fourth Post For XipBlog</a></h4>
+                                                <h4><a href="blog-single-left-sidebar.html">This is Fourth Post For Jewellery</a></h4>
                                                 <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo Hasthemes</a> </span>
+                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
                                                     <span class="date">Jun 29,2022</span>
                                                 </div>
                                             </div>
@@ -145,19 +145,19 @@
                             <div class="social-icon">
                                 <ul>
                                     <li class="facebook">
-                                        <a href="#"><i class="ion-social-facebook"></i></a>
+                                        <a href="https://facebook.com/PureAndPreloved"><i class="ion-social-facebook"></i></a>
                                     </li>
                                     <li class="twitter">
-                                        <a href="#"><i class="ion-social-twitter"></i></a>
+                                        <a href="https://x.com/pureandpreloved"><i class="ion-social-twitter"></i></a>
                                     </li>
                                     <li class="google">
-                                        <a href="#"><i class="ion-social-google"></i></a>
+                                        <a href="https://threads.com/pureandpreloved"><i class="ion-social-google"></i></a>
                                     </li>
                                     <li class="youtube">
-                                        <a href="#"><i class="ion-social-youtube"></i></a>
+                                        <a href="https://pinterest.com/pureandpreloved"><i class="ion-social-pinterest"></i></a>
                                     </li>
                                     <li class="instagram">
-                                        <a href="#"><i class="ion-social-instagram"></i></a>
+                                        <a href="https://instagram.com/pureandpreloved"><i class="ion-social-instagram"></i></a>
                                     </li>
                                 </ul>
                             </div>
@@ -181,11 +181,11 @@
                                 <li><a href="#">Most Populars</a></li>
                                 <li><a href="#">New Arrivals</a></li>
                                 <li><a href="#">Special Products</a></li>
-                                <li><a href="#">Manufacturers</a></li>
+{{--                                <li><a href="#">Manufacturers</a></li>--}}
                                 <li><a href="#">Our Stores</a></li>
                                 <li><a href="#">Shipping</a></li>
                                 <li><a href="#">Payments</a></li>
-                                <li><a href="#">Warantee</a></li>
+{{--                                <li><a href="#">Warantee</a></li>--}}
                                 <li><a href="#">Refunds</a></li>
                                 <li><a href="#">Checkout</a></li>
                                 <li><a href="#">Discount</a></li>
@@ -194,7 +194,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 text-center">
-                        <p class="copy-text">Copyright © <a href="https://hasthemes.com/"> HasThemes</a>. All Rights Reserved</p>
+                        <p class="copy-text">Copyright © <a href="https://pureandpreloved.co.uk/"> Pure and Preloved</a>. All Rights Reserved</p>
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@
     <title>@yield('title', 'Pure and Preloved')</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, follow">
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="description" content="@yield('meta_description', '')">
 
     <!-- Favicon -->
@@ -42,6 +42,8 @@
 
 {{-- Mobile Header --}}
 @include('public.layouts.nav.mobile_header')
+
+@include('public.layouts.nav.mobile_off_canvas')
 
 {{-- Page Content --}}
 <main>

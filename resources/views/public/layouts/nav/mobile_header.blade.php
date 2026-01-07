@@ -14,11 +14,11 @@
             <div class="col-auto">
                 <div class="header-tools justify-content-end">
                     <div class="cart-info d-flex align-self-center">
-                        <a href="{{ url('/') }}#offcanvas-wishlist" class="heart offcanvas-toggle"><i class="lnr lnr-heart"></i><span>Wishlist</span></a>
-                        <a href="{{ url('/') }}#offcanvas-cart" class="bag offcanvas-toggle"><i class="lnr lnr-cart"></i><span>My Cart</span></a>
+                        <a href="#offcanvas-wishlist" class="heart offcanvas-toggle"><i class="lnr lnr-heart"></i><span>Wishlist</span></a>
+                        <a href="#offcanvas-cart" class="bag offcanvas-toggle"><i class="lnr lnr-cart"></i><span>My Cart</span></a>
                     </div>
                     <div class="mobile-menu-toggle">
-                        <a href="{{ url('/') }}#offcanvas-mobile-menu" class="offcanvas-toggle">
+                        <a href="#offcanvas-mobile-menu" class="offcanvas-toggle">
                             <svg viewBox="0 0 800 600">
                                 <path d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200" id="top"></path>
                                 <path d="M300,320 L540,320" id="middle"></path>
