@@ -30,6 +30,13 @@ class CategoryController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        if ($request->parent_id) {
+            $parent = Category::find($request->parent_id);
+            if ($parent && $parent->gender !== 'unisex' && $request->gender !== $parent->gender) {
+                return back()->withErrors(['gender' => 'Gender must match parent category gender.'])->withInput();
+            }
+        }
+
         $slug = Str::slug($request->name);
         $count = Category::where('slug', $slug)->count();
         if ($count > 0) {
@@ -67,6 +74,13 @@ class CategoryController extends Controller
             'gender' => 'required|in:man,women,unisex',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->parent_id) {
+            $parent = Category::find($request->parent_id);
+            if ($parent && $parent->gender !== 'unisex' && $request->gender !== $parent->gender) {
+                return back()->withErrors(['gender' => 'Gender must match parent category gender.'])->withInput();
+            }
+        }
 
         $slug = Str::slug($request->name);
         if ($slug != $category->slug) {

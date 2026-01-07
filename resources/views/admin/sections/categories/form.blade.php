@@ -71,7 +71,7 @@
                                     <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
                                         <option value="">None</option>
                                         @foreach($parents as $parent)
-                                            <option value="{{ $parent->id }}" {{ (old('parent_id', isset($category) ? $category->parent_id : '') == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} - {{$parent->gender??""}}</option>
+                                            <option value="{{ $parent->id }}" data-gender="{{ $parent->gender }}" {{ (old('parent_id', isset($category) ? $category->parent_id : '') == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} - {{$parent->gender??""}}</option>
                                         @endforeach
                                     </select>
                                     @error('parent_id')
@@ -124,4 +124,55 @@
             </div>
         </div>
     </div>
+    @push('js')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const genderSelect = document.getElementById('gender');
+                const parentSelect = document.getElementById('parent_id');
+                const parentOptions = parentSelect.querySelectorAll('option:not([value=""])');
+
+                function filterParents() {
+                    const selectedGender = genderSelect.value;
+
+                    parentOptions.forEach(option => {
+                        const parentGender = option.getAttribute('data-gender');
+                        if (selectedGender === 'unisex' || parentGender === 'unisex' || parentGender === selectedGender) {
+                            option.style.display = '';
+                        } else {
+                            option.style.display = 'none';
+                            if (parentSelect.value === option.value) {
+                                parentSelect.value = ''; // Deselect if hidden
+                            }
+                        }
+                    });
+                }
+
+                function syncGender() {
+                    const selectedParentId = parentSelect.value;
+                    if (selectedParentId) {
+                        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
+                        const parentGender = selectedOption.getAttribute('data-gender');
+                        
+                        // If parent has a specific gender (not unisex), force child to that gender
+                        // Or if child is currently something else that contradicts parent, update it.
+                        // Actually requirement says: "gender will automatically slelect baseed on Parent Category's gender"
+                        
+                        if (parentGender && parentGender !== 'unisex') {
+                             genderSelect.value = parentGender;
+                             // Make gender read-only or disable options?
+                             // Requirement: "i should not select another gender by mistake"
+                             // Let's just update it for now. User can change it back, but then filterParents will run again.
+                        }
+                    }
+                    filterParents(); // Re-filter based on the (potentially new) gender
+                }
+
+                genderSelect.addEventListener('change', filterParents);
+                parentSelect.addEventListener('change', syncGender);
+
+                // Initial run
+                filterParents();
+            });
+        </script>
+    @endpush
 @endsection
