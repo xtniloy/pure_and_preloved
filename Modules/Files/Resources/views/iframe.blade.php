@@ -5,23 +5,22 @@
     @push('js')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Check if running inside iframe
-                if (window.self !== window.top) {
-                    const selectButtons = document.querySelectorAll('.select-file-btn');
-                    selectButtons.forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            const file = {
-                                id: this.dataset.id,
-                                original_name: this.dataset.originalName,
-                                url: this.dataset.url
-                            };
-                            window.parent.postMessage({ type: 'fileSelected', file: file }, '*');
-                        });
-                    });
-                } else {
-                    // Hide select buttons if not in iframe
-                    document.querySelectorAll('.select-file-btn').forEach(el => el.style.display = 'none');
-                }
+                document.addEventListener('click', function(event) {
+                    const btn = event.target.closest('.select-file-btn');
+                    if (!btn) {
+                        return;
+                    }
+
+                    const file = {
+                        id: btn.dataset.id,
+                        original_name: btn.dataset.originalName,
+                        url: btn.dataset.url
+                    };
+
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage({ type: 'fileSelected', file: file }, '*');
+                    }
+                });
             });
         </script>
     @endpush
@@ -305,6 +304,15 @@
                                             <p class="card-text small mb-1 text-truncate fw-medium" title="{{ $file->original_name }}">{{ $file->original_name }}</p>
                                             <p class="card-text small text-muted mb-2">{{ $file->file_size }}</p>
                                             <div class="d-flex gap-1">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-outline-primary flex-fill select-file-btn"
+                                                    data-id="{{ $file->id }}"
+                                                    data-original-name="{{ $file->original_name }}"
+                                                    data-url="{{ $file->url }}"
+                                                >
+                                                    Select
+                                                </button>
                                                 <button type="button" class="btn btn-sm btn-outline-primary flex-fill" onclick="viewFile('{{$file->id}}')" title="View">
                                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -436,7 +444,7 @@
             const uploadQueue = [];
             let activeUploads = 0;
             const MAX_CONCURRENT_UPLOADS = 2;
-            let currentView = 'list';
+            let currentView = 'grid';
 
             // CSRF Token
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -506,9 +514,13 @@
                 localStorage.setItem('fileViewPreference', 'grid');
             });
 
-            // Restore view preference
+            // Restore view preference (default to grid)
             const savedView = localStorage.getItem('fileViewPreference');
             if (savedView === 'grid') {
+                gridViewBtn.click();
+            } else if (savedView === 'list') {
+                listViewBtn.click();
+            } else {
                 gridViewBtn.click();
             }
 
@@ -859,6 +871,7 @@
                             fileData.serverPath = result.path;
                             fileData.db_id = result.fileId;
                             fileData.serverThumbnailUrl = result.thumbnailUrl;
+                            fileData.url = result.url || result.thumbnailUrl || result.path || '';
 
                             updateElementIds(fileData);
 
@@ -879,6 +892,8 @@
                                     console.error('Thumbnail upload failed', e);
                                 }
                             }
+
+                            ensureSelectButtons(fileData);
                         }
                     }
                 } catch (error) {
@@ -964,6 +979,56 @@
                             if (onclick.includes('deleteFile')) btn.setAttribute('onclick', `deleteFile('${fileData.db_id}')`);
                         }
                     });
+                }
+            }
+
+            function ensureSelectButtons(fileData) {
+                const finalId = fileData.db_id || fileData.id;
+                const fileUrl = fileData.serverThumbnailUrl || fileData.serverPath || fileData.url || '';
+                console.log(fileData);
+
+                const listRow = document.getElementById(`file-${finalId}`);
+                if (listRow) {
+                    const container = listRow.querySelector('.d-flex.align-items-center');
+                    if (container) {
+                        let selectWrapper = container.querySelector('.select-file-wrapper');
+                        if (!selectWrapper) {
+                            selectWrapper = document.createElement('div');
+                            selectWrapper.className = 'form-check me-2 select-file-wrapper';
+                            container.prepend(selectWrapper);
+                        }
+
+                        selectWrapper.innerHTML = `
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-outline-primary select-file-btn"
+                                data-id="${finalId}"
+                                data-original-name="${fileData.name}"
+                                data-url="${fileUrl}"
+                            >
+                                Select
+                            </button>
+                        `;
+                    }
+                }
+
+                const gridItem = document.getElementById(`grid-file-${finalId}`);
+                if (gridItem) {
+                    const actions = gridItem.querySelector('.card-body .d-flex.gap-1');
+                    if (actions) {
+                        let selectBtn = actions.querySelector('.select-file-btn');
+                        if (!selectBtn) {
+                            selectBtn = document.createElement('button');
+                            selectBtn.type = 'button';
+                            selectBtn.className = 'btn btn-sm btn-outline-primary flex-fill select-file-btn';
+                            selectBtn.textContent = 'Select';
+                            actions.prepend(selectBtn);
+                        }
+
+                        selectBtn.dataset.id = finalId;
+                        selectBtn.dataset.originalName = fileData.name;
+                        selectBtn.dataset.url = fileUrl;
+                    }
                 }
             }
 
