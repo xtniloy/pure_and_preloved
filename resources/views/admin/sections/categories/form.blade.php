@@ -139,7 +139,7 @@
                     <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
-                    <iframe id="fileManagerIframe" src="{{ route('admin.file.index') }}" style="width: 100%; height: 600px; border: none;"></iframe>
+                    <iframe id="fileManagerIframe" src="{{ route('admin.file.iframe') }}" style="width: 100%; height: 600px; border: none;"></iframe>
                 </div>
             </div>
         </div>
@@ -172,15 +172,15 @@
                         const file = event.data.file;
                         assetIdInput.value = file.id;
                         imageNameInput.value = file.original_name;
-                        
+
                         // Update preview
                         imagePreview.innerHTML = `<img src="${file.url}" alt="${file.original_name}" style="max-height: 100px;">`;
                         btnRemoveImage.style.display = '';
-                        
+
                         fileManagerModal.hide();
                     }
                 });
-                
+
                 const genderSelect = document.getElementById('gender');
                 const parentSelect = document.getElementById('parent_id');
                 const parentOptions = parentSelect.querySelectorAll('option:not([value=""])');
@@ -206,11 +206,11 @@
                     if (selectedParentId) {
                         const selectedOption = parentSelect.options[parentSelect.selectedIndex];
                         const parentGender = selectedOption.getAttribute('data-gender');
-                        
+
                         // If parent has a specific gender (not unisex), force child to that gender
                         // Or if child is currently something else that contradicts parent, update it.
                         // Actually requirement says: "gender will automatically slelect baseed on Parent Category's gender"
-                        
+
                         if (parentGender && parentGender !== 'unisex') {
                              genderSelect.value = parentGender;
                              // Make gender read-only or disable options?

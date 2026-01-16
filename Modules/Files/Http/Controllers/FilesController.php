@@ -26,9 +26,13 @@ class FilesController extends Controller
         $files = Asset::orderBy('id','desc')->get();
 
         return view('files::index',compact('files'));
+    }
 
+    public function iframe()
+    {
+        $files = Asset::orderBy('id','desc')->get();
 
-        //return response()->json(['message' => 'Files module working!']);
+        return view('files::iframe',compact('files'));
     }
 
 
