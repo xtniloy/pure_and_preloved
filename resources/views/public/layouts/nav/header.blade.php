@@ -137,17 +137,23 @@
 
                                                 <!-- RIGHT COLUMN -->
                                                 <div class="mega-menu-right">
-                                                    <a href="{{ url('single-product') }}" class="mega-banner">
-                                                        <img src="{{ asset('assets/images/product-image/5.jpg') }}" alt="">
-                                                    </a>
+                                                    <div class="mega-img">
+                                                        <a href="{{ url('single-product') }}">
+                                                            <img src="{{ asset('assets/images/product-image/5.jpg') }}">
+                                                        </a>
+                                                    </div>
 
-                                                    <a href="{{ url('single-product') }}" class="mega-banner">
-                                                        <img src="{{ asset('assets/images/product-image/6.jpg') }}" alt="">
-                                                    </a>
+                                                    <div class="mega-img">
+                                                        <a href="{{ url('single-product') }}">
+                                                            <img src="{{ asset('assets/images/product-image/6.jpg') }}">
+                                                        </a>
+                                                    </div>
 
-                                                    <a href="{{ url('single-product') }}" class="mega-banner">
-                                                        <img src="{{ asset('assets/images/product-image/7.jpg') }}" alt="">
-                                                    </a>
+                                                    <div class="mega-img">
+                                                        <a href="{{ url('single-product') }}">
+                                                            <img src="{{ asset('assets/images/product-image/7.jpg') }}">
+                                                        </a>
+                                                    </div>
                                                 </div>
 
 
