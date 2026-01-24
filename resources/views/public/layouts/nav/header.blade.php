@@ -118,34 +118,40 @@
                                     <li class="menu-dropdown">
                                         <a href="#">{{ $category->name }} <i class="ion-ios-arrow-down"></i></a>
                                         <ul class="mega-menu-wrap">
-                                            <li>
-                                                <ul>
-                                                    <li class="mega-menu-title"><a href="#">{{ $category->name }} </a></li>
-                                                    @foreach($category->children as $child)
-                                                        <li><a href="#">{{ $child->name }}</a></li>
-                                                    @endforeach
-                                                </ul>
-                                            </li>
-{{--                                            <li>--}}
-{{--                                                <ul>--}}
-{{--                                                    <li class="mega-menu-title"><a href="#">Shop Grid</a></li>--}}
-{{--                                                    <li><a href="{{ url('shop-3-column') }}">Shop Grid 3 Column</a></li>--}}
-{{--                                                    <li><a href="{{ url('shop-4-column') }}">Shop Grid 4 Column</a></li>--}}
-{{--                                                    <li><a href="{{ url('shop-left-sidebar') }}">Shop Grid Left Sidebar</a></li>--}}
-{{--                                                    <li><a href="{{ url('shop-right-sidebar') }}">Shop Grid Right Sidebar</a></li>--}}
-{{--                                                </ul>--}}
-{{--                                            </li>--}}
+                                            <li class="mega-menu-inner">
+                                                <!-- LEFT COLUMN -->
+                                                <div class="mega-menu-left">
+                                                    <ul>
+                                                        <li class="mega-menu-title">
+                                                            <a href="#">{{ $category->name }}</a>
+                                                        </li>
+
+                                                        @foreach($category->children as $child)
+                                                            <li>
+                                                                <a href="#">{{ $child->name }}</a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
 
 
-                                            <li class="w-100">
-                                                <ul class="banner-megamenu-wrapper d-flex">
-                                                    <li class="banner-wrapper mr-30px">
-                                                        <a href="{{ url('single-product') }}"><img src="{{ asset('assets/images/menu-image/banner-menu2.jpg') }}" alt="" /></a>
-                                                    </li>
-                                                    <li class="banner-wrapper">
-                                                        <a href="{{ url('single-product') }}"><img src="{{ asset('assets/images/menu-image/banner-menu3.jpg') }}" alt="" /></a>
-                                                    </li>
-                                                </ul>
+                                                <!-- RIGHT COLUMN -->
+                                                <div class="mega-menu-right">
+                                                    <a href="{{ url('single-product') }}" class="mega-banner">
+                                                        <img src="{{ asset('assets/images/product-image/5.jpg') }}" alt="">
+                                                    </a>
+
+                                                    <a href="{{ url('single-product') }}" class="mega-banner">
+                                                        <img src="{{ asset('assets/images/product-image/6.jpg') }}" alt="">
+                                                    </a>
+
+                                                    <a href="{{ url('single-product') }}" class="mega-banner">
+                                                        <img src="{{ asset('assets/images/product-image/7.jpg') }}" alt="">
+                                                    </a>
+                                                </div>
+
+
+
                                             </li>
 
                                         </ul>
