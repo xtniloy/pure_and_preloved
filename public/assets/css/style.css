@@ -8122,3 +8122,91 @@ offcanvas-menu > ul > li .menu-expand {
       padding: 0px 16px;
   }
 }
+
+/* Allow mega menu to escape li positioning */
+.header-menu {
+    position: relative;
+}
+
+.header-menu .header-horizontal-menu li.menu-dropdown {
+    position: static;
+}
+
+/* Center mega menu on screen */
+.header-menu .header-horizontal-menu li.menu-dropdown ul.mega-menu-wrap {
+    left: 50% !important;
+    transform: translateX(-50%) rotateX(-75deg);
+    transform-origin: top center;
+}
+
+.header-menu .header-horizontal-menu li.menu-dropdown:hover ul.mega-menu-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) rotateX(0deg);
+}
+
+
+
+/*---------------------------*/
+
+
+/*!* Main container layout *!*/
+/*.header-menu .mega-menu-inner {*/
+/*    display: flex;*/
+/*    gap: 30px;*/
+/*}*/
+
+/*!* LEFT MENU COLUMN *!*/
+/*.header-menu .mega-menu-left {*/
+/*    width: 45%;*/
+/*}*/
+
+/*.header-menu .mega-menu-left ul {*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
+
+/*.header-menu .mega-menu-left li {*/
+/*    width: 100%;*/
+/*    padding: 6px 0;*/
+/*}*/
+
+/*!* RIGHT IMAGE COLUMN *!*/
+/*.header-menu .mega-menu-right {*/
+/*    width: 55%;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 20px;*/
+/*}*/
+
+/*.header-menu .mega-menu-right img {*/
+/*    width: 100%;*/
+/*    display: block;*/
+/*    transition: transform 0.3s ease;*/
+/*}*/
+
+/*.header-menu .mega-menu-right img:hover {*/
+/*    transform: scale(1.05);*/
+/*}*/
+
+/*!*!* Reset float behavior inside our custom mega menu layout *!*!*/
+/*!*.header-menu .mega-menu-inner,*!*/
+/*!*.header-menu .mega-menu-inner * {*!*/
+/*!*    float: none !important;*!*/
+/*!*}*!*/
+
+/*!* Ensure right column stacks vertically *!*/
+/*.header-menu .mega-menu-right {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 20px;*/
+/*}*/
+
+/*!*.header-menu .mega-menu-wrap > li {*!*/
+/*!*    width: 100% !important;*!*/
+/*!*}*!*/
+
+/*.header-menu .mega-menu-right a {*/
+/*    display: block;*/
+/*}*/
+
