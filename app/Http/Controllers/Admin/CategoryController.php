@@ -9,16 +9,27 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::with('parent')->latest()->paginate(10);
-        return view('admin.sections.categories.index', compact('categories'));
+        $query = Category::with('parent');
+
+        if ($request->has('parent_id')) {
+            $query->where('parent_id', $request->parent_id);
+            $parent = Category::find($request->parent_id);
+        } else {
+            $query->whereNull('parent_id');
+            $parent = null;
+        }
+
+        $categories = $query->latest()->paginate(10);
+        return view('admin.sections.categories.index', compact('categories', 'parent'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $parents = Category::all();
-        return view('admin.sections.categories.form', compact('parents'));
+        $parent_id = $request->query('parent_id');
+        return view('admin.sections.categories.form', compact('parents', 'parent_id'));
     }
 
     public function store(Request $request)

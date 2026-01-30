@@ -26,13 +26,13 @@ class AppServiceProvider extends ServiceProvider
             $manCategories = Category::where('gender', 'man')
                 ->whereNull('parent_id')
                 ->where('status', true)
-                ->with('children')
+                ->with(['children.asset', 'asset'])
                 ->get();
 
             $womenCategories = Category::where('gender', 'women')
                 ->whereNull('parent_id')
                 ->where('status', true)
-                ->with('children')
+                ->with(['children.asset', 'asset'])
                 ->get();
 
             $activeGender = request('gender', 'women');

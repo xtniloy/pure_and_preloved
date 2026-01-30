@@ -8200,6 +8200,8 @@ offcanvas-menu > ul > li .menu-expand {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
+    max-height: 300px;
+    max-width: max-content;
 }
 
 .header-menu .mega-menu-right .mega-img a {

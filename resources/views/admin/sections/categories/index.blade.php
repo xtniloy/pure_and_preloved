@@ -4,25 +4,41 @@
 @endsection
 @section('content')
     <div class="container-lg px-4">
-        <div class="fs-2 fw-semibold" data-coreui-i18n="dashboard">Category Management</div>
+        <div class="fs-2 fw-semibold" data-coreui-i18n="dashboard">
+            Category Management
+            @if(isset($parent))
+                <small class="text-muted fs-5"> > {{ $parent->name }}</small>
+            @endif
+        </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-4">
                 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}" data-coreui-i18n="home">Home</a>
                 </li>
-                <li class="breadcrumb-item active"><span data-coreui-i18n="dashboard">Category Management</span>
+                <li class="breadcrumb-item active"><a href="{{route('admin.categories.index')}}">Category Management</a>
                 </li>
+                @if(isset($parent))
+                    <li class="breadcrumb-item active">{{ $parent->name }}</li>
+                @endif
             </ol>
         </nav>
         @include('partials.notification')
         <div class="row ">
             <div class="col-12">
                 <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between"><strong>Category list</strong><span
-                            class="small ms-1">Total: {{$categories->total()??0}}</span></div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Category list</strong>
+                            @if(isset($parent))
+                                <span class="badge bg-info ms-2">Parent: {{ $parent->name }}</span>
+                                <a href="{{ $parent->parent_id ? route('admin.categories.index', ['parent_id' => $parent->parent_id]) : route('admin.categories.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Back</a>
+                            @endif
+                        </div>
+                        <span class="small ms-1">Total: {{$categories->total()??0}}</span>
+                    </div>
                     <div class="card-body">
                         <div class="row align-items-center mx-2 mb-3">
                             <div class="col-auto ml-0 ml-lg-auto text-left text-lg-right mt-3 mt-lg-0 ms-auto">
-                                <a href="{{route('admin.categories.create')}}">
+                                <a href="{{route('admin.categories.create', ['parent_id' => isset($parent) ? $parent->id : null])}}">
                                     <button class="btn btn-outline-secondary">
                                         <svg class="icon me-2">
                                             <use
@@ -55,7 +71,9 @@
                                                 @if($category->image)
                                                     <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" style="width: 30px; height: 30px; object-fit: cover; margin-right: 5px;">
                                                 @endif
-                                                {{$category->name}}
+                                                <a href="{{ route('admin.categories.index', ['parent_id' => $category->id]) }}" class="text-decoration-none">
+                                                    {{$category->name}}
+                                                </a>
                                             </td>
                                             <td>{{$category->parent ? $category->parent->name : '-'}}</td>
                                             <td>{{ucfirst($category->gender)}}</td>
@@ -81,7 +99,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-center mt-3">
-                            {{ $categories->links() }}
+                            {{ $categories->appends(request()->query())->links() }}
                         </div>
                     </div>
                 </div>
