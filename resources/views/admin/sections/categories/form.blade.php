@@ -71,7 +71,7 @@
                                     <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
                                         <option value="">None</option>
                                         @foreach($parents as $parent)
-                                            <option value="{{ $parent->id }}" data-gender="{{ $parent->gender }}" {{ (old('parent_id', isset($category) ? $category->parent_id : '') == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} - {{$parent->gender??""}}</option>
+                                            <option value="{{ $parent->id }}" data-gender="{{ $parent->gender }}" {{ (old('parent_id', isset($category) ? $category->parent_id : (isset($parent_id) ? $parent_id : '')) == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} - {{$parent->gender??""}}</option>
                                         @endforeach
                                     </select>
                                     @error('parent_id')
