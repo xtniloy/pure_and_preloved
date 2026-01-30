@@ -98,7 +98,11 @@
                                         <input type="text" class="form-control @error('asset_id') is-invalid @enderror" id="image_name" value="{{ isset($category) && $category->asset ? $category->asset->original_name : '' }}" readonly placeholder="Select or upload an image">
                                         <input type="hidden" id="asset_id" name="asset_id" value="{{ old('asset_id', isset($category) ? $category->asset_id : '') }}">
                                         <button class="btn btn-outline-secondary" type="button" id="btn-file-manager">Choose Image</button>
-                                        <button class="btn btn-outline-danger" type="button" id="btn-remove-image" style="{{ isset($category) && $category->asset ? '' : 'display: none;' }}">Remove</button>
+@if(isset($category) && $category->asset)
+    <button class="btn btn-outline-danger" type="button" id="btn-remove-image">Remove</button>
+@else
+    <button class="btn btn-outline-danger" type="button" id="btn-remove-image" style="display: none;">Remove</button>
+@endif
                                     </div>
                                     <div class="mt-2" id="image-preview">
                                         @if(isset($category) && $category->asset)
