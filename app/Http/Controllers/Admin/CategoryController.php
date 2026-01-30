@@ -21,8 +21,23 @@ class CategoryController extends Controller
             $parent = null;
         }
 
-        $categories = $query->latest()->paginate(10);
+        $categories = $query->orderBy('sort_order', 'asc')->latest()->paginate(30);
         return view('admin.sections.categories.index', compact('categories', 'parent'));
+    }
+
+    public function updateOrder(Request $request)
+    {
+        $request->validate([
+            'categories' => 'required|array',
+            'categories.*.id' => 'required|exists:categories,id',
+            'categories.*.sort_order' => 'required|integer',
+        ]);
+
+        foreach ($request->categories as $categoryData) {
+            Category::where('id', $categoryData['id'])->update(['sort_order' => $categoryData['sort_order']]);
+        }
+
+        return back()->with('success', 'Order updated successfully.');
     }
 
     public function create(Request $request)

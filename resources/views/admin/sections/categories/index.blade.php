@@ -47,15 +47,25 @@
                                         Add
                                     </button>
                                 </a>
+                                <button type="submit" form="orderForm" class="btn btn-outline-primary ms-2">
+                                    <svg class="icon me-2">
+                                        <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-save')}}"></use>
+                                    </svg>
+                                    Save Order
+                                </button>
                             </div>
                         </div>
 
                         <div class="card border">
                             <div class=" p-3 " role="tabpanel">
-                                <table class="table">
+                                <form action="{{ route('admin.categories.update_order') }}" method="POST" id="orderForm">
+                                    @csrf
+                                <table class="table table-hover" id="sortable-table">
                                     <thead>
                                     <tr>
+                                        <th scope="col" style="width: 50px;"></th>
                                         <th scope="col">#</th>
+                                        <th scope="col" style="width: 100px;">Order</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Parent</th>
                                         <th scope="col">Gender</th>
@@ -63,10 +73,19 @@
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="category-list">
                                     @foreach($categories as $k=> $category)
-                                        <tr>
+                                        <tr class="align-middle" data-id="{{ $category->id }}">
+                                            <td class="cursor-grab text-center">
+                                                <svg class="icon text-secondary">
+                                                    <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-cursor-move')}}"></use>
+                                                </svg>
+                                            </td>
                                             <th scope="row">{{$categories->firstItem() + $k}}</th>
+                                            <td>
+                                                <input type="hidden" name="categories[{{ $k }}][id]" value="{{ $category->id }}">
+                                                <input type="number" name="categories[{{ $k }}][sort_order]" value="{{ $category->sort_order }}" class="form-control form-control-sm sort-order-input" style="width: 80px;" readonly>
+                                            </td>
                                             <td>
                                                 @if($category->image)
                                                     <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" style="width: 30px; height: 30px; object-fit: cover; margin-right: 5px;">
@@ -86,16 +105,21 @@
                                             </td>
                                             <td>
                                                 <a href="{{route('admin.categories.edit', $category->id)}}" class="btn btn-sm btn-primary">Edit</a>
-                                                <form action="{{route('admin.categories.destroy', $category->id)}}" method="POST" style="display:inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                                </form>
+                                                {{-- Separate delete button to avoid nested forms --}}
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="if(confirm('Are you sure?')) { document.getElementById('delete-form-{{$category->id}}').submit(); }">Delete</button>
                                             </td>
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
+                                </form>
+                                {{-- Hidden delete forms outside the main form --}}
+                                @foreach($categories as $category)
+                                    <form id="delete-form-{{$category->id}}" action="{{route('admin.categories.destroy', $category->id)}}" method="POST" style="display:none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                @endforeach
                             </div>
                         </div>
                         <div class="d-flex justify-content-center mt-3">
@@ -107,3 +131,37 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var el = document.getElementById('category-list');
+            var sortable = Sortable.create(el, {
+                handle: '.cursor-grab', // Drag handle selector within list items
+                animation: 150,
+                onEnd: function (evt) {
+                    updateSortOrders();
+                }
+            });
+
+            function updateSortOrders() {
+                var rows = document.querySelectorAll('#category-list tr');
+                rows.forEach(function (row, index) {
+                    var input = row.querySelector('.sort-order-input');
+                    if (input) {
+                        input.value = index + 1; // Start order from 1
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        .cursor-grab {
+            cursor: grab;
+        }
+        .cursor-grab:active {
+            cursor: grabbing;
+        }
+    </style>
+@endpush

@@ -17,6 +17,7 @@ class Category extends Model
         'gender',
         'asset_id',
         'status',
+        'sort_order',
     ];
 
     public function asset()
