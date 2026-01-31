@@ -18,9 +18,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
-Route::get('/product', [\App\Http\Controllers\Public\HomeController::class, 'product'])->name('product');
-
-
+// Route::get('/product', [\App\Http\Controllers\Public\HomeController::class, 'product'])->name('product'); // Replaced by dynamic route
 
 
 //-------------------------------------------------------------
@@ -59,3 +57,6 @@ Route::get('/email/verify', [\App\Http\Controllers\User\Auth\AuthController::cla
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [\App\Http\Controllers\User\Auth\AuthController::class, 'logout'])->name('logout');
 });
+
+// Dynamic Product Route - Must be last to avoid conflicts with other 3-segment routes
+Route::get('/{gender}/{category}/{product}', [\App\Http\Controllers\Public\ProductController::class, 'show'])->name('product.show');

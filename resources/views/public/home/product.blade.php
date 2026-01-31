@@ -1,6 +1,10 @@
 @extends('public.layouts.main')
 @section('title')
-    Dashboard
+    {{ $product->meta_title ?? $product->name }}
+@endsection
+@section('meta')
+    <meta name="description" content="{{ $product->meta_description }}">
+    <meta name="keywords" content="{{ $product->meta_keywords }}">
 @endsection
 @section('content')
     <!-- Breadcrumb Area Start -->
@@ -10,8 +14,10 @@
                 <div class="col-md-12">
                     <div class="breadcrumb-content">
                         <ul class="nav">
-                            <li><a href="index.html">Home</a></li>
-                            <li>Single Product</li>
+                            <li><a href="{{ route('home') }}">Home</a></li>
+                            <li><a href="#">{{ ucfirst($gender) }}</a></li>
+                            <li><a href="#">{{ $category->name }}</a></li>
+                            <li>{{ $product->name }}</li>
                         </ul>
                     </div>
                 </div>
@@ -26,65 +32,48 @@
                 <div class="col-xl-6 col-lg-6 col-md-12">
                     <div class="product-details-img product-details-tab">
                         <div class="zoompro-wrap zoompro-2">
-                            <div class="zoompro-border zoompro-span">
-                                <img class="zoompro" src="assets/images/product-image/8.jpg" data-zoom-image="assets/images/product-image/zoom/5.jpg" alt="" />
-                            </div>
-                            <div class="zoompro-border zoompro-span">
-                                <img class="zoompro" src="assets/images/product-image/6.jpg" data-zoom-image="assets/images/product-image/zoom/1.jpg" alt="" />
-                            </div>
-                            <div class="zoompro-border zoompro-span">
-                                <img class="zoompro" src="assets/images/product-image/9.jpg" data-zoom-image="assets/images/product-image/zoom/3.jpg" alt="" />
-                            </div>
-                            <div class="zoompro-border zoompro-span">
-                                <img class="zoompro" src="assets/images/product-image/15.jpg" data-zoom-image="assets/images/product-image/zoom/4.jpg" alt="" />
-                            </div>
-                            <div class="zoompro-border zoompro-span">
-                                <img class="zoompro" src="assets/images/product-image/7.jpg" data-zoom-image="assets/images/product-image/zoom/2.jpg" alt="" />
-                            </div>
+                            @if($product->assets && $product->assets->count() > 0)
+                                @foreach($product->assets as $key => $asset)
+                                    <div class="zoompro-border zoompro-span" style="display: {{ $key == 0 ? 'block' : 'none' }}">
+                                        <img class="zoompro" src="{{ route('file.view', ['fileId' => $asset->id]) }}" data-zoom-image="{{ route('file.view', ['fileId' => $asset->id]) }}" alt="{{ $product->name }}" />
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="zoompro-border zoompro-span">
+                                    <img class="zoompro" src="{{ asset('assets/images/product-image/8.jpg') }}" alt="Placeholder" />
+                                </div>
+                            @endif
                         </div>
                         <div id="gallery" class="product-dec-slider-2">
-                            <div class="single-slide-item">
-                                <img class="img-responsive" data-image="assets/images/product-image/8.jpg" data-zoom-image="assets/images/product-image/zoom/5.jpg" src="assets/images/product-image/8.jpg" alt="" />
-                            </div>
-                            <div class="single-slide-item">
-                                <img class="img-responsive" data-image="assets/images/product-image/6.jpg" data-zoom-image="assets/images/product-image/zoom/1.jpg" src="assets/images/product-image/6.jpg"  alt="" />
-                            </div>
-                            <div class="single-slide-item">
-                                <img class="img-responsive" data-image="assets/images/product-image/9.jpg" data-zoom-image="assets/images/product-image/zoom/3.jpg"  src="assets/images/product-image/9.jpg" alt="" />
-                            </div>
-                            <div class="single-slide-item">
-                                <img class="img-responsive" data-image="assets/images/product-image/15.jpg" data-zoom-image="assets/images/product-image/zoom/4.jpg" src="assets/images/product-image/15.jpg" alt="" />
-                            </div>
-                            <div class="single-slide-item">
-                                <img class="img-responsive" data-image="assets/images/product-image/7.jpg" data-zoom-image="assets/images/product-image/zoom/2.jpg" src="assets/images/product-image/7.jpg" alt="" />
-                            </div>
+                            @if($product->assets && $product->assets->count() > 0)
+                                @foreach($product->assets as $asset)
+                                    <div class="single-slide-item">
+                                        <img class="img-responsive" data-image="{{ route('file.view', ['fileId' => $asset->id]) }}" data-zoom-image="{{ route('file.view', ['fileId' => $asset->id]) }}" src="{{ route('file.view', ['fileId' => $asset->id]) }}" alt="{{ $product->name }}" />
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-12">
                     <div class="product-details-content">
-                        <p class="reference">Reference:<span> demo_17</span></p>
-                        <h2>Originals Kaval Windbr</h2>
-                        <div class="pro-details-rating-wrap">
-                            <div class="rating-product">
-                                <i class="ion-android-star"></i>
-                                <i class="ion-android-star"></i>
-                                <i class="ion-android-star"></i>
-                                <i class="ion-android-star"></i>
-                                <i class="ion-android-star"></i>
-                            </div>
-                            <span class="read-review"><a class="reviews" href="#">Read reviews (1)</a></span>
-                        </div>
+                        <p class="reference">SKU: <span> {{ $product->sku }}</span></p>
+                        <h2>{{ $product->name }}</h2>
                         <div class="pricing-meta">
                             <ul>
-                                <li class="old-price">$23.90</li>
-                                <li class="cuttent-price">$21.51</li>
-                                <li class="discount-flag">save 10%</li>
+                                @if($product->sale_price)
+                                    <li class="old-price">${{ $product->price }}</li>
+                                    <li class="cuttent-price">${{ $product->sale_price }}</li>
+                                    <li class="discount-flag">Sale</li>
+                                @else
+                                    <li class="cuttent-price">${{ $product->price }}</li>
+                                @endif
                             </ul>
                         </div>
                         <div class="pro-details-list">
-                            <p>Galileo, and QZSS, Barometric Altimeter, Optical Heart Sensor, Accelerometer And Gyroscope, Ion-X Strengthened Glass</p>
+                            <p>{{ Str::limit($product->description, 150) }}</p>
                         </div>
+                        
                         <div class="pro-details-quality mt-0px">
                             <div class="cart-plus-minus">
                                 <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1" />
@@ -97,34 +86,31 @@
                             <div class="pro-details-wishlist">
                                 <a href="#"><i class="ion-android-favorite-outline"></i>Add to wishlist</a>
                             </div>
-                            <div class="pro-details-compare">
-                                <a href="#"><i class="ion-ios-shuffle-strong"></i>Add to compare</a>
-                            </div>
                         </div>
                         <div class="pro-details-social-info">
                             <span>Share</span>
                             <div class="social-info">
                                 <ul>
                                     <li>
-                                        <a title="Facebook" href="#"><i class="ion-social-facebook"></i></a>
+                                        <a href="#"><i class="ion-social-facebook"></i></a>
                                     </li>
                                     <li>
-                                        <a title="Twitter" href="#"><i class="ion-social-twitter"></i></a>
+                                        <a href="#"><i class="ion-social-twitter"></i></a>
                                     </li>
                                     <li>
-                                        <a title="Google+" href="#"><i class="ion-social-google"></i></a>
+                                        <a href="#"><i class="ion-social-google"></i></a>
                                     </li>
                                     <li>
-                                        <a title="Instagram" href="#"><i class="ion-social-instagram"></i></a>
+                                        <a href="#"><i class="ion-social-instagram"></i></a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="pro-details-policy">
                             <ul>
-                                <li><img src="assets/images/icons/policy.png" alt="" /><span>Security Policy (Edit With Customer Reassurance Module)</span></li>
-                                <li><img src="assets/images/icons/policy-2.png" alt="" /><span>Delivery Policy (Edit With Customer Reassurance Module)</span></li>
-                                <li><img src="assets/images/icons/policy-3.png" alt="" /><span>Return Policy (Edit With Customer Reassurance Module)</span></li>
+                                <li><img src="{{ asset('assets/images/icons/policy.png') }}" alt="" /><span>Security Policy (Edit With Customer Reassurance Module)</span></li>
+                                <li><img src="{{ asset('assets/images/icons/policy-2.png') }}" alt="" /><span>Delivery Policy (Edit With Customer Reassurance Module)</span></li>
+                                <li><img src="{{ asset('assets/images/icons/policy-3.png') }}" alt="" /><span>Return Policy (Edit With Customer Reassurance Module)</span></li>
                             </ul>
                         </div>
                     </div>
@@ -134,133 +120,28 @@
     </section>
     <!-- Shop details Area End -->
     <!-- product details description area start -->
-    <div class="description-review-area mb-50px bg-light-gray-3 ptb-50px">
+    <div class="description-review-area mb-60px">
         <div class="container">
             <div class="description-review-wrapper">
                 <div class="description-review-topbar nav">
                     <a data-bs-toggle="tab" href="#des-details1">Description</a>
                     <a class="active" data-bs-toggle="tab" href="#des-details2">Product Details</a>
-                    <a data-bs-toggle="tab" href="#des-details3">Reviews (2)</a>
                 </div>
                 <div class="tab-content description-review-bottom">
                     <div id="des-details2" class="tab-pane active">
                         <div class="product-anotherinfo-wrapper">
                             <ul>
-                                <li><span>Weight</span> 400 g</li>
-                                <li><span>Dimensions</span>10 x 10 x 15 cm</li>
-                                <li><span>Materials</span> 60% cotton, 40% polyester</li>
-                                <li><span>Other Info</span> American heirloom jean shorts pug seitan letterpress</li>
+                                <li><span>Weight</span> {{ $product->weight ?? 'N/A' }}</li>
+                                <li><span>Dimensions</span> N/A</li> <!-- Placeholder, add if needed -->
+                                <li><span>Materials</span> {{ $product->material ?? 'N/A' }}</li>
+                                <li><span>Carat</span> {{ $product->carat ?? 'N/A' }}</li>
+                                <li><span>Condition</span> {{ $product->condition ?? 'N/A' }}</li>
                             </ul>
                         </div>
                     </div>
                     <div id="des-details1" class="tab-pane">
                         <div class="product-description-wrapper">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod tempor incididunt</p>
-                            <p>
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commo consequat. Duis aute irure dolor in reprehend in voluptate velit esse
-                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                            </p>
-                        </div>
-                    </div>
-                    <div id="des-details3" class="tab-pane">
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <div class="review-wrapper">
-                                    <div class="single-review">
-                                        <div class="review-img">
-                                            <img src="assets/images/review-image/1.png" alt="" />
-                                        </div>
-                                        <div class="review-content">
-                                            <div class="review-top-wrap">
-                                                <div class="review-left">
-                                                    <div class="review-name">
-                                                        <h4>White Lewis</h4>
-                                                    </div>
-                                                    <div class="rating-product">
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="review-left">
-                                                    <a href="#">Reply</a>
-                                                </div>
-                                            </div>
-                                            <div class="review-bottom">
-                                                <p>
-                                                    Vestibulum ante ipsum primis aucibus orci luctustrices posuere cubilia Curae Suspendisse viverra ed viverra. Mauris ullarper euismod vehicula. Phasellus quam nisi, congue id nulla.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="single-review child-review">
-                                        <div class="review-img">
-                                            <img src="assets/images/review-image/2.png" alt="" />
-                                        </div>
-                                        <div class="review-content">
-                                            <div class="review-top-wrap">
-                                                <div class="review-left">
-                                                    <div class="review-name">
-                                                        <h4>White Lewis</h4>
-                                                    </div>
-                                                    <div class="rating-product">
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="review-left">
-                                                    <a href="#">Reply</a>
-                                                </div>
-                                            </div>
-                                            <div class="review-bottom">
-                                                <p>Vestibulum ante ipsum primis aucibus orci luctustrices posuere cubilia Curae Sus pen disse viverra ed viverra. Mauris ullarper euismod vehicula.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="ratting-form-wrapper pl-50">
-                                    <h3>Add a Review</h3>
-                                    <div class="ratting-form">
-                                        <form action="#">
-                                            <div class="star-box">
-                                                <span>Your rating:</span>
-                                                <div class="rating-product">
-                                                    <i class="ion-android-star"></i>
-                                                    <i class="ion-android-star"></i>
-                                                    <i class="ion-android-star"></i>
-                                                    <i class="ion-android-star"></i>
-                                                    <i class="ion-android-star"></i>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="rating-form-style mb-10">
-                                                        <input placeholder="Name" type="text" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="rating-form-style mb-10">
-                                                        <input placeholder="Email" type="email" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="rating-form-style form-submit">
-                                                        <textarea name="Your Review" placeholder="Message"></textarea>
-                                                        <input type="submit" value="Submit" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            <p>{{ $product->description }}</p>
                         </div>
                     </div>
                 </div>
@@ -275,20 +156,25 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="section-title">
-                        <h2 class="section-heading">12 Other Products In The Same Category:</h2>
+                        <h2 class="section-heading">Other Products In The Same Category:</h2>
                     </div>
                 </div>
             </div>
             <!-- Arrivel slider start -->
             <div class="arrival-slider-wrapper slider-nav-style-1">
+                @foreach($relatedProducts as $related)
                 <div class="slider-single-item">
                     <!-- Single Item -->
                     <article class="list-product text-center">
                         <div class="product-inner">
                             <div class="img-block">
-                                <a href="single-product.html" class="thumbnail">
-                                    <img class="first-img" src="assets/images/product-image/4.jpg" alt="" />
-                                    <img class="second-img" src="assets/images/product-image/5.jpg" alt="" />
+                                <a href="{{ route('product.show', ['gender' => $gender, 'category' => $category->slug, 'product' => $related->slug]) }}" class="thumbnail">
+                                    @if($related->main_image)
+                                        <img class="first-img" src="{{ route('file.view', ['fileId' => $related->main_image->id]) }}" alt="{{ $related->name }}" />
+                                        <img class="second-img" src="{{ route('file.view', ['fileId' => $related->main_image->id]) }}" alt="{{ $related->name }}" />
+                                    @else
+                                        <img class="first-img" src="{{ asset('assets/images/product-image/4.jpg') }}" alt="Placeholder" />
+                                    @endif
                                 </a>
                                 <div class="add-to-link">
                                     <ul>
@@ -301,279 +187,47 @@
                                             <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
                                         </li>
                                         <li>
-                                            <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
+                                            <a href="compare.html" title="Add to Compare"><i class="lnr lnr-sync"></i></a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                             <ul class="product-flag">
-                                <li class="new">-12%</li>
+                                <li class="new">New</li>
                             </ul>
                             <div class="product-decs">
-                                <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                <h2><a href="single-product.html" class="product-link">Edifier H840 Audiophile</a></h2>
+                                <a class="inner-link" href="#"><span>{{ $category->name }}</span></a>
+                                <h2><a href="{{ route('product.show', ['gender' => $gender, 'category' => $category->slug, 'product' => $related->slug]) }}" class="product-link">{{ $related->name }}</a></h2>
+                                <div class="rating-product">
+                                    <i class="ion-android-star"></i>
+                                    <i class="ion-android-star"></i>
+                                    <i class="ion-android-star"></i>
+                                    <i class="ion-android-star"></i>
+                                    <i class="ion-android-star"></i>
+                                </div>
                                 <div class="pricing-meta">
                                     <ul>
-                                        <li class="old-price">$23.90</li>
-                                        <li class="current-price">$21.51</li>
+                                        @if($related->sale_price)
+                                            <li class="old-price">${{ $related->price }}</li>
+                                            <li class="cuttent-price">${{ $related->sale_price }}</li>
+                                            <li class="discount-flag">Sale</li>
+                                        @else
+                                            <li class="cuttent-price">${{ $related->price }}</li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
-                            <div class="cart-btn">
-                                <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="slider-single-item">
-                    <!-- Single Item -->
-                    <article class="list-product text-center">
-                        <div class="product-inner">
-                            <div class="img-block">
-                                <a href="single-product.html" class="thumbnail">
-                                    <img class="first-img" src="assets/images/product-image/8.jpg" alt="" />
-                                    <img class="second-img" src="assets/images/product-image/9.jpg" alt="" />
-                                </a>
-                                <div class="add-to-link">
-                                    <ul>
-                                        <li>
-                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <i class="lnr lnr-magnifier"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="product-decs">
-                                <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                <h2><a href="single-product.html" class="product-link">SoundBox Pro Portable</a></h2>
-                                <div class="pricing-meta">
-                                    <ul>
-                                        <li class="old-price">$23.90</li>
-                                        <li class="current-price">$21.51</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="cart-btn">
+                            <div class="add-to-link-btn">
                                 <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
                             </div>
                         </div>
                     </article>
                     <!-- Single Item -->
                 </div>
-                <div class="slider-single-item">
-                    <!-- Single Item -->
-                    <article class="list-product text-center">
-                        <div class="product-inner">
-                            <div class="img-block">
-                                <a href="single-product.html" class="thumbnail">
-                                    <img class="first-img" src="assets/images/product-image/12.jpg" alt="" />
-                                    <img class="second-img" src="assets/images/product-image/13.jpg" alt="" />
-                                </a>
-                                <div class="add-to-link">
-                                    <ul>
-                                        <li>
-                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <i class="lnr lnr-magnifier"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="product-decs">
-                                <a class="inner-link" href="shop-4-column.html"><span>GRAPHIC CORNER</span></a>
-                                <h2><a href="single-product.html" class="product-link">Naham WiFi HD 1080P</a></h2>
-                                <div class="pricing-meta">
-                                    <ul>
-                                        <li class="current-price">$21.51</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="cart-btn">
-                                <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="slider-single-item">
-                    <!-- Single Item -->
-                    <article class="list-product text-center">
-                        <div class="product-inner">
-                            <div class="img-block">
-                                <a href="single-product.html" class="thumbnail">
-                                    <img class="first-img" src="assets/images/product-image/16.jpg" alt="" />
-                                    <img class="second-img" src="assets/images/product-image/17.jpg" alt="" />
-                                </a>
-                                <div class="add-to-link">
-                                    <ul>
-                                        <li>
-                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <i class="lnr lnr-magnifier"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="product-decs">
-                                <a class="inner-link" href="shop-4-column.html"><span>GRAPHIC CORNER</span></a>
-                                <h2><a href="single-product.html" class="product-link">Polk Audio T30 Speaker</a></h2>
-                                <div class="pricing-meta">
-                                    <ul>
-                                        <li class="current-price">$21.51</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="cart-btn">
-                                <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="slider-single-item">
-                    <!-- Single Item -->
-                    <article class="list-product text-center">
-                        <div class="product-inner">
-                            <div class="img-block">
-                                <a href="single-product.html" class="thumbnail">
-                                    <img class="first-img" src="assets/images/product-image/20.jpg" alt="" />
-                                    <img class="second-img" src="assets/images/product-image/21.jpg" alt="" />
-                                </a>
-                                <div class="add-to-link">
-                                    <ul>
-                                        <li>
-                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <i class="lnr lnr-magnifier"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <ul class="product-flag">
-                            </ul>
-                            <div class="product-decs">
-                                <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                <h2><a href="single-product.html" class="product-link">Numkuda USB 2.0 Gamepad</a></h2>
-                                <div class="pricing-meta">
-                                    <ul>
-                                        <li class="current-price">$21.51</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="cart-btn">
-                                <a href="#"  class="add-to-curt" title="Add to cart">Add to cart</a>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="slider-single-item">
-                    <!-- Single Item -->
-                    <article class="list-product text-center">
-                        <div class="product-inner">
-                            <div class="img-block">
-                                <a href="single-product.html" class="thumbnail">
-                                    <img class="first-img" src="assets/images/product-image/4.jpg" alt="" />
-                                    <img class="second-img" src="assets/images/product-image/5.jpg" alt="" />
-                                </a>
-                                <div class="add-to-link">
-                                    <ul>
-                                        <li>
-                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <i class="lnr lnr-magnifier"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <ul class="product-flag">
-                                <li class="new">-12%</li>
-                            </ul>
-                            <div class="product-decs">
-                                <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                <h2><a href="single-product.html" class="product-link">Edifier H840 Audiophile</a></h2>
-                                <div class="pricing-meta">
-                                    <ul>
-                                        <li class="old-price">$23.90</li>
-                                        <li class="current-price">$21.51</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="cart-btn">
-                                <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                            </div>
-                        </div>
-                    </article>
-                </div>
+                @endforeach
             </div>
             <!-- Arrivel slider end -->
         </div>
     </div>
     <!-- Arrivals Area End -->
-    <!-- News letter area -->
-    <div class="news-letter-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-lg-4 mb-md-30px mb-lm-30px">
-                    <div class="title-newsletter">
-                        <h2>Sign Up For Newsletters</h2>
-                        <p class="des">Be the First to Know. Sign up for newsletter today !</p>
-                    </div>
-                </div>
-                <div class="col-md-12 col-lg-8">
-                    <div id="mc_embed_signup" class="subscribe-form">
-                        <form
-                            id="mc-embedded-subscribe-form"
-                            class="validate"
-                            novalidate=""
-                            target="_blank"
-                            name="mc-embedded-subscribe-form"
-                            method="post"
-                            action="http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef"
-                        >
-                            <div id="mc_embed_signup_scroll" class="mc-form">
-                                <input class="email" type="email" required="" placeholder="Enter your email here.." name="EMAIL" value="" />
-                                <div class="mc-news" aria-hidden="true">
-                                    <input type="text" value="" tabindex="-1" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" />
-                                </div>
-                                <div class="clear">
-                                    <input id="mc-embedded-subscribe" class="button" type="submit" name="subscribe" value="Sign Up" />
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- News letter area  End -->
 @endsection
-
