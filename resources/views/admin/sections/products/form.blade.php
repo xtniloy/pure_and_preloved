@@ -77,16 +77,14 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="category_id" class="form-label">Category <b class="text-danger">*</b></label>
-                                    <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
-                                        <option value="">Select Category</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ (old('category_id', isset($product) ? $product->category_id : '') == $category->id) ? 'selected' : '' }}>{{ $category->name }} ({{ $category->gender }})</option>
-                                        @endforeach
+                                    <label for="product_gender" class="form-label">Gender Selection</label>
+                                    <select class="form-select" id="product_gender" name="product_gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="man">Man</option>
+                                        <option value="women">Woman</option>
+                                        <option value="unisex">Unisex</option>
                                     </select>
-                                    @error('category_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="form-text">Selecting a new gender will clear current category selections.</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="status" class="form-label">Status</label>
@@ -94,6 +92,24 @@
                                         <input class="form-check-input" type="checkbox" id="status" name="status" value="1" {{ old('status', isset($product) && $product->status ? 'checked' : '') }}>
                                         <label class="form-check-label" for="status">Active</label>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="categories" class="form-label">Categories <b class="text-danger">*</b></label>
+                                    <select class="form-select @error('categories') is-invalid @enderror" id="categories" name="categories[]" multiple required style="height: 200px;">
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" data-gender="{{ $category->gender }}"
+                                                {{ (in_array($category->id, old('categories', isset($product) ? $product->categories->pluck('id')->toArray() : []))) ? 'selected' : '' }}>
+                                                {{ $category->parent ? $category->parent->name . ' > ' : '' }}{{ $category->name }} ({{ $category->gender }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="form-text">Hold Ctrl/Cmd to select multiple. Only categories matching the selected gender are shown.</div>
+                                    @error('categories')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -143,22 +159,61 @@
                             </div>
 
                             <h5 class="mt-4 mb-3">Images</h5>
+
+                            <!-- Thumbnail Image -->
                             <div class="mb-3">
-                                <button class="btn btn-outline-secondary mb-2" type="button" id="btn-file-manager-multi">Select Images</button>
-                                <div id="selected-images-container" class="d-flex flex-wrap gap-2">
-                                    @if(isset($product) && $product->images)
-                                        @foreach($product->assets as $asset)
-                                            <div class="position-relative image-item" data-id="{{ $asset->id }}">
-                                                <img src="{{ route('file.view', ['fileId' => $asset->id]) }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
-                                                <button type="button" class="btn-close position-absolute top-0 end-0 bg-white" aria-label="Close" onclick="removeImage(this)"></button>
-                                                <input type="hidden" name="images[]" value="{{ $asset->id }}">
+                                <label class="form-label">Thumbnail Image</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <button class="btn btn-outline-secondary" type="button" id="btn-file-manager-thumbnail">Select Thumbnail</button>
+                                    <div id="thumbnail-container">
+                                        @if(isset($product) && $product->thumbnailImage)
+                                            <div class="position-relative image-item-single">
+                                                <img src="{{ route('admin.file.view', ['fileId' => $product->thumbnail_image_id]) }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                                <button type="button" class="btn-close position-absolute top-0 end-0 bg-white" aria-label="Close" onclick="removeSingleImage(this)"></button>
+                                                <input type="hidden" name="thumbnail_image_id" value="{{ $product->thumbnail_image_id }}">
                                             </div>
-                                        @endforeach
-                                    @endif
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gallery Images -->
+                            <div class="mb-3">
+                                <label class="form-label">Gallery Images</label>
+                                <div>
+                                    <button class="btn btn-outline-secondary mb-2" type="button" id="btn-file-manager-multi">Select Images</button>
+                                    <div id="selected-images-container" class="d-flex flex-wrap gap-2">
+                                        @if(isset($product) && $product->images)
+                                            @foreach($product->assets as $asset)
+                                                <div class="position-relative image-item" data-id="{{ $asset->id }}">
+                                                    <img src="{{ route('admin.file.view', ['fileId' => $asset->id]) }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                                    <button type="button" class="btn-close position-absolute top-0 end-0 bg-white" aria-label="Close" onclick="removeImage(this)"></button>
+                                                    <input type="hidden" name="images[]" value="{{ $asset->id }}">
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
                             <h5 class="mt-4 mb-3">SEO Information</h5>
+                            
+                            <!-- Meta Image -->
+                            <div class="mb-3">
+                                <label class="form-label">Meta Image</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <button class="btn btn-outline-secondary" type="button" id="btn-file-manager-meta">Select Meta Image</button>
+                                    <div id="meta-image-container">
+                                        @if(isset($product) && $product->metaImage)
+                                            <div class="position-relative image-item-single">
+                                                <img src="{{ route('admin.file.view', ['fileId' => $product->meta_image_id]) }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                                <button type="button" class="btn-close position-absolute top-0 end-0 bg-white" aria-label="Close" onclick="removeSingleImage(this)"></button>
+                                                <input type="hidden" name="meta_image_id" value="{{ $product->meta_image_id }}">
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                             <div class="mb-3">
                                 <label for="meta_title" class="form-label">Meta Title</label>
                                 <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{ old('meta_title', isset($product) ? $product->meta_title : '') }}">
@@ -202,11 +257,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             const fileManagerModal = new coreui.Modal(document.getElementById('fileManagerModal'));
             const fileManagerIframe = document.getElementById('fileManagerIframe');
+            
+            // Containers
             const selectedImagesContainer = document.getElementById('selected-images-container');
+            const thumbnailContainer = document.getElementById('thumbnail-container');
+            const metaImageContainer = document.getElementById('meta-image-container');
+
+            // Buttons
             const btnFileManagerMulti = document.getElementById('btn-file-manager-multi');
+            const btnFileManagerThumbnail = document.getElementById('btn-file-manager-thumbnail');
+            const btnFileManagerMeta = document.getElementById('btn-file-manager-meta');
+
+            let currentSelectionMode = 'multi'; // multi, thumbnail, meta
 
             btnFileManagerMulti.addEventListener('click', function() {
-                fileManagerIframe.src = "{{ route('file.iframe') }}"; // Assuming this route exists and supports multiple selection if needed, or we adapt logic
+                currentSelectionMode = 'multi';
+                fileManagerIframe.src = "{{ route('admin.file.iframe') }}";
+                fileManagerModal.show();
+            });
+
+            btnFileManagerThumbnail.addEventListener('click', function() {
+                currentSelectionMode = 'thumbnail';
+                fileManagerIframe.src = "{{ route('admin.file.iframe') }}";
+                fileManagerModal.show();
+            });
+
+            btnFileManagerMeta.addEventListener('click', function() {
+                currentSelectionMode = 'meta';
+                fileManagerIframe.src = "{{ route('admin.file.iframe') }}";
                 fileManagerModal.show();
             });
 
@@ -214,47 +292,164 @@
             window.addEventListener('message', function(event) {
                 if (event.data.type === 'fileSelected') {
                     const file = event.data.file;
-                    
-                    // Check if image is already added
-                    if (document.querySelector(`.image-item[data-id="${file.id}"]`)) {
-                        return;
-                    }
 
-                    // Create image element
-                    const div = document.createElement('div');
-                    div.className = 'position-relative image-item';
-                    div.setAttribute('data-id', file.id);
+                    if (currentSelectionMode === 'multi') {
+                        // Check if image is already added
+                        if (document.querySelector(`.image-item[data-id="${file.id}"]`)) {
+                            return;
+                        }
+
+                        // Create image element
+                        const div = document.createElement('div');
+                        div.className = 'position-relative image-item';
+                        div.setAttribute('data-id', file.id);
+
+                        const img = document.createElement('img');
+                        img.src = file.url;
+                        img.className = 'img-thumbnail';
+                        img.style.width = '100px';
+                        img.style.height = '100px';
+                        img.style.objectFit = 'cover';
+
+                        const closeBtn = document.createElement('button');
+                        closeBtn.type = 'button';
+                        closeBtn.className = 'btn-close position-absolute top-0 end-0 bg-white';
+                        closeBtn.ariaLabel = 'Close';
+                        closeBtn.onclick = function() { removeImage(closeBtn); };
+
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'images[]';
+                        input.value = file.id;
+
+                        div.appendChild(img);
+                        div.appendChild(closeBtn);
+                        div.appendChild(input);
+
+                        selectedImagesContainer.appendChild(div);
+
+                    } else if (currentSelectionMode === 'thumbnail') {
+                        // Replace content
+                        thumbnailContainer.innerHTML = '';
+                        const div = createSingleImageElement(file, 'thumbnail_image_id');
+                        thumbnailContainer.appendChild(div);
+                        fileManagerModal.hide();
+                    } else if (currentSelectionMode === 'meta') {
+                        // Replace content
+                        metaImageContainer.innerHTML = '';
+                        const div = createSingleImageElement(file, 'meta_image_id');
+                        metaImageContainer.appendChild(div);
+                        fileManagerModal.hide();
+                    }
                     
-                    const img = document.createElement('img');
-                    img.src = file.url;
-                    img.className = 'img-thumbnail';
-                    img.style.width = '100px';
-                    img.style.height = '100px';
-                    img.style.objectFit = 'cover';
-                    
-                    const closeBtn = document.createElement('button');
-                    closeBtn.type = 'button';
-                    closeBtn.className = 'btn-close position-absolute top-0 end-0 bg-white';
-                    closeBtn.ariaLabel = 'Close';
-                    closeBtn.onclick = function() { removeImage(closeBtn); };
-                    
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'images[]';
-                    input.value = file.id;
-                    
-                    div.appendChild(img);
-                    div.appendChild(closeBtn);
-                    div.appendChild(input);
-                    
-                    selectedImagesContainer.appendChild(div);
-                    
-                    fileManagerModal.hide();
+                    if (currentSelectionMode !== 'multi') {
+                        fileManagerModal.hide();
+                    }
                 }
             });
         });
 
+        function createSingleImageElement(file, inputName) {
+            const div = document.createElement('div');
+            div.className = 'position-relative image-item-single';
+
+            const img = document.createElement('img');
+            img.src = file.url;
+            img.className = 'img-thumbnail';
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.className = 'btn-close position-absolute top-0 end-0 bg-white';
+            closeBtn.ariaLabel = 'Close';
+            closeBtn.onclick = function() { removeSingleImage(closeBtn); };
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = inputName;
+            input.value = file.id;
+
+            div.appendChild(img);
+            div.appendChild(closeBtn);
+            div.appendChild(input);
+
+            return div;
+        }
+
+        // Gender -> Category Flow
+        const genderSelect = document.getElementById('product_gender');
+        const categoriesSelect = document.getElementById('categories');
+        
+        if (genderSelect && categoriesSelect) {
+            // Initial setup
+            initializeGenderFlow();
+            
+            // Listen for gender changes
+            genderSelect.addEventListener('change', function() {
+                // Clear existing selections when gender changes
+                Array.from(categoriesSelect.options).forEach(opt => opt.selected = false);
+                filterCategories();
+            });
+        }
+
+        function initializeGenderFlow() {
+            // Check if we have old input or existing product gender
+            // If gender is already selected (e.g. by old input), filter based on it.
+            // If not, but we have selected categories, infer gender.
+            
+            const selectedCategories = Array.from(categoriesSelect.selectedOptions);
+            
+            if (genderSelect.value) {
+                // Gender explicitly selected (e.g. old input)
+                filterCategories();
+            } else if (selectedCategories.length > 0) {
+                // Infer from first category
+                const inferredGender = selectedCategories[0].getAttribute('data-gender');
+                if (inferredGender) {
+                    genderSelect.value = inferredGender;
+                    filterCategories();
+                }
+            } else {
+                // No gender, no categories. 
+                // Maybe hide all categories until gender is selected? 
+                // Or show all but disable? User said "based on gender it will show".
+                // Let's hide all initially if no gender selected.
+                filterCategories();
+            }
+        }
+
+        function filterCategories() {
+            const selectedGender = genderSelect.value;
+            
+            Array.from(categoriesSelect.options).forEach(opt => {
+                const optGender = opt.getAttribute('data-gender');
+                
+                if (!selectedGender) {
+                    // No gender selected -> Hide all or Show all?
+                    // User flow: "first i slect the gender...". 
+                    // So we should probably hide everything or disable everything.
+                    opt.hidden = true;
+                    opt.disabled = true;
+                } else {
+                    if (optGender === selectedGender) {
+                        opt.hidden = false;
+                        opt.disabled = false;
+                    } else {
+                        opt.hidden = true;
+                        opt.disabled = true;
+                        opt.selected = false; // Ensure hidden ones aren't selected
+                    }
+                }
+            });
+        }
+
         function removeImage(btn) {
+            btn.parentElement.remove();
+        }
+
+        function removeSingleImage(btn) {
             btn.parentElement.remove();
         }
     </script>

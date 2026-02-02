@@ -13,19 +13,24 @@ class ProductController extends Controller
     {
         // Resolve category
         $category = Category::where('slug', $categorySlug)->firstOrFail();
-        
+
         // Optional: Validate gender matches category gender or is consistent
         // if ($category->gender !== 'unisex' && $category->gender !== $gender) {
         //    abort(404);
         // }
 
+        // Updated query to use relationship
         $product = Product::where('slug', $productSlug)
-            ->where('category_id', $category->id)
+            ->whereHas('categories', function($q) use ($category) {
+                $q->where('categories.id', $category->id);
+            })
             ->where('status', true)
             ->firstOrFail();
 
-        // Get related products (same category)
-        $relatedProducts = Product::where('category_id', $category->id)
+        // Get related products (share at least one category with the current product, ideally the current context category)
+        $relatedProducts = Product::whereHas('categories', function($q) use ($category) {
+                $q->where('categories.id', $category->id);
+            })
             ->where('id', '!=', $product->id)
             ->where('status', true)
             ->take(12)

@@ -327,9 +327,9 @@ class FilesController extends Controller
 
     }
 
-    public function thumbnail(int $fileId)
+    public function thumbnail(Asset $fileId)
     {
-        $file = Asset::findOrFail($fileId);
+        $file = $fileId;
         if (!$file->thumbnail_path) {
             abort(404);
         }

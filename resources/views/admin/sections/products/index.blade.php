@@ -61,14 +61,22 @@
                                             <th scope="row">{{$products->firstItem() + $k}}</th>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ route('file.view', ['fileId' => $product->main_image->id]) }}" alt="{{ $product->name }}" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <img src="{{ route('admin.file.view', ['fileId' => $product->main_image->id]) }}" alt="{{ $product->name }}" style="width: 50px; height: 50px; object-fit: cover;">
                                                 @else
                                                     <span class="text-muted">No Image</span>
                                                 @endif
                                             </td>
                                             <td>{{$product->name}}</td>
                                             <td>{{$product->sku}}</td>
-                                            <td>{{$product->category ? $product->category->name : '-'}}</td>
+                                            <td>
+                                                @if($product->categories->isNotEmpty())
+                                                    {{ $product->categories->pluck('name')->join(', ') }}
+                                                    <br>
+                                                    <small class="text-muted">({{ $product->categories->first()->gender }})</small>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if($product->sale_price)
                                                     <del class="text-muted">${{ $product->price }}</del> <br>
@@ -86,6 +94,16 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex">
+                                                    @if($product->categories->isNotEmpty())
+                                                        <a href="{{ route('product.show', ['gender' => $product->categories->first()->gender, 'category' => $product->categories->first()->slug, 'product' => $product->slug]) }}"
+                                                           class="btn btn-sm btn-outline-info me-2"
+                                                           target="_blank"
+                                                           title="View Public Page">
+                                                            <svg class="icon">
+                                                                <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-eye')}}"></use>
+                                                            </svg>
+                                                        </a>
+                                                    @endif
                                                     <a href="{{route('admin.products.edit', $product->id)}}"
                                                        class="btn btn-sm btn-outline-primary me-2">
                                                         <svg class="icon">

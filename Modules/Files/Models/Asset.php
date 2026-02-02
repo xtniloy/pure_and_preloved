@@ -40,4 +40,20 @@ class Asset extends Model
         }
         return route('admin.file.thumbnail', ['fileId' => $this->id]);
     }
+
+    public function getPublicUrlAttribute(): ?string
+    {
+        if (!$this->stored_name) {
+            return "#";
+        }
+        return asset('storage'.$this->path);
+    }
+
+    public function getPublicThumbnailUrlAttribute(): ?string
+    {
+        if (!$this->thumbnail_path) {
+            return "#";
+        }
+        return route('admin.file.thumbnail', ['fileId' => $this->id]);
+    }
 }

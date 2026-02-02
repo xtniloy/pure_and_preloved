@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Files\Http\Controllers\FilesController;
 
-Route::middleware(['web', 'auth:admin'])->group(function () {})
+Route::middleware(['web', 'auth:admin'])
     ->prefix('admin/files')
     ->group(function () {
         Route::get('/', [FilesController::class, 'index'])->name('admin.file.index');
-        Route::get('/', [FilesController::class, 'iframe'])->name('admin.file.iframe');
+        Route::get('/iframe', [FilesController::class, 'iframe'])->name('admin.file.iframe');
         Route::post('/upload-chunk', [FilesController::class, 'uploadChunk'])
             ->name('admin.file.upload.chunk');
         Route::post('/upload-thumbnail', [FilesController::class, 'uploadThumbnail'])
@@ -19,15 +19,20 @@ Route::middleware(['web', 'auth:admin'])->group(function () {})
 
         Route::get('/view/{fileId?}', [FilesController::class, 'view'])
             ->name('admin.file.view');
-    });
 
-Route::prefix('files')
-    ->group(function () {
         Route::get('/uploaded_asset/{stored_name}', [FilesController::class, 'uploaded_asset'])
             ->name('admin.file.uploaded_asset');
         Route::get('/thumbnail/{fileId}', [FilesController::class, 'thumbnail'])
             ->name('admin.file.thumbnail');
     });
+
+//Route::prefix('files')
+//    ->group(function () {
+//        Route::get('/uploaded_asset/{stored_name}', [FilesController::class, 'uploaded_asset'])
+//            ->name('admin.file.uploaded_asset');
+//        Route::get('/thumbnail/{fileId}', [FilesController::class, 'thumbnail'])
+//            ->name('admin.file.thumbnail');
+//    });
 
 
 /*

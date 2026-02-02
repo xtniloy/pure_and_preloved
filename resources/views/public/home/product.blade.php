@@ -34,8 +34,8 @@
                         <div class="zoompro-wrap zoompro-2">
                             @if($product->assets && $product->assets->count() > 0)
                                 @foreach($product->assets as $key => $asset)
-                                    <div class="zoompro-border zoompro-span" style="display: {{ $key == 0 ? 'block' : 'none' }}">
-                                        <img class="zoompro" src="{{ route('file.view', ['fileId' => $asset->id]) }}" data-zoom-image="{{ route('file.view', ['fileId' => $asset->id]) }}" alt="{{ $product->name }}" />
+                                    <div class="zoompro-border zoompro-span">
+                                        <img class="zoompro" src="{{ $asset->public_url }}" data-zoom-image="{{ $asset->public_url }}" alt="{{ $product->name }}" />
                                     </div>
                                 @endforeach
                             @else
@@ -48,7 +48,7 @@
                             @if($product->assets && $product->assets->count() > 0)
                                 @foreach($product->assets as $asset)
                                     <div class="single-slide-item">
-                                        <img class="img-responsive" data-image="{{ route('file.view', ['fileId' => $asset->id]) }}" data-zoom-image="{{ route('file.view', ['fileId' => $asset->id]) }}" src="{{ route('file.view', ['fileId' => $asset->id]) }}" alt="{{ $product->name }}" />
+                                        <img class="img-responsive" data-image="{{ $asset->public_url }}" data-zoom-image="{{ $asset->public_url }}" src="{{ $asset->public_url}}" alt="{{ $product->name }}" />
                                     </div>
                                 @endforeach
                             @endif
@@ -73,7 +73,7 @@
                         <div class="pro-details-list">
                             <p>{{ Str::limit($product->description, 150) }}</p>
                         </div>
-                        
+
                         <div class="pro-details-quality mt-0px">
                             <div class="cart-plus-minus">
                                 <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1" />
@@ -170,8 +170,8 @@
                             <div class="img-block">
                                 <a href="{{ route('product.show', ['gender' => $gender, 'category' => $category->slug, 'product' => $related->slug]) }}" class="thumbnail">
                                     @if($related->main_image)
-                                        <img class="first-img" src="{{ route('file.view', ['fileId' => $related->main_image->id]) }}" alt="{{ $related->name }}" />
-                                        <img class="second-img" src="{{ route('file.view', ['fileId' => $related->main_image->id]) }}" alt="{{ $related->name }}" />
+                                        <img class="first-img" src="{{ $related->main_image->public_url }}" alt="{{ $related->name }}" />
+                                        <img class="second-img" src="{{ $related->main_image->public_url }}" alt="{{ $related->name }}" />
                                     @else
                                         <img class="first-img" src="{{ asset('assets/images/product-image/4.jpg') }}" alt="Placeholder" />
                                     @endif

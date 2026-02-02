@@ -21,8 +21,10 @@ class Product extends Model
         'material',
         'weight',
         'carat',
-        'category_id',
+        // 'category_id', // Removed column
         'images',
+        'thumbnail_image_id',
+        'meta_image_id',
         'status',
         'meta_title',
         'meta_description',
@@ -36,9 +38,17 @@ class Product extends Model
         'status' => 'boolean',
     ];
 
-    public function category()
+    // New relationship
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'category_product');
+    }
+
+    // Keep accessor for backward compatibility if needed, or update views.
+    // Let's create an accessor that returns the first category to avoid breaking $product->category calls immediately
+    public function getCategoryAttribute()
+    {
+        return $this->categories->first();
     }
     
     // Helper to get asset objects for the stored image IDs
@@ -58,5 +68,15 @@ class Product extends Model
         }
         $firstId = $this->images[0];
         return Asset::find($firstId);
+    }
+
+    public function thumbnailImage()
+    {
+        return $this->belongsTo(Asset::class, 'thumbnail_image_id');
+    }
+
+    public function metaImage()
+    {
+        return $this->belongsTo(Asset::class, 'meta_image_id');
     }
 }
