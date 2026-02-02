@@ -198,26 +198,26 @@
                             <div class="product-decs">
                                 <a class="inner-link" href="#"><span>{{ $category->name }}</span></a>
                                 <h2><a href="{{ route('product.show', ['gender' => $gender, 'category' => $category->slug, 'product' => $related->slug]) }}" class="product-link">{{ $related->name }}</a></h2>
-                                <div class="rating-product">
-                                    <i class="ion-android-star"></i>
-                                    <i class="ion-android-star"></i>
-                                    <i class="ion-android-star"></i>
-                                    <i class="ion-android-star"></i>
-                                    <i class="ion-android-star"></i>
-                                </div>
+{{--                                <div class="rating-product">--}}
+{{--                                    <i class="ion-android-star"></i>--}}
+{{--                                    <i class="ion-android-star"></i>--}}
+{{--                                    <i class="ion-android-star"></i>--}}
+{{--                                    <i class="ion-android-star"></i>--}}
+{{--                                    <i class="ion-android-star"></i>--}}
+{{--                                </div>--}}
                                 <div class="pricing-meta">
                                     <ul>
                                         @if($related->sale_price)
                                             <li class="old-price">${{ $related->price }}</li>
-                                            <li class="cuttent-price">${{ $related->sale_price }}</li>
+                                            <li class="current-price">${{ $related->sale_price }}</li>
                                             <li class="discount-flag">Sale</li>
                                         @else
-                                            <li class="cuttent-price">${{ $related->price }}</li>
+                                            <li class="current-price">${{ $related->price }}</li>
                                         @endif
                                     </ul>
                                 </div>
                             </div>
-                            <div class="add-to-link-btn">
+                            <div class="cart-btn">
                                 <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
                             </div>
                         </div>
