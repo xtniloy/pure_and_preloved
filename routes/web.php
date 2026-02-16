@@ -59,4 +59,4 @@ Route::middleware('auth')->group(function () {
 });
 
 // Dynamic Product Route - Must be last to avoid conflicts with other 3-segment routes
-Route::get('/item/{gender}/{category}/{product}', [\App\Http\Controllers\Public\ProductController::class, 'show'])->name('product.show');
+Route::get('/product/{gender}/{category}/{product}', [\App\Http\Controllers\Public\ProductController::class, 'show'])->name('product.show');
