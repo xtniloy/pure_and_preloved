@@ -73,6 +73,48 @@ class HomeController extends Controller
         ]);
     }
 
+    public function wishlist(Request $request)
+    {
+        $wishlist = $request->session()->get('wishlist', []);
+
+        if (empty($wishlist)) {
+            return view('public.home.wishlist', [
+                'wishlistItems' => [],
+            ]);
+        }
+
+        $productIds = array_keys($wishlist);
+        $products = Product::with(['categories', 'thumbnailImage'])->whereIn('id', $productIds)->get();
+
+        $wishlistItems = [];
+
+        foreach ($products as $product) {
+            $category = $product->categories->first();
+            $gender = $category ? $category->gender : null;
+            $categorySlug = $category ? $category->slug : null;
+
+            $imageUrl = null;
+            if ($product->thumbnailImage) {
+                $imageUrl = $product->thumbnailImage->public_url;
+            } elseif ($product->main_image) {
+                $imageUrl = $product->main_image->public_url;
+            } else {
+                $imageUrl = asset('assets/images/product-image/8.jpg');
+            }
+
+            $wishlistItems[] = [
+                'product' => $product,
+                'gender' => $gender,
+                'category_slug' => $categorySlug,
+                'image_url' => $imageUrl,
+            ];
+        }
+
+        return view('public.home.wishlist', [
+            'wishlistItems' => $wishlistItems,
+        ]);
+    }
+
     public function addToCart(Request $request)
     {
         $data = $request->validate([
@@ -96,6 +138,33 @@ class HomeController extends Controller
         $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.index');
+    }
+
+    public function addToWishlist(Request $request)
+    {
+        $data = $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        $productId = (int) $data['product_id'];
+
+        $wishlist = $request->session()->get('wishlist', []);
+        $wishlist[$productId] = true;
+        $request->session()->put('wishlist', $wishlist);
+
+        return back()->with('success', 'Product added to wishlist.');
+    }
+
+    public function removeFromWishlist(Request $request, Product $product)
+    {
+        $wishlist = $request->session()->get('wishlist', []);
+
+        if (isset($wishlist[$product->id])) {
+            unset($wishlist[$product->id]);
+            $request->session()->put('wishlist', $wishlist);
+        }
+
+        return redirect()->route('wishlist.index');
     }
 
     public function updateCart(Request $request)

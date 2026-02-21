@@ -86,7 +86,13 @@
                             </div>
                             <div class="pro-details-wish-com">
                                 <div class="pro-details-wishlist">
-                                    <a href="wishlist.html"><i class="ion-android-favorite-outline"></i>Add to wishlist</a>
+                                    <form action="{{ route('wishlist.add') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id ?? '' }}">
+                                        <button type="submit" class="btn btn-link p-0">
+                                            <i class="ion-android-favorite-outline"></i>Add to wishlist
+                                        </button>
+                                    </form>
                                 </div>
                                 <div class="pro-details-compare">
                                     <a href="compare.html"><i class="ion-ios-shuffle-strong"></i>Add to compare</a>

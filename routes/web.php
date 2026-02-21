@@ -69,3 +69,7 @@ Route::post('/cart/add', [\App\Http\Controllers\Public\HomeController::class, 'a
 Route::post('/cart/update', [\App\Http\Controllers\Public\HomeController::class, 'updateCart'])->name('cart.update');
 Route::post('/cart/remove/{product}', [\App\Http\Controllers\Public\HomeController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/clear', [\App\Http\Controllers\Public\HomeController::class, 'clearCart'])->name('cart.clear');
+
+Route::get('/wishlist', [\App\Http\Controllers\Public\HomeController::class, 'wishlist'])->name('wishlist.index');
+Route::post('/wishlist/add', [\App\Http\Controllers\Public\HomeController::class, 'addToWishlist'])->name('wishlist.add');
+Route::post('/wishlist/remove/{product}', [\App\Http\Controllers\Public\HomeController::class, 'removeFromWishlist'])->name('wishlist.remove');

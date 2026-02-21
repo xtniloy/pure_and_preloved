@@ -88,7 +88,13 @@
                         </div>
                         <div class="pro-details-wish-com">
                             <div class="pro-details-wishlist">
-                                <a href="#"><i class="ion-android-favorite-outline"></i>Add to wishlist</a>
+                                <form action="{{ route('wishlist.add') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-link p-0">
+                                        <i class="ion-android-favorite-outline"></i>Add to wishlist
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <div class="pro-details-social-info">
@@ -188,7 +194,13 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
+                                            <form action="{{ route('wishlist.add') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $related->id }}">
+                                                <button type="submit" class="btn btn-link p-0" title="Add to Wishlist">
+                                                    <i class="lnr lnr-heart"></i>
+                                                </button>
+                                            </form>
                                         </li>
                                         <li>
                                             <a href="compare.html" title="Add to Compare"><i class="lnr lnr-sync"></i></a>
