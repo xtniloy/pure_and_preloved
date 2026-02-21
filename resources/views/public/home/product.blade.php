@@ -75,12 +75,16 @@
                         </div>
 
                         <div class="pro-details-quality mt-0px">
-                            <div class="cart-plus-minus">
-                                <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1" />
-                            </div>
-                            <div class="pro-details-cart btn-hover">
-                                <a href="#">  Add To Cart</a>
-                            </div>
+                            <form action="{{ route('cart.add') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" type="text" name="quantity" value="1" />
+                                </div>
+                                <div class="pro-details-cart btn-hover">
+                                    <button type="submit">Add To Cart</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="pro-details-wish-com">
                             <div class="pro-details-wishlist">
