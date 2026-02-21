@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index(){
         return view('public.home.index');
-    }
-
-    public function product(){
-        return view('public.home.product');
     }
 
     public function cart(Request $request){
@@ -115,6 +114,51 @@ class HomeController extends Controller
         ]);
     }
 
+    public function checkout(Request $request)
+    {
+        $cart = $request->session()->get('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $productIds = array_keys($cart);
+        $products = Product::whereIn('id', $productIds)->get();
+
+        $items = [];
+        $subtotal = 0;
+
+        foreach ($products as $product) {
+            $quantity = $cart[$product->id]['quantity'] ?? 0;
+            if ($quantity < 1) {
+                continue;
+            }
+
+            $unitPrice = $product->sale_price ?? $product->price;
+            $lineTotal = $unitPrice * $quantity;
+            $subtotal += $lineTotal;
+
+            $items[] = [
+                'product' => $product,
+                'quantity' => $quantity,
+                'unit_price' => $unitPrice,
+                'line_total' => $lineTotal,
+            ];
+        }
+
+        if (empty($items)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $user = Auth::user();
+
+        return view('public.home.checkout', [
+            'items' => $items,
+            'subtotal' => $subtotal,
+            'user' => $user,
+        ]);
+    }
+
     public function addToCart(Request $request)
     {
         $data = $request->validate([
@@ -211,5 +255,67 @@ class HomeController extends Controller
         $request->session()->forget('cart');
 
         return redirect()->route('cart.index');
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $cart = $request->session()->get('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $productIds = array_keys($cart);
+        $products = Product::whereIn('id', $productIds)->get();
+
+        $items = [];
+        $subtotal = 0;
+
+        foreach ($products as $product) {
+            $quantity = $cart[$product->id]['quantity'] ?? 0;
+            if ($quantity < 1) {
+                continue;
+            }
+
+            $unitPrice = $product->sale_price ?? $product->price;
+            $lineTotal = $unitPrice * $quantity;
+            $subtotal += $lineTotal;
+
+            $items[] = [
+                'product' => $product,
+                'quantity' => $quantity,
+                'unit_price' => $unitPrice,
+                'line_total' => $lineTotal,
+            ];
+        }
+
+        if (empty($items)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $data = $request->validate([
+            'billing_first_name' => 'required|string|max:255',
+            'billing_last_name' => 'required|string|max:255',
+            'billing_address' => 'required|string|max:1000',
+            'billing_city' => 'required|string|max:255',
+            'billing_postcode' => 'required|string|max:50',
+            'billing_country' => 'required|string|max:255',
+            'billing_phone' => 'required|string|max:50',
+            'billing_email' => 'required|email:rfc,dns,filter|max:255',
+            'notes' => 'nullable|string|max:2000',
+        ]);
+
+        $user = Auth::user();
+
+        $order = Order::create([
+            'user_id' => $user ? $user->id : null,
+            'reference' => 'ORD-' . strtoupper(Str::random(10)),
+            'total' => $subtotal,
+            'status' => 'pending',
+        ]);
+
+        $request->session()->forget('cart');
+
+        return redirect()->route('user.dashboard')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
     }
 }

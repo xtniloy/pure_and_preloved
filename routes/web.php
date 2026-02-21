@@ -73,3 +73,8 @@ Route::post('/cart/clear', [\App\Http\Controllers\Public\HomeController::class, 
 Route::get('/wishlist', [\App\Http\Controllers\Public\HomeController::class, 'wishlist'])->name('wishlist.index');
 Route::post('/wishlist/add', [\App\Http\Controllers\Public\HomeController::class, 'addToWishlist'])->name('wishlist.add');
 Route::post('/wishlist/remove/{product}', [\App\Http\Controllers\Public\HomeController::class, 'removeFromWishlist'])->name('wishlist.remove');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [\App\Http\Controllers\Public\HomeController::class, 'checkout'])->name('checkout.index');
+    Route::post('/checkout', [\App\Http\Controllers\Public\HomeController::class, 'placeOrder'])->name('checkout.place');
+});
