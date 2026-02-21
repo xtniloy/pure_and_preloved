@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 //class User extends Authenticatable implements MustVerifyEmail
 class User extends Authenticatable implements MustVerifyEmail
@@ -36,6 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'new_email',
         'phone',
+        'billing_address',
+        'delivery_address',
         'password',
         'status',
         'verified_by',
@@ -78,6 +81,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function userAccessToken():HasOne
     {
         return $this->hasOne(UserAccessToken::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
 }

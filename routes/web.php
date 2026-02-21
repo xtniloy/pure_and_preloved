@@ -49,14 +49,23 @@ Route::middleware('guest')
         Route::post('/forget-password', 'AuthController@request_forget_password')->name('request_forget_password');
     });
 
-Route::get('/dashboard', function () {
-    return "Welcome to dashboard. Your email is verified!";
-})->middleware(['auth', 'verified'])->name('user.dashboard');
+Route::get('/dashboard', [\App\Http\Controllers\User\Auth\AuthController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('user.dashboard');
 Route::get('/email/verify', [\App\Http\Controllers\User\Auth\AuthController::class, 'email_not_verify'])->name('verification.notice');
 
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [\App\Http\Controllers\User\Auth\AuthController::class, 'logout'])->name('logout');
+    Route::get('/account/profile', [\App\Http\Controllers\User\Auth\AuthController::class, 'profile'])->name('account.profile');
+    Route::post('/account/profile', [\App\Http\Controllers\User\Auth\AuthController::class, 'updateProfile'])->name('account.profile.update');
+    Route::post('/account/delete', [\App\Http\Controllers\User\Auth\AuthController::class, 'deleteAccount'])->name('account.delete');
 });
 
 // Dynamic Product Route - Must be last to avoid conflicts with other 3-segment routes
 Route::get('/product/{gender}/{category}/{product}', [\App\Http\Controllers\Public\ProductController::class, 'show'])->name('product.show');
+
+Route::get('/cart', [\App\Http\Controllers\Public\HomeController::class, 'cart'])->name('cart.index');
+Route::post('/cart/add', [\App\Http\Controllers\Public\HomeController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/update', [\App\Http\Controllers\Public\HomeController::class, 'updateCart'])->name('cart.update');
+Route::post('/cart/remove/{product}', [\App\Http\Controllers\Public\HomeController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/cart/clear', [\App\Http\Controllers\Public\HomeController::class, 'clearCart'])->name('cart.clear');

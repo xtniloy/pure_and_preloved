@@ -16,6 +16,7 @@ use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -215,6 +216,52 @@ class AuthController extends Controller
 
         return redirect()->route('email.success',$user)
             ->with('success','Forget password email has been send. Check your email.');
+    }
+
+    public function dashboard(): View
+    {
+        $user = Auth::user();
+        $orders = $user->orders()->latest()->get();
+
+        return view('user.account.dashboard', compact('user', 'orders'));
+    }
+
+    public function profile(): View
+    {
+        $user = Auth::user();
+
+        return view('user.account.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email:rfc,dns,filter', 'max:255', 'unique:users,email,' . $user->id],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'billing_address' => ['nullable', 'string', 'max:1000'],
+            'delivery_address' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $user->update($data);
+
+        return redirect()->route('account.profile')->with('success', 'Profile updated successfully.');
+    }
+
+    public function deleteAccount(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            Auth::guard('web')->logout();
+            $user->delete();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        return redirect()->route('home')->with('success', 'Your account has been deleted.');
     }
 
     public function logout(): RedirectResponse
