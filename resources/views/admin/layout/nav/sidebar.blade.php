@@ -26,6 +26,16 @@
             </a>
         </li>
 
+        @if(Route::has('admin.orders.index'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.orders.index')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-file') }}"></use>
+                    </svg><span data-coreui-i18n="file">Orders</span>
+                </a>
+            </li>
+        @endif
+
         @if(Route::has('admin.categories.index'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.categories.index')}}">

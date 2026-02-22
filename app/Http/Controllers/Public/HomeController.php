@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -313,6 +314,18 @@ class HomeController extends Controller
             'total' => $subtotal,
             'status' => 'pending',
         ]);
+
+        foreach ($items as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['product']->id,
+                'product_name' => $item['product']->name,
+                'product_sku' => $item['product']->sku,
+                'unit_price' => $item['unit_price'],
+                'quantity' => $item['quantity'],
+                'line_total' => $item['line_total'],
+            ]);
+        }
 
         $request->session()->forget('cart');
 
