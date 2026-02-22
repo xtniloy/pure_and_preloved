@@ -79,7 +79,7 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <div class="cart-plus-minus">
-                                    <input class="cart-plus-minus-box" type="text" name="quantity" value="1" />
+                                    <input class="cart-plus-minus-box" type="number" name="quantity" value="1" min="1" />
                                 </div>
                                 <div class="pro-details-cart btn-hover">
                                     <button type="submit">Add To Cart</button>
@@ -234,7 +234,12 @@
                                 </div>
                             </div>
                             <div class="cart-btn">
-                                <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
+                                <form action="{{ route('cart.add') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $related->id }}">
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <button type="submit" class="add-to-curt" title="Add to cart">Add to cart</button>
+                                </form>
                             </div>
                         </div>
                     </article>
