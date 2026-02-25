@@ -219,7 +219,7 @@
                                             <div class="add-to-link">
                                                 <ul>
                                                     <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                        <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal" data-product-id="{{ $product->id }}">
                                                             <i class="lnr lnr-magnifier"></i>
                                                         </a>
                                                     </li>
@@ -311,7 +311,7 @@
                                             <div class="add-to-link">
                                                 <ul>
                                                     <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                        <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal" data-product-id="{{ $product->id }}">
                                                             <i class="lnr lnr-magnifier"></i>
                                                         </a>
                                                     </li>

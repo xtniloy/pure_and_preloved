@@ -76,3 +76,5 @@ Route::post('/wishlist/remove/{product}', [\App\Http\Controllers\Public\HomeCont
 
 Route::get('/checkout', [\App\Http\Controllers\Public\HomeController::class, 'checkout'])->name('checkout.index');
 Route::post('/checkout', [\App\Http\Controllers\Public\HomeController::class, 'placeOrder'])->name('checkout.place');
+
+Route::get('/product-quickview/{product}', [\App\Http\Controllers\Public\HomeController::class, 'quickView'])->name('product.quickview');

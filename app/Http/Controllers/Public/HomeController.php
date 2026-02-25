@@ -396,4 +396,15 @@ class HomeController extends Controller
 
         return redirect()->route('home')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
     }
+
+    public function quickView(Product $product)
+    {
+        $product->load(['categories', 'thumbnailImage']);
+        
+        $category = $product->categories->first();
+        $gender = $category ? $category->gender : null;
+        $categorySlug = $category ? $category->slug : null;
+
+        return view('public.modal.quickview_content', compact('product', 'gender', 'categorySlug'));
+    }
 }

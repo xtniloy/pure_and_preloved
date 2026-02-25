@@ -72,6 +72,76 @@
 <!-- Main JS -->
 <script src="{{ asset('assets/js/main.js') }}"></script>
 
+<script>
+$(document).ready(function() {
+    $(document).on('click', '.quick_view', function(e) {
+        e.preventDefault();
+        var productId = $(this).data('product-id');
+        var modalBody = $('#quickview-modal-body');
+
+        if (!productId) return;
+
+        // Show spinner
+        modalBody.html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+        const QUICK_VIEW_URL = "{{ route('product.quickview', ':id') }}";
+
+        $.ajax({
+            url: QUICK_VIEW_URL.replace(':id', productId),
+            method: 'GET',
+            success: function(response) {
+                modalBody.html(response);
+
+                // Re-initialize sliders
+                $('.gallery-top').slick({
+                    autoplay: false,
+                    autoplaySpeed: 1000,
+                    pauseOnHover: true,
+                    arrows: false,
+                    dots: false,
+                    infinite: true,
+                    fade: true,
+                    asNavFor: '.gallery-thumbs',
+                });
+                $('.gallery-thumbs').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    arrows: true,
+                    prevArrow: '<span class="prev"><i class="ion-ios-arrow-left"></i></span>',
+                    nextArrow: '<span class="next"><i class="ion-ios-arrow-right"></i></span>',
+                    dots: false,
+                    infinite: true,
+                    focusOnSelect: true,
+                    loop: true,
+                    asNavFor: '.gallery-top',
+                });
+
+                // Re-initialize cart plus minus
+                var CartPlusMinus = $(".cart-plus-minus");
+                CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
+                CartPlusMinus.append('<div class="inc qtybutton">+</div>');
+                $(".qtybutton").on("click", function() {
+                    var $button = $(this);
+                    var oldValue = $button.parent().find("input").val();
+                    if ($button.text() === "+") {
+                        var newVal = parseFloat(oldValue) + 1;
+                    } else {
+                        if (oldValue > 1) {
+                            var newVal = parseFloat(oldValue) - 1;
+                        } else {
+                            newVal = 1;
+                        }
+                    }
+                    $button.parent().find("input").val(newVal);
+                });
+            },
+            error: function() {
+                modalBody.html('<div class="alert alert-danger">Error loading product details.</div>');
+            }
+        });
+    });
+});
+</script>
+
 @stack('scripts')
 </body>
 </html>
