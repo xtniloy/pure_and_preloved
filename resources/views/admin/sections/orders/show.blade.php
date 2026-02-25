@@ -49,6 +49,24 @@
                             @endif
                         </div>
                     </div>
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            Billing details
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Name:</strong> {{ $order->billing_first_name }} {{ $order->billing_last_name }}</p>
+                            <p><strong>Email:</strong> {{ $order->billing_email }}</p>
+                            <p><strong>Phone:</strong> {{ $order->billing_phone }}</p>
+                            <p><strong>Address:</strong><br>
+                                {{ $order->billing_address }}<br>
+                                {{ $order->billing_city }}, {{ $order->billing_postcode }}<br>
+                                {{ $order->billing_country }}
+                            </p>
+                            @if($order->notes)
+                                <p><strong>Notes:</strong><br>{{ $order->notes }}</p>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card mb-3">

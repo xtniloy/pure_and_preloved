@@ -16,6 +16,15 @@ class Order extends Model
         'reference',
         'total',
         'status',
+        'billing_first_name',
+        'billing_last_name',
+        'billing_address',
+        'billing_city',
+        'billing_postcode',
+        'billing_country',
+        'billing_phone',
+        'billing_email',
+        'notes',
     ];
 
     public function user(): BelongsTo
