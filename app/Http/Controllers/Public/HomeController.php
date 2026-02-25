@@ -400,7 +400,7 @@ class HomeController extends Controller
     public function quickView(Product $product)
     {
         $product->load(['categories', 'thumbnailImage']);
-        
+
         $category = $product->categories->first();
         $gender = $category ? $category->gender : null;
         $categorySlug = $category ? $category->slug : null;

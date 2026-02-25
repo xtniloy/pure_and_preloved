@@ -76,10 +76,10 @@
                                             </td>
                                             <td class="product-subtotal">${{ number_format($item['subtotal'], 2) }}</td>
                                             <td class="product-remove">
-                                                <form action="{{ route('cart.remove', $item['product']->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit"><i class="fa fa-times"></i></button>
-                                                </form>
+                                                @php $pId = $item['product']->id; @endphp
+                                                <a href="#" onclick="event.preventDefault(); document.getElementById('remove-cart-{{ $pId }}').submit();">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -95,14 +95,23 @@
                                     </div>
                                     <div class="cart-clear">
                                         <button type="submit">Update Shopping Cart</button>
-                                        <form action="{{ route('cart.clear') }}" method="POST" style="display:inline-block">
-                                            @csrf
-                                            <button type="submit">Clear Shopping Cart</button>
-                                        </form>
+                                        <a href="#" onclick="event.preventDefault(); document.getElementById('clear-cart-form').submit();">Clear Shopping Cart</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </form>
+
+                    {{-- Hidden forms for Remove and Clear actions (outside main form) --}}
+                    @if(!empty($cartItems))
+                        @foreach($cartItems as $item)
+                            <form id="remove-cart-{{ $item['product']->id }}" action="{{ route('cart.remove', $item['product']->id) }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        @endforeach
+                    @endif
+                    <form id="clear-cart-form" action="{{ route('cart.clear') }}" method="POST" style="display: none;">
+                        @csrf
                     </form>
                     <div class="row">
                         <div class="col-lg-4 col-md-6 mb-lm-30px">
