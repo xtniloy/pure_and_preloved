@@ -6,36 +6,37 @@
             <button class="offcanvas-close">×</button>
         </div>
         <div class="body customScroll">
+            @php
+                $wishlistIds = array_keys(session('wishlist', []));
+                $wishlistProducts = \App\Models\Product::with(['categories', 'thumbnailImage'])->whereIn('id', $wishlistIds)->get();
+            @endphp
             <ul class="minicart-product-list">
-                <li>
-                    <a href="{{ url('single-product') }}" class="image"><img src="{{ asset('assets/images/product-image/1.jpg') }}" alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="{{ url('single-product') }}" class="title">Walnut Cutting Board</a>
-                        <span class="quantity-price">1 x <span class="amount">$100.00</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ url('single-product') }}" class="image"><img src="{{ asset('assets/images/product-image/2.jpg') }}" alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="{{ url('single-product') }}" class="title">Lucky Wooden Elephant</a>
-                        <span class="quantity-price">1 x <span class="amount">$35.00</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ url('single-product') }}" class="image"><img src="{{ asset('assets/images/product-image/3.jpg') }}" alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="{{ url('single-product') }}" class="title">Fish Cut Out Set</a>
-                        <span class="quantity-price">1 x <span class="amount">$9.00</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
+                @forelse($wishlistProducts as $product)
+                    @php
+                        $category = $product->categories->first();
+                        $gender = $category ? $category->gender : 'women';
+                        $categorySlug = $category ? $category->slug : 'all';
+                        $imageUrl = $product->thumbnailImage ? $product->thumbnailImage->public_url : ($product->main_image ? $product->main_image->public_url : asset('assets/images/product-image/1.jpg'));
+                    @endphp
+                    <li>
+                        <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="image"><img src="{{ $imageUrl }}" alt="{{ $product->name }}"></a>
+                        <div class="content">
+                            <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="title">{{ $product->name }}</a>
+                            <span class="quantity-price">1 x <span class="amount">${{ number_format($product->sale_price ?? $product->price, 2) }}</span></span>
+                            <a href="#" class="remove" onclick="event.preventDefault(); document.getElementById('remove-wishlist-{{ $product->id }}').submit();">×</a>
+                            <form id="remove-wishlist-{{ $product->id }}" action="{{ route('wishlist.remove', $product->id) }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @empty
+                    <li>Your wishlist is empty.</li>
+                @endforelse
             </ul>
         </div>
         <div class="foot">
             <div class="buttons">
-                <a href="{{ url('wishlist') }}" class="btn btn-dark btn-hover-primary mt-30px">view wishlist</a>
+                <a href="{{ route('wishlist.index') }}" class="btn btn-dark btn-hover-primary mt-30px">view wishlist</a>
             </div>
         </div>
     </div>
@@ -50,41 +51,49 @@
             <button class="offcanvas-close">×</button>
         </div>
         <div class="body customScroll">
+            @php
+                $cart = session('cart', []);
+                $cartIds = array_keys($cart);
+                $cartProducts = \App\Models\Product::with(['categories', 'thumbnailImage'])->whereIn('id', $cartIds)->get();
+                $cartSubtotal = 0;
+            @endphp
             <ul class="minicart-product-list">
-                <li>
-                    <a href="{{ url('single-product') }}" class="image"><img src="{{ asset('assets/images/product-image/1.jpg') }}" alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="{{ url('single-product') }}" class="title">Walnut Cutting Board</a>
-                        <span class="quantity-price">1 x <span class="amount">$100.00</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ url('/') }}single-product.html" class="image"><img src="{{ asset('assets/images/product-image/2.jpg') }}" alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="{{ url('/') }}single-product.html" class="title">Lucky Wooden Elephant</a>
-                        <span class="quantity-price">1 x <span class="amount">$35.00</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ url('/') }}single-product.html" class="image"><img src="{{ asset('assets/images/product-image/3.jpg') }}" alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="{{ url('/') }}single-product.html" class="title">Fish Cut Out Set</a>
-                        <span class="quantity-price">1 x <span class="amount">$9.00</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
+                @forelse($cartProducts as $product)
+                    @php
+                        $quantity = $cart[$product->id]['quantity'] ?? 1;
+                        $price = $product->sale_price ?? $product->price;
+                        $subtotal = $price * $quantity;
+                        $cartSubtotal += $subtotal;
+                        
+                        $category = $product->categories->first();
+                        $gender = $category ? $category->gender : 'women';
+                        $categorySlug = $category ? $category->slug : 'all';
+                        $imageUrl = $product->thumbnailImage ? $product->thumbnailImage->public_url : ($product->main_image ? $product->main_image->public_url : asset('assets/images/product-image/1.jpg'));
+                    @endphp
+                    <li>
+                        <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="image"><img src="{{ $imageUrl }}" alt="{{ $product->name }}"></a>
+                        <div class="content">
+                            <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="title">{{ $product->name }}</a>
+                            <span class="quantity-price">{{ $quantity }} x <span class="amount">${{ number_format($price, 2) }}</span></span>
+                            <a href="#" class="remove" onclick="event.preventDefault(); document.getElementById('remove-cart-{{ $product->id }}').submit();">×</a>
+                            <form id="remove-cart-{{ $product->id }}" action="{{ route('cart.remove', $product->id) }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @empty
+                    <li>Your cart is empty.</li>
+                @endforelse
             </ul>
         </div>
         <div class="foot">
             <div class="sub-total">
                 <strong>Subtotal :</strong>
-                <span class="amount">$144.00</span>
+                <span class="amount">${{ number_format($cartSubtotal, 2) }}</span>
             </div>
             <div class="buttons">
-                <a href="{{ url('/') }}cart.html" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
-                <a href="{{ url('/') }}checkout.html" class="btn btn-outline-dark current-btn">checkout</a>
+                <a href="{{ route('cart.index') }}" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
+                <a href="{{ route('checkout.index') }}" class="btn btn-outline-dark current-btn">checkout</a>
             </div>
             <p class="minicart-message">Free Shipping on All Orders Over $100!</p>
         </div>

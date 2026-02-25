@@ -14,8 +14,12 @@
             <div class="col-auto">
                 <div class="header-tools justify-content-end">
                     <div class="cart-info d-flex align-self-center">
-                        <a href="#offcanvas-wishlist" class="heart offcanvas-toggle"><i class="lnr lnr-heart"></i><span>Wishlist</span></a>
-                        <a href="#offcanvas-cart" class="bag offcanvas-toggle"><i class="lnr lnr-cart"></i><span>My Cart</span></a>
+                        @php
+                            $wishlistCount = count(session('wishlist', []));
+                            $cartCount = count(session('cart', []));
+                        @endphp
+                        <a href="#offcanvas-wishlist" class="heart offcanvas-toggle" data-count="{{ $wishlistCount }}"><i class="lnr lnr-heart"></i><span>Wishlist</span></a>
+                        <a href="#offcanvas-cart" class="bag offcanvas-toggle" data-count="{{ $cartCount }}"><i class="lnr lnr-cart"></i><span>My Cart</span></a>
                     </div>
                     <div class="mobile-menu-toggle">
                         <a href="#offcanvas-mobile-menu" class="offcanvas-toggle">

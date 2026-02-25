@@ -29,9 +29,13 @@
                         <!--Cart info Start -->
                         <div class="header-tools d-flex">
                             <div class="cart-info d-flex align-self-center">
-                                <a href="#offcanvas-wishlist" class="heart offcanvas-toggle" data-count="5"><i class="lnr lnr-heart"></i><span></span></a>
-                                <a href="#offcanvas-cart" class="heart offcanvas-toggle" data-count="4"><i class="lnr lnr-cart"></i><span></span></a>
-                                <a href="#" class=""><i class="lnr lnr-user" data-count="0"></i><span></span></a>
+                                @php
+                                    $wishlistCount = count(session('wishlist', []));
+                                    $cartCount = count(session('cart', []));
+                                @endphp
+                                <a href="#offcanvas-wishlist" class="heart offcanvas-toggle" data-count="{{ $wishlistCount }}"><i class="lnr lnr-heart"></i><span></span></a>
+                                <a href="#offcanvas-cart" class="heart offcanvas-toggle" data-count="{{ $cartCount }}"><i class="lnr lnr-cart"></i><span></span></a>
+                                <a href="{{ Auth::check() ? route('user.dashboard') : route('login') }}" class=""><i class="lnr lnr-user"></i><span></span></a>
                             </div>
                         </div>
                     </div>
