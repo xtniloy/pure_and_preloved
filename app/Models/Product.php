@@ -26,6 +26,7 @@ class Product extends Model
         'thumbnail_image_id',
         'meta_image_id',
         'status',
+        'is_featured',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -36,6 +37,7 @@ class Product extends Model
         'price' => 'decimal:2',
         'sale_price' => 'decimal:2',
         'status' => 'boolean',
+        'is_featured' => 'boolean',
     ];
 
     // New relationship

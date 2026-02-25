@@ -153,6 +153,9 @@
                             </div>
                         </div>
                         <div class="Place-order mt-25">
+                            @foreach($items as $item)
+                                <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
+                            @endforeach
                             <button class="btn-hover" type="submit">Place Order</button>
                         </div>
                     </div>

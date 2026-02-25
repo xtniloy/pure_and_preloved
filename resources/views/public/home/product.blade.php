@@ -81,8 +81,15 @@
                                 <div class="cart-plus-minus">
                                     <input class="cart-plus-minus-box" type="number" name="quantity" value="1" min="1" />
                                 </div>
-                                <div class="pro-details-cart btn-hover">
+                                <div class="pro-details-cart btn-hover mb-2">
                                     <button type="submit">Add To Cart</button>
+                                </div>
+                            </form>
+                            <form action="{{ route('checkout.index') }}" method="GET">
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <div class="pro-details-cart btn-hover">
+                                    <button type="submit">Order Now</button>
                                 </div>
                             </form>
                         </div>

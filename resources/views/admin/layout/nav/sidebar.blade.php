@@ -54,6 +54,15 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.featured-products.index'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.featured-products.index')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-star') }}"></use>
+                    </svg><span data-coreui-i18n="file">Feature Products</span>
+                </a>
+            </li>
+        @endif
          @if(Route::has('admin.file.index'))
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.file.index')}}">

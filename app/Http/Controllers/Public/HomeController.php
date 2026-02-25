@@ -13,7 +13,14 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index(){
-        return view('public.home.index');
+        $featuredProducts = Product::with(['categories', 'thumbnailImage'])
+            ->where('status', true)
+            ->where('is_featured', true)
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('public.home.index', compact('featuredProducts'));
     }
 
     public function cart(Request $request){
@@ -117,27 +124,21 @@ class HomeController extends Controller
 
     public function checkout(Request $request)
     {
-        $cart = $request->session()->get('cart', []);
-
-        if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
-        }
-
-        $productIds = array_keys($cart);
-        $products = Product::whereIn('id', $productIds)->get();
-
         $items = [];
         $subtotal = 0;
 
-        foreach ($products as $product) {
-            $quantity = $cart[$product->id]['quantity'] ?? 0;
+        if ($request->filled('product_id')) {
+            $productId = (int) $request->input('product_id');
+            $quantity = (int) $request->input('quantity', 1);
             if ($quantity < 1) {
-                continue;
+                $quantity = 1;
             }
+
+            $product = Product::where('id', $productId)->where('status', true)->firstOrFail();
 
             $unitPrice = $product->sale_price ?? $product->price;
             $lineTotal = $unitPrice * $quantity;
-            $subtotal += $lineTotal;
+            $subtotal = $lineTotal;
 
             $items[] = [
                 'product' => $product,
@@ -145,6 +146,31 @@ class HomeController extends Controller
                 'unit_price' => $unitPrice,
                 'line_total' => $lineTotal,
             ];
+        } else {
+            $cart = $request->session()->get('cart', []);
+
+            if (!empty($cart)) {
+                $productIds = array_keys($cart);
+                $products = Product::whereIn('id', $productIds)->get();
+
+                foreach ($products as $product) {
+                    $quantity = $cart[$product->id]['quantity'] ?? 0;
+                    if ($quantity < 1) {
+                        continue;
+                    }
+
+                    $unitPrice = $product->sale_price ?? $product->price;
+                    $lineTotal = $unitPrice * $quantity;
+                    $subtotal += $lineTotal;
+
+                    $items[] = [
+                        'product' => $product,
+                        'quantity' => $quantity,
+                        'unit_price' => $unitPrice,
+                        'line_total' => $lineTotal,
+                    ];
+                }
+            }
         }
 
         if (empty($items)) {
@@ -260,34 +286,60 @@ class HomeController extends Controller
 
     public function placeOrder(Request $request)
     {
-        $cart = $request->session()->get('cart', []);
-
-        if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
-        }
-
-        $productIds = array_keys($cart);
-        $products = Product::whereIn('id', $productIds)->get();
-
         $items = [];
         $subtotal = 0;
 
-        foreach ($products as $product) {
-            $quantity = $cart[$product->id]['quantity'] ?? 0;
-            if ($quantity < 1) {
-                continue;
+        $itemsInput = $request->input('items', []);
+
+        if (!empty($itemsInput) && is_array($itemsInput)) {
+            $productIds = array_map('intval', array_keys($itemsInput));
+            $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
+            foreach ($itemsInput as $productId => $quantity) {
+                $productId = (int) $productId;
+                $quantity = (int) $quantity;
+
+                if ($quantity < 1 || !isset($products[$productId])) {
+                    continue;
+                }
+
+                $product = $products[$productId];
+                $unitPrice = $product->sale_price ?? $product->price;
+                $lineTotal = $unitPrice * $quantity;
+                $subtotal += $lineTotal;
+
+                $items[] = [
+                    'product' => $product,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'line_total' => $lineTotal,
+                ];
             }
+        } else {
+            $cart = $request->session()->get('cart', []);
 
-            $unitPrice = $product->sale_price ?? $product->price;
-            $lineTotal = $unitPrice * $quantity;
-            $subtotal += $lineTotal;
+            if (!empty($cart)) {
+                $productIds = array_keys($cart);
+                $products = Product::whereIn('id', $productIds)->get();
 
-            $items[] = [
-                'product' => $product,
-                'quantity' => $quantity,
-                'unit_price' => $unitPrice,
-                'line_total' => $lineTotal,
-            ];
+                foreach ($products as $product) {
+                    $quantity = $cart[$product->id]['quantity'] ?? 0;
+                    if ($quantity < 1) {
+                        continue;
+                    }
+
+                    $unitPrice = $product->sale_price ?? $product->price;
+                    $lineTotal = $unitPrice * $quantity;
+                    $subtotal += $lineTotal;
+
+                    $items[] = [
+                        'product' => $product,
+                        'quantity' => $quantity,
+                        'unit_price' => $unitPrice,
+                        'line_total' => $lineTotal,
+                    ];
+                }
+            }
         }
 
         if (empty($items)) {
@@ -313,6 +365,15 @@ class HomeController extends Controller
             'reference' => 'ORD-' . strtoupper(Str::random(10)),
             'total' => $subtotal,
             'status' => 'pending',
+            'billing_first_name' => $data['billing_first_name'],
+            'billing_last_name' => $data['billing_last_name'],
+            'billing_address' => $data['billing_address'],
+            'billing_city' => $data['billing_city'],
+            'billing_postcode' => $data['billing_postcode'],
+            'billing_country' => $data['billing_country'],
+            'billing_phone' => $data['billing_phone'],
+            'billing_email' => $data['billing_email'],
+            'notes' => $data['notes'] ?? null,
         ]);
 
         foreach ($items as $item) {
@@ -329,6 +390,10 @@ class HomeController extends Controller
 
         $request->session()->forget('cart');
 
-        return redirect()->route('user.dashboard')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
+        if ($user) {
+            return redirect()->route('user.dashboard')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
+        }
+
+        return redirect()->route('home')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
     }
 }

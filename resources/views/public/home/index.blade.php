@@ -193,431 +193,151 @@
                         </div>
                     </div>
                     <div class="feature-slider-wrapper slider-nav-style-1 d-none d-lg-block">
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/4.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/5.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <form action="{{ route('wishlist.add') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="product_id" value="{{ $product->id ?? '' }}">
-                                                        <button type="submit" class="btn btn-link p-0" title="Add to Wishlist">
-                                                            <i class="lnr lnr-heart"></i>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
+                        @foreach($featuredProducts as $product)
+                            @php
+                                $category = $product->categories->first();
+                                $gender = $category ? $category->gender : null;
+                                $categorySlug = $category ? $category->slug : null;
+                                $imageUrl = null;
+                                if ($product->thumbnailImage) {
+                                    $imageUrl = $product->thumbnailImage->public_url;
+                                } elseif ($product->main_image) {
+                                    $imageUrl = $product->main_image->public_url;
+                                } else {
+                                    $imageUrl = asset('assets/images/product-image/4.jpg');
+                                }
+                            @endphp
+                            <div class="slider-single-item">
+                                <!-- Single Item -->
+                                <article class="list-product text-center mb-30px">
+                                    <div class="product-inner">
+                                        <div class="img-block">
+                                            <a href="{{ $gender && $categorySlug ? route('product.show', [$gender, $categorySlug, $product->slug]) : '#' }}" class="thumbnail">
+                                                <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                                <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                            </a>
+                                            <div class="add-to-link">
+                                                <ul>
+                                                    <li>
+                                                        <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                            <i class="lnr lnr-magnifier"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('wishlist.add') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                            <button type="submit" class="btn btn-link p-0" title="Add to Wishlist">
+                                                                <i class="lnr lnr-heart"></i>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" title="Add to compare"><i class="lnr lnr-sync"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <ul class="product-flag">
+                                        </ul>
+                                        <div class="product-decs">
+                                            <a class="inner-link" href="{{ $gender ? '#' : '#' }}"><span>Pure and Preloved</span></a>
+                                            <h2><a href="{{ $gender && $categorySlug ? route('product.show', [$gender, $categorySlug, $product->slug]) : '#' }}" class="product-link">{{ $product->name }}</a></h2>
+                                            <div class="pricing-meta">
+                                                <ul>
+                                                    @if($product->sale_price)
+                                                        <li class="old-price">${{ number_format($product->price, 2) }}</li>
+                                                        <li class="current-price">${{ number_format($product->sale_price, 2) }}</li>
+                                                    @else
+                                                        <li class="current-price">${{ number_format($product->price, 2) }}</li>
+                                                    @endif
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="cart-btn">
+                                            <form action="{{ route('cart.add') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <button type="submit" class="add-to-curt" title="Add to cart">Add to cart</button>
+                                            </form>
                                         </div>
                                     </div>
-                                    <ul class="product-flag">
-                                        <li class="new">-12%</li>
-                                    </ul>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>Pure and Preloved</span></a>
-                                        <h2><a href="single-product.html" class="product-link">CANDY Sky Silver CZ Flower Earrings</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="old-price">$23.90</li>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="cart-btn">
-                                        <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                                    </div>
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/8.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/9.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>Pure and Preloved</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Silver Hearts Paw Print Engraving T-Bar Necklace</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="old-price">$23.90</li>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="cart-btn">
-                                        <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                                    </div>
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/12.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/13.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>Pure and Preloved</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Connect Silver Drop Stone Charm Pendant</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="cart-btn">
-                                        <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                                    </div>
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/16.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/17.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>Pure and Preloved</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Connect Gold Blue Stone Charm Pendant</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="cart-btn">
-                                        <a href="#" class="add-to-curt" title="Add to cart">Add to cart</a>
-                                    </div>
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/20.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/21.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <ul class="product-flag">
-                                    </ul>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>Pure and Preloved</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Gold and Silver Perl Stone Charm Pendant</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="cart-btn">
-                                        <a href="#"  class="add-to-curt" title="Add to cart">Add to cart</a>
-                                    </div>
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
+                                </article>
+                                <!-- Single Item -->
+                            </div>
+                        @endforeach
                     </div>
 
                     <!-- only mobile view -->
 
                     <div class="product-show-mobile d-block d-lg-none">
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/4.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/5.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
+                        @foreach($featuredProducts as $product)
+                            @php
+                                $category = $product->categories->first();
+                                $gender = $category ? $category->gender : null;
+                                $categorySlug = $category ? $category->slug : null;
+                                $imageUrl = null;
+                                if ($product->thumbnailImage) {
+                                    $imageUrl = $product->thumbnailImage->public_url;
+                                } elseif ($product->main_image) {
+                                    $imageUrl = $product->main_image->public_url;
+                                } else {
+                                    $imageUrl = asset('assets/images/product-image/4.jpg');
+                                }
+                            @endphp
+                            <div class="slider-single-item">
+                                <!-- Single Item -->
+                                <article class="list-product text-center mb-30px">
+                                    <div class="product-inner">
+                                        <div class="img-block">
+                                            <a href="{{ $gender && $categorySlug ? route('product.show', [$gender, $categorySlug, $product->slug]) : '#' }}" class="thumbnail">
+                                                <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                                <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                            </a>
+                                            <div class="add-to-link">
+                                                <ul>
+                                                    <li>
+                                                        <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                            <i class="lnr lnr-magnifier"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('wishlist.add') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                            <button type="submit" class="btn btn-link p-0" title="Add to Wishlist">
+                                                                <i class="lnr lnr-heart"></i>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" title="Add to compare"><i class="lnr lnr-sync"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <ul class="product-flag">
-                                        <li class="new">-12%</li>
-                                    </ul>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Edifier H840 Audiophile</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="old-price">$23.90</li>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
+                                        <ul class="product-flag">
+                                        </ul>
+                                        <div class="product-decs">
+                                            <a class="inner-link" href="{{ $gender ? '#' : '#' }}"><span>Pure and Preloved</span></a>
+                                            <h2><a href="{{ $gender && $categorySlug ? route('product.show', [$gender, $categorySlug, $product->slug]) : '#' }}" class="product-link">{{ $product->name }}</a></h2>
+                                            <div class="pricing-meta">
+                                                <ul>
+                                                    @if($product->sale_price)
+                                                        <li class="old-price">${{ number_format($product->price, 2) }}</li>
+                                                        <li class="current-price">${{ number_format($product->sale_price, 2) }}</li>
+                                                    @else
+                                                        <li class="current-price">${{ number_format($product->price, 2) }}</li>
+                                                    @endif
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/8.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/9.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </div>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                        <h2><a href="single-product.html" class="product-link">SoundBox Pro Portable</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="old-price">$23.90</li>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/12.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/13.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>GRAPHIC CORNER</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Naham WiFi HD 1080P</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/16.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/17.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>GRAPHIC CORNER</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Polk Audio T30 Speaker</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
-                        <div class="slider-single-item">
-                            <!-- Single Item -->
-                            <article class="list-product text-center mb-30px">
-                                <div class="product-inner">
-                                    <div class="img-block">
-                                        <a href="single-product.html" class="thumbnail">
-                                            <img class="first-img" src="assets/images/product-image/20.jpg" alt="" />
-                                            <img class="second-img" src="assets/images/product-image/21.jpg" alt="" />
-                                        </a>
-                                        <div class="add-to-link">
-                                            <ul>
-                                                <li>
-                                                    <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                        <i class="lnr lnr-magnifier"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="wishlist.html" title="Add to Wishlist"><i class="lnr lnr-heart"></i></a>
-                                                </li>
-                                                <li>
-                                                    <a href="compare.html" title="Add to compare"><i class="lnr lnr-sync"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <ul class="product-flag">
-                                    </ul>
-                                    <div class="product-decs">
-                                        <a class="inner-link" href="shop-4-column.html"><span>STUDIO DESIGN</span></a>
-                                        <h2><a href="single-product.html" class="product-link">Numkuda USB 2.0 Gamepad</a></h2>
-                                        <div class="pricing-meta">
-                                            <ul>
-                                                <li class="current-price">$21.51</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </article>
-                            <!-- Single Item -->
-                        </div>
+                                </article>
+                                <!-- Single Item -->
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
