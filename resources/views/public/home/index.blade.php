@@ -224,12 +224,18 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('wishlist.add') }}" method="POST">
+                                                        <a href="#"
+                                                           title="Add to Wishlist"
+                                                           onclick="event.preventDefault(); document.getElementById('wishlist-{{ $product->id }}').submit();">
+                                                            <i class="lnr lnr-heart"></i>
+                                                        </a>
+
+                                                        <form id="wishlist-{{ $product->id }}"
+                                                              action="{{ route('wishlist.add') }}"
+                                                              method="POST"
+                                                              class="d-none">
                                                             @csrf
                                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                            <button type="submit" class="btn btn-link p-0" title="Add to Wishlist">
-                                                                <i class="lnr lnr-heart"></i>
-                                                            </button>
                                                         </form>
                                                     </li>
                                                     <li>
@@ -255,10 +261,18 @@
                                             </div>
                                         </div>
                                         <div class="cart-btn">
-                                            <form action="{{ route('cart.add') }}" method="POST">
+
+                                            <a href="#" class="add-to-curt"
+                                               onclick="event.preventDefault(); document.getElementById('add-to-curt-{{ $product->id }}').submit();"
+                                               title="Add to cart">Add to cart</a>
+
+
+                                            <form id="add-to-curt-{{ $product->id }}"
+                                                  action="{{ route('cart.add') }}"
+                                                  method="POST"
+                                                  class="d-none">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                <button type="submit" class="add-to-curt" title="Add to cart">Add to cart</button>
                                             </form>
                                         </div>
                                     </div>
