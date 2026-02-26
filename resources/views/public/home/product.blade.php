@@ -75,24 +75,27 @@
                         </div>
 
                         <div class="pro-details-quality mt-0px">
-                            <form action="{{ route('cart.add') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <div class="cart-plus-minus">
-                                    <input class="cart-plus-minus-box" type="number" name="quantity" value="1" min="1" />
-                                </div>
-                                <div class="pro-details-cart btn-hover mb-2">
-                                    <button type="submit">Add To Cart</button>
-                                </div>
-                            </form>
-                            <form action="{{ route('checkout.index') }}" method="GET">
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <input type="hidden" name="quantity" value="1">
-                                <div class="pro-details-cart btn-hover">
-                                    <button type="submit">Order Now</button>
-                                </div>
-                            </form>
+                            <div class="cart-plus-minus">
+                                <input class="cart-plus-minus-box" type="text" name="qtybutton" id="product_quantity_display" value="1" />
+                            </div>
+                            <div class="pro-details-cart btn-hover">
+                                <a href="#" onclick="event.preventDefault(); submitAddToCart();">Add To Cart</a>
+                            </div>
+                            <div class="pro-details-cart btn-hover ms-2">
+                                <a href="#" onclick="event.preventDefault(); submitOrderNow();">Order Now</a>
+                            </div>
                         </div>
+
+                        <form id="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" class="d-none">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" id="add_to_cart_quantity" value="1">
+                        </form>
+
+                        <form id="order-now-form" action="{{ route('checkout.index') }}" method="GET" class="d-none">
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" id="order_now_quantity" value="1">
+                        </form>
                         <div class="pro-details-wish-com">
                             <div class="pro-details-wishlist">
 
@@ -266,3 +269,19 @@
     </div>
     <!-- Arrivals Area End -->
 @endsection
+
+@push('scripts')
+<script>
+    function submitAddToCart() {
+        var qty = $('#product_quantity_display').val();
+        $('#add_to_cart_quantity').val(qty);
+        $('#add-to-cart-form').submit();
+    }
+
+    function submitOrderNow() {
+        var qty = $('#product_quantity_display').val();
+        $('#order_now_quantity').val(qty);
+        $('#order-now-form').submit();
+    }
+</script>
+@endpush
