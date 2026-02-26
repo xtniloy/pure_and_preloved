@@ -6,7 +6,7 @@
                     <div class="col-md-6 col-lg-4 mb-md-30px mb-lm-30px">
                         <div class="single-wedge">
                             <div class="footer-logo">
-                                <a href="index.html"><img class="img-responsive-footer" src="assets/images/logo/logo.jpg.png" alt="logo.jpg" /></a>
+                                <a href="{{route('home')}}"><img class="img-responsive-footer" src="{{asset('assets/images/logo/logo.jpg.png')}}" alt="Pure & Preloved" /></a>
                             </div>
                             <p class="text-infor">Preloved Jewellery | Gold Diamond Silver | Rings Pendants Bracelets Earrings | Free Nationwide Delivery | Evri & Royal Mail 📮🇬🇧</p>
                             <div class="need_help">
@@ -22,9 +22,9 @@
                             <div class="footer-links">
                                 <ul>
                                     <li><a href="#">Delivery</a></li>
-                                    <li><a href="about.html">About Us</a></li>
+                                    <li><a href="#">About Us</a></li>
                                     <li><a href="#">Secure Payment</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
+                                    <li><a href="#">Contact Us</a></li>
                                     <li><a href="#">Sitemap</a></li>
                                     <li><a href="#">Stores</a></li>
                                 </ul>
@@ -40,8 +40,8 @@
                                     <li><a href="#">Prices Drop</a></li>
                                     <li><a href="#">New Products</a></li>
                                     <li><a href="#">Best Sales</a></li>
-                                    <li><a href="login.html">Login</a></li>
-                                    <li><a href="my-account.html">My Account</a></li>
+                                    <li><a href="{{route('login')}}">Login</a></li>
+                                    <li><a href="{{route('user.dashboard')}}">My Account</a></li>
                                 </ul>
                             </div>
                         </div>
