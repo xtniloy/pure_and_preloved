@@ -95,12 +95,19 @@
                         </div>
                         <div class="pro-details-wish-com">
                             <div class="pro-details-wishlist">
-                                <form action="{{ route('wishlist.add') }}" method="POST">
+
+                                <a href="#"
+                                   title="Add to Wishlist"
+                                   onclick="event.preventDefault(); document.getElementById('wishlist-{{ $product->id }}').submit();">
+                                    <i class="lnr lnr-heart"></i> Add to wishlist
+                                </a>
+
+                                <form id="wishlist-{{ $product->id }}"
+                                      action="{{ route('wishlist.add') }}"
+                                      method="POST"
+                                      class="d-none">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <button type="submit" class="btn btn-link p-0">
-                                        <i class="ion-android-favorite-outline"></i>Add to wishlist
-                                    </button>
                                 </form>
                             </div>
                         </div>
