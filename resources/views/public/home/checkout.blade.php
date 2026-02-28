@@ -169,6 +169,54 @@
                                 <a class="btn-hover" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Place Order</a>
                             </div>
                         </div>
+
+                        <!-- Added Coupon Code & Shipping Estimate -->
+                        <div class="discount-code-wrapper mt-30px">
+                            <div class="title-wrap">
+                                <h4 class="cart-bottom-title section-bg-gray">Use Coupon Code</h4>
+                            </div>
+                            <div class="discount-code">
+                                <p>Enter your coupon code if you have one.</p>
+                                <div class="d-flex">
+                                    <input type="text" name="coupon_code" placeholder="Coupon Code" style="height: 45px; border: 1px solid #ebebeb; padding: 0 15px; width: 100%;" />
+                                    <button class="cart-btn-2 ms-2" type="button" style="white-space: nowrap; height: 45px; background-color: #242424; color: #fff; border: none; padding: 0 20px; font-weight: 700; text-transform: uppercase;">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cart-tax mt-30px">
+                            <div class="title-wrap">
+                                <h4 class="cart-bottom-title section-bg-gray">Estimate Shipping And Tax</h4>
+                            </div>
+                            <div class="tax-wrapper">
+                                <p>Enter your destination to get a shipping estimate.</p>
+                                <div class="tax-select-wrapper">
+                                    <div class="tax-select">
+                                        <label>* Country</label>
+                                        <select class="email s-email s-wid">
+                                            <option>United Kingdom</option>
+                                            <option>United States</option>
+                                            <option>Canada</option>
+                                            <option>Bangladesh</option>
+                                        </select>
+                                    </div>
+                                    <div class="tax-select">
+                                        <label>* Region / State</label>
+                                        <select class="email s-email s-wid">
+                                            <option>London</option>
+                                            <option>New York</option>
+                                            <option>Ontario</option>
+                                            <option>Dhaka</option>
+                                        </select>
+                                    </div>
+                                    <div class="tax-select mb-25px">
+                                        <label>* Zip/Postal Code</label>
+                                        <input type="text" placeholder="Zip Code" />
+                                    </div>
+                                    <button class="cart-btn-2" type="button" style="background-color: #242424; color: #fff; border: none; padding: 10px 20px; font-weight: 700; text-transform: uppercase;">Get A Quote</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- END RIGHT COLUMN -->
 
