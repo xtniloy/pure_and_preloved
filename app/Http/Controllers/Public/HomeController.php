@@ -390,11 +390,14 @@ class HomeController extends Controller
 
         $request->session()->forget('cart');
 
-        if ($user) {
-            return redirect()->route('user.dashboard')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
-        }
+        return redirect()->route('order.success', $order->reference);
+    }
 
-        return redirect()->route('home')->with('success', 'Your order has been placed. Reference: ' . $order->reference);
+    public function orderSuccess($reference)
+    {
+        $order = Order::with('items.product')->where('reference', $reference)->firstOrFail();
+
+        return view('public.home.order_success', compact('order'));
     }
 
     public function quickView(Product $product)

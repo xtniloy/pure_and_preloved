@@ -166,7 +166,7 @@
                                 @foreach($items as $item)
                                     <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
                                 @endforeach
-                                <button class="btn-hover" type="submit">Place Order</button>
+                                <a class="btn-hover" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Place Order</a>
                             </div>
                         </div>
                     </div>
