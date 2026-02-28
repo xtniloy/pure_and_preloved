@@ -82,7 +82,9 @@
                                 <a href="#" onclick="event.preventDefault(); submitAddToCart();">Add To Cart</a>
                             </div>
                             <div class="pro-details-cart btn-hover ms-2">
-                                <a href="#" onclick="event.preventDefault(); submitOrderNow();">Order Now</a>
+                                <a href="#"
+                                   style="background: var(--secondary-color);"
+                                   onclick="event.preventDefault(); submitOrderNow();">Order Now</a>
                             </div>
                         </div>
 
@@ -206,17 +208,24 @@
                                 <div class="add-to-link">
                                     <ul>
                                         <li>
-                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal" data-product-id="{{ $related->id }}">
+                                            <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#quickview-modal" data-product-id="{{ $related->id }}">
                                                 <i class="lnr lnr-magnifier"></i>
                                             </a>
                                         </li>
                                         <li>
-                                            <form action="{{ route('wishlist.add') }}" method="POST">
+
+                                            <a href="#"
+                                               title="Add to Wishlist"
+                                               onclick="event.preventDefault(); document.getElementById('wishlist-{{ $related->id }}').submit();">
+                                                <i class="lnr lnr-heart"></i>
+                                            </a>
+
+                                            <form id="wishlist-{{ $related->id }}"
+                                                  action="{{ route('wishlist.add') }}"
+                                                  method="POST"
+                                                  class="d-none">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $related->id }}">
-                                                <button type="submit" class="btn btn-link p-0" title="Add to Wishlist">
-                                                    <i class="lnr lnr-heart"></i>
-                                                </button>
                                             </form>
                                         </li>
                                         <li>
@@ -251,11 +260,17 @@
                                 </div>
                             </div>
                             <div class="cart-btn">
-                                <form action="{{ route('cart.add') }}" method="POST">
+                                <a href="#" class="add-to-curt"
+                                   onclick="event.preventDefault(); document.getElementById('add-to-curt-{{ $related->id }}').submit();"
+                                   title="Add to cart">Add to cart</a>
+
+
+                                <form id="add-to-curt-{{ $related->id }}"
+                                      action="{{ route('cart.add') }}"
+                                      method="POST"
+                                      class="d-none">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $related->id }}">
-                                    <input type="hidden" name="quantity" value="1" />
-                                    <button type="submit" class="add-to-curt" title="Add to cart">Add to cart</button>
                                 </form>
                             </div>
                         </div>
