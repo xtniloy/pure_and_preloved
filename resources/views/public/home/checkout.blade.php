@@ -21,13 +21,16 @@
         </div>
     </div>
     <!-- Breadcrumb Area End-->
+
     <!-- checkout area start -->
     <div class="checkout-area mt-50px mb-40px">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-7">
-                    <form method="POST" action="{{ route('checkout.place') }}">
-                        @csrf
+            <form method="POST" action="{{ route('checkout.place') }}">
+                @csrf
+                <div class="row">
+
+                    <!-- LEFT COLUMN: Billing Details -->
+                    <div class="col-lg-7">
                         <div class="billing-info-wrap">
                             <h3>Billing Details</h3>
                             <div class="row">
@@ -85,86 +88,96 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="additional-info-wrap">
                                 <h4>Additional information</h4>
                                 <div class="additional-info">
                                     <label>Order notes</label>
-                                    <textarea placeholder="Notes about your order, e.g. special notes for delivery. " name="notes">{{ old('notes') }}</textarea>
+                                    <textarea placeholder="Notes about your order, e.g. special notes for delivery." name="notes">{{ old('notes') }}</textarea>
                                 </div>
                             </div>
                         </div>
-                <div class="col-lg-5 mt-md-30px mt-lm-30px ">
-                    <div class="your-order-area">
-                        <h3>Your order</h3>
-                        <div class="your-order-wrap gray-bg-4">
-                            <div class="your-order-product-info">
-                                <div class="your-order-top">
-                                    <ul>
-                                        <li>Product</li>
-                                        <li>Total</li>
-                                    </ul>
+                    </div>
+                    <!-- END LEFT COLUMN -->
+
+                    <!-- RIGHT COLUMN: Order Summary -->
+                    <div class="col-lg-5 mt-md-30px mt-lm-30px">
+                        <div class="your-order-area">
+                            <h3>Your order</h3>
+                            <div class="your-order-wrap gray-bg-4">
+                                <div class="your-order-product-info">
+                                    <div class="your-order-top">
+                                        <ul>
+                                            <li>Product</li>
+                                            <li>Total</li>
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-middle">
+                                        <ul>
+                                            @foreach($items as $item)
+                                                <li>
+                                                    <span class="order-middle-left">
+                                                        {{ $item['product']->name }} x {{ $item['quantity'] }}
+                                                    </span>
+                                                    <span class="order-price">
+                                                        ${{ number_format($item['line_total'], 2) }}
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-bottom">
+                                        <ul>
+                                            <li class="your-order-shipping">Shipping</li>
+                                            <li>Free shipping</li>
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-total">
+                                        <ul>
+                                            <li class="order-total">Total</li>
+                                            <li>${{ number_format($subtotal, 2) }}</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div class="your-order-middle">
-                                    <ul>
-                                        @foreach($items as $item)
-                                            <li>
-                                                <span class="order-middle-left">
-                                                    {{ $item['product']->name }} x {{ $item['quantity'] }}
-                                                </span>
-                                                <span class="order-price">
-                                                    ${{ number_format($item['line_total'], 2) }}
-                                                </span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                <div class="your-order-bottom">
-                                    <ul>
-                                        <li class="your-order-shipping">Shipping</li>
-                                        <li>Free shipping</li>
-                                    </ul>
-                                </div>
-                                <div class="your-order-total">
-                                    <ul>
-                                        <li class="order-total">Total</li>
-                                        <li>${{ number_format($subtotal, 2) }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="payment-method">
-                                <div class="payment-accordion element-mrg">
-                                    <div class="panel-group" id="accordion">
-                                        <div class="panel payment-accordion">
-                                            <div class="panel-heading" id="method-three">
-                                                <h4 class="panel-title">
-                                                    <a class="collapsed" data-bs-toggle="collapse" data-bs-parent="#accordion" href="#method3">
-                                                        Cash on delivery
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="method3" class="panel-collapse collapse show">
-                                                <div class="panel-body">
-                                                    <p>Pay with cash upon delivery.</p>
+
+                                <div class="payment-method">
+                                    <div class="payment-accordion element-mrg">
+                                        <div class="panel-group" id="accordion">
+                                            <div class="panel payment-accordion">
+                                                <div class="panel-heading" id="method-three">
+                                                    <h4 class="panel-title">
+                                                        <a class="collapsed" data-bs-toggle="collapse" data-bs-parent="#accordion" href="#method3">
+                                                            Cash on delivery
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="method3" class="panel-collapse collapse show">
+                                                    <div class="panel-body">
+                                                        <p>Pay with cash upon delivery.</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="Place-order mt-25">
-                            @foreach($items as $item)
-                                <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
-                            @endforeach
-                            <button class="btn-hover" type="submit">Place Order</button>
+
+                            <div class="Place-order mt-25">
+                                @foreach($items as $item)
+                                    <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
+                                @endforeach
+                                <button class="btn-hover" type="submit">Place Order</button>
+                            </div>
                         </div>
                     </div>
+                    <!-- END RIGHT COLUMN -->
+
                 </div>
-                    </form>
-            </div>
+            </form>
         </div>
     </div>
     <!-- checkout area end -->
+
     <!-- News letter area -->
     <div class="news-letter-area">
         <div class="container">
@@ -201,5 +214,5 @@
             </div>
         </div>
     </div>
-    <!-- News letter area  End -->
+    <!-- News letter area End -->
 @endsection
