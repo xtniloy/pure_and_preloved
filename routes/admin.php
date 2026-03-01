@@ -35,6 +35,7 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::post('/categories/update-order', [\App\Http\Controllers\Admin\CategoryController::class, 'updateOrder'])->name('categories.update_order');
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    Route::resource('shipping_methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::get('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'index'])->name('featured-products.index');
     Route::put('featured-products/{product}', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'toggle'])->name('featured-products.toggle');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update']);

@@ -63,6 +63,15 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.shipping_methods.index'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.shipping_methods.index')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-truck') }}"></use>
+                    </svg><span data-coreui-i18n="file">Shipping Methods</span>
+                </a>
+            </li>
+        @endif
          @if(Route::has('admin.file.index'))
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.file.index')}}">
