@@ -67,8 +67,8 @@
                                 </div>
                                 <div class="your-order-bottom">
                                     <ul>
-                                        <li class="your-order-shipping">Shipping</li>
-                                        <li>Free shipping</li>
+                                        <li class="your-order-shipping">Shipping ({{ ucfirst($order->shipping_method) }})</li>
+                                        <li>${{ number_format($order->shipping_charge, 2) }}</li>
                                     </ul>
                                 </div>
                                 <div class="your-order-total">

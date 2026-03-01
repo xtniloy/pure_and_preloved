@@ -161,13 +161,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="Place-order mt-25">
-                                @foreach($items as $item)
-                                    <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
-                                @endforeach
-                                <a class="btn-hover" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Place Order</a>
-                            </div>
                         </div>
 
                         <!-- Added Coupon Code & Shipping Estimate -->
@@ -217,6 +210,28 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="grand-totall mt-30px">
+                            <div class="title-wrap">
+                                <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
+                            </div>
+                            <h5>Total products <span>${{ number_format($subtotal, 2) }}</span></h5>
+                            <div class="total-shipping">
+                                <h5>Total shipping</h5>
+                                <ul>
+                                    <li><input type="radio" name="shipping_method" value="standard" checked onclick="updateGrandTotal(20)" /> Standard <span>$20.00</span></li>
+                                    <li><input type="radio" name="shipping_method" value="express" onclick="updateGrandTotal(30)" /> Express <span>$30.00</span></li>
+                                </ul>
+                            </div>
+                            <h4 class="grand-totall-title">Grand Total <span id="grand-total-display">${{ number_format($subtotal + 20, 2) }}</span></h4>
+                        </div>
+
+                        <div class="Place-order mt-25">
+                            @foreach($items as $item)
+                                <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
+                            @endforeach
+                            <a class="btn-hover" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Place Order</a>
+                        </div>
                     </div>
                     <!-- END RIGHT COLUMN -->
 
@@ -264,3 +279,13 @@
     </div>
     <!-- News letter area End -->
 @endsection
+
+@push('scripts')
+ <script>
+     function updateGrandTotal(shippingCharge) {
+         var subtotal = parseFloat("{{ $subtotal }}");
+         var grandTotal = subtotal + shippingCharge;
+         $('#grand-total-display').text('$' + grandTotal.toFixed(2));
+     }
+ </script>
+ @endpush

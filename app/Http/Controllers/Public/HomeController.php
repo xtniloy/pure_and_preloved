@@ -356,14 +356,21 @@ class HomeController extends Controller
             'billing_phone' => 'required|string|max:50',
             'billing_email' => 'required|email:rfc,dns,filter|max:255',
             'notes' => 'nullable|string|max:2000',
+            'shipping_method' => 'required|string|in:standard,express',
         ]);
+
+        $shippingCharge = $data['shipping_method'] === 'express' ? 30 : 20;
+        $grandTotal = $subtotal + $shippingCharge;
 
         $user = Auth::user();
 
         $order = Order::create([
             'user_id' => $user ? $user->id : null,
             'reference' => 'ORD-' . strtoupper(Str::random(10)),
-            'total' => $subtotal,
+            'subtotal' => $subtotal,
+            'shipping_method' => $data['shipping_method'],
+            'shipping_charge' => $shippingCharge,
+            'total' => $grandTotal,
             'status' => 'pending',
             'billing_first_name' => $data['billing_first_name'],
             'billing_last_name' => $data['billing_last_name'],
