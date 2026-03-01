@@ -102,6 +102,22 @@
 
                     <!-- RIGHT COLUMN: Order Summary -->
                     <div class="col-lg-5 mt-md-30px mt-lm-30px">
+                        
+                        <!-- CARD 1: Promo Code -->
+                        <div class="discount-code-wrapper mb-30px">
+                            <div class="title-wrap">
+                                <h4 class="cart-bottom-title section-bg-gray">Apply Coupon</h4>
+                            </div>
+                            <div class="discount-code">
+                                <p>Enter your coupon code if you have one.</p>
+                                <div class="d-flex">
+                                    <input type="text" name="coupon_code" placeholder="Coupon Code" style="height: 45px; border: 1px solid #ebebeb; padding: 0 15px; width: 100%;" />
+                                    <button class="cart-btn-2 ms-2" type="button" style="white-space: nowrap; height: 45px; background-color: #242424; color: #fff; border: none; padding: 0 20px; font-weight: 700; text-transform: uppercase;">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: Order Summary & Totals -->
                         <div class="your-order-area">
                             <h3>Your order</h3>
                             <div class="your-order-wrap gray-bg-4">
@@ -128,14 +144,42 @@
                                     </div>
                                     <div class="your-order-bottom">
                                         <ul>
-                                            <li class="your-order-shipping">Shipping</li>
-                                            <li>Free shipping</li>
+                                            <li class="your-order-shipping">Subtotal</li>
+                                            <li>${{ number_format($subtotal, 2) }}</li>
                                         </ul>
                                     </div>
+                                    
+                                    <!-- Discount placeholder -->
+                                    <div class="your-order-bottom">
+                                        <ul>
+                                            <li class="your-order-shipping">Discount</li>
+                                            <li id="discount-display">-$0.00</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Shipping Options -->
+                                    <div class="your-order-bottom total-shipping" style="padding: 20px 0; border-bottom: 1px solid #ebebeb;">
+                                        <h5 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Shipping Method</h5>
+                                        <ul style="display: block;">
+                                            @foreach($shippingMethods as $method)
+                                                <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; width: 100%;">
+                                                    <label style="margin: 0; cursor: pointer; display: flex; align-items: center;">
+                                                        <input type="radio" name="shipping_method_id" value="{{ $method->id }}" 
+                                                            {{ $loop->first ? 'checked' : '' }} 
+                                                            onclick="updateGrandTotal({{ $method->charge }})"
+                                                            style="width: auto; height: auto; margin-right: 10px;">
+                                                        {{ $method->name }}
+                                                    </label>
+                                                    <span>{{ $method->charge > 0 ? '$' . number_format($method->charge, 2) : 'Free' }}</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
                                     <div class="your-order-total">
                                         <ul>
-                                            <li class="order-total">Total</li>
-                                            <li>${{ number_format($subtotal, 2) }}</li>
+                                            <li class="order-total">Grand Total</li>
+                                            <li id="grand-total-display">${{ number_format($subtotal + ($shippingMethods->first()->charge ?? 0), 2) }}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -161,69 +205,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Added Coupon Code & Shipping Estimate -->
-                        <div class="discount-code-wrapper mt-30px">
-                            <div class="title-wrap">
-                                <h4 class="cart-bottom-title section-bg-gray">Use Coupon Code</h4>
-                            </div>
-                            <div class="discount-code">
-                                <p>Enter your coupon code if you have one.</p>
-                                <div class="d-flex">
-                                    <input type="text" name="coupon_code" placeholder="Coupon Code" style="height: 45px; border: 1px solid #ebebeb; padding: 0 15px; width: 100%;" />
-                                    <button class="cart-btn-2 ms-2" type="button" style="white-space: nowrap; height: 45px; background-color: #242424; color: #fff; border: none; padding: 0 20px; font-weight: 700; text-transform: uppercase;">Apply</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="cart-tax mt-30px">
-                            <div class="title-wrap">
-                                <h4 class="cart-bottom-title section-bg-gray">Estimate Shipping And Tax</h4>
-                            </div>
-                            <div class="tax-wrapper">
-                                <p>Enter your destination to get a shipping estimate.</p>
-                                <div class="tax-select-wrapper">
-                                    <div class="tax-select">
-                                        <label>* Country</label>
-                                        <select class="email s-email s-wid">
-                                            <option>United Kingdom</option>
-                                            <option>United States</option>
-                                            <option>Canada</option>
-                                            <option>Bangladesh</option>
-                                        </select>
-                                    </div>
-                                    <div class="tax-select">
-                                        <label>* Region / State</label>
-                                        <select class="email s-email s-wid">
-                                            <option>London</option>
-                                            <option>New York</option>
-                                            <option>Ontario</option>
-                                            <option>Dhaka</option>
-                                        </select>
-                                    </div>
-                                    <div class="tax-select mb-25px">
-                                        <label>* Zip/Postal Code</label>
-                                        <input type="text" placeholder="Zip Code" />
-                                    </div>
-                                    <button class="cart-btn-2" type="button" style="background-color: #242424; color: #fff; border: none; padding: 10px 20px; font-weight: 700; text-transform: uppercase;">Get A Quote</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grand-totall mt-30px">
-                            <div class="title-wrap">
-                                <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
-                            </div>
-                            <h5>Total products <span>${{ number_format($subtotal, 2) }}</span></h5>
-                            <div class="total-shipping">
-                                <h5>Total shipping</h5>
-                                <ul>
-                                    <li><input type="radio" name="shipping_method" value="standard" checked onclick="updateGrandTotal(20)" /> Standard <span>$20.00</span></li>
-                                    <li><input type="radio" name="shipping_method" value="express" onclick="updateGrandTotal(30)" /> Express <span>$30.00</span></li>
-                                </ul>
-                            </div>
-                            <h4 class="grand-totall-title">Grand Total <span id="grand-total-display">${{ number_format($subtotal + 20, 2) }}</span></h4>
                         </div>
 
                         <div class="Place-order mt-25">

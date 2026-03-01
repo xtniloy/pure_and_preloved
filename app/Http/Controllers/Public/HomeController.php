@@ -178,11 +178,13 @@ class HomeController extends Controller
         }
 
         $user = Auth::user();
+        $shippingMethods = \App\Models\ShippingMethod::where('status', true)->get();
 
         return view('public.home.checkout', [
             'items' => $items,
             'subtotal' => $subtotal,
             'user' => $user,
+            'shippingMethods' => $shippingMethods,
         ]);
     }
 
@@ -356,10 +358,11 @@ class HomeController extends Controller
             'billing_phone' => 'required|string|max:50',
             'billing_email' => 'required|email:rfc,dns,filter|max:255',
             'notes' => 'nullable|string|max:2000',
-            'shipping_method' => 'required|string|in:standard,express',
+            'shipping_method_id' => 'required|exists:shipping_methods,id',
         ]);
 
-        $shippingCharge = $data['shipping_method'] === 'express' ? 30 : 20;
+        $shippingMethod = \App\Models\ShippingMethod::find($data['shipping_method_id']);
+        $shippingCharge = $shippingMethod->charge;
         $grandTotal = $subtotal + $shippingCharge;
 
         $user = Auth::user();
@@ -368,7 +371,7 @@ class HomeController extends Controller
             'user_id' => $user ? $user->id : null,
             'reference' => 'ORD-' . strtoupper(Str::random(10)),
             'subtotal' => $subtotal,
-            'shipping_method' => $data['shipping_method'],
+            'shipping_method' => $shippingMethod->name,
             'shipping_charge' => $shippingCharge,
             'total' => $grandTotal,
             'status' => 'pending',
