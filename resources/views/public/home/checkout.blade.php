@@ -102,7 +102,7 @@
 
                     <!-- RIGHT COLUMN: Order Summary -->
                     <div class="col-lg-5 mt-md-30px mt-lm-30px">
-                        
+
                         <!-- CARD 1: Promo Code -->
                         <div class="discount-code-wrapper mb-30px">
                             <div class="title-wrap">
@@ -148,7 +148,7 @@
                                             <li>${{ number_format($subtotal, 2) }}</li>
                                         </ul>
                                     </div>
-                                    
+
                                     <!-- Discount placeholder -->
                                     <div class="your-order-bottom">
                                         <ul>
@@ -164,8 +164,8 @@
                                             @foreach($shippingMethods as $method)
                                                 <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; width: 100%;">
                                                     <label style="margin: 0; cursor: pointer; display: flex; align-items: center;">
-                                                        <input type="radio" name="shipping_method_id" value="{{ $method->id }}" 
-                                                            {{ $loop->first ? 'checked' : '' }} 
+                                                        <input type="radio" name="shipping_method_id" value="{{ $method->id }}"
+                                                            {{ $loop->first ? 'checked' : '' }}
                                                             onclick="updateGrandTotal({{ $method->charge }})"
                                                             style="width: auto; height: auto; margin-right: 10px;">
                                                         {{ $method->name }}
@@ -205,14 +205,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="Place-order mt-25">
+                                @foreach($items as $item)
+                                    <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
+                                @endforeach
+                                <a class="btn-hover" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Place Order</a>
+                            </div>
                         </div>
 
-                        <div class="Place-order mt-25">
-                            @foreach($items as $item)
-                                <input type="hidden" name="items[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}">
-                            @endforeach
-                            <a class="btn-hover" href="#" onclick="event.preventDefault(); this.closest('form').submit();">Place Order</a>
-                        </div>
                     </div>
                     <!-- END RIGHT COLUMN -->
 
