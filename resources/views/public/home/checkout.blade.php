@@ -37,54 +37,78 @@
                                 <div class="col-lg-6 col-md-6">
                                     <div class="billing-info mb-20px">
                                         <label>First Name</label>
-                                        <input type="text" name="billing_first_name" value="{{ old('billing_first_name') }}" />
+                                        <input type="text" name="billing_first_name" value="{{ old('billing_first_name') }}" class="@error('billing_first_name') is-invalid @enderror" />
+                                        @error('billing_first_name')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <div class="billing-info mb-20px">
                                         <label>Last Name</label>
-                                        <input type="text" name="billing_last_name" value="{{ old('billing_last_name') }}" />
+                                        <input type="text" name="billing_last_name" value="{{ old('billing_last_name') }}" class="@error('billing_last_name') is-invalid @enderror" />
+                                        @error('billing_last_name')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="billing-select mb-20px">
                                         <label>Country</label>
-                                        <select name="billing_country">
+                                        <select name="billing_country" class="@error('billing_country') is-invalid @enderror">
                                             <option value="">Select a country</option>
                                             <option value="United Kingdom" @selected(old('billing_country') === 'United Kingdom')>United Kingdom</option>
                                             <option value="United States" @selected(old('billing_country') === 'United States')>United States</option>
                                             <option value="Canada" @selected(old('billing_country') === 'Canada')>Canada</option>
                                         </select>
+                                        @error('billing_country')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="billing-info mb-20px">
                                         <label>Street Address</label>
-                                        <input class="billing-address" placeholder="House number and street name" type="text" name="billing_address" value="{{ old('billing_address', optional($user)->billing_address) }}" />
+                                        <input class="billing-address @error('billing_address') is-invalid @enderror" placeholder="House number and street name" type="text" name="billing_address" value="{{ old('billing_address', optional($user)->billing_address) }}" />
+                                        @error('billing_address')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="billing-info mb-20px">
                                         <label>Town / City</label>
-                                        <input type="text" name="billing_city" value="{{ old('billing_city') }}" />
+                                        <input type="text" name="billing_city" value="{{ old('billing_city') }}" class="@error('billing_city') is-invalid @enderror" />
+                                        @error('billing_city')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <div class="billing-info mb-20px">
                                         <label>Postcode / ZIP</label>
-                                        <input type="text" name="billing_postcode" value="{{ old('billing_postcode') }}" />
+                                        <input type="text" name="billing_postcode" value="{{ old('billing_postcode') }}" class="@error('billing_postcode') is-invalid @enderror" />
+                                        @error('billing_postcode')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <div class="billing-info mb-20px">
                                         <label>Phone</label>
-                                        <input type="text" name="billing_phone" value="{{ old('billing_phone', optional($user)->phone) }}" />
+                                        <input type="text" name="billing_phone" value="{{ old('billing_phone', optional($user)->phone) }}" class="@error('billing_phone') is-invalid @enderror" />
+                                        @error('billing_phone')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12">
                                     <div class="billing-info mb-20px">
                                         <label>Email Address</label>
-                                        <input type="email" name="billing_email" value="{{ old('billing_email', optional($user)->email) }}" />
+                                        <input type="email" name="billing_email" value="{{ old('billing_email', optional($user)->email) }}" class="@error('billing_email') is-invalid @enderror" />
+                                        @error('billing_email')
+                                            <span class="text-danger small">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +117,10 @@
                                 <h4>Additional information</h4>
                                 <div class="additional-info">
                                     <label>Order notes</label>
-                                    <textarea placeholder="Notes about your order, e.g. special notes for delivery." name="notes">{{ old('notes') }}</textarea>
+                                    <textarea placeholder="Notes about your order, e.g. special notes for delivery." name="notes" class="@error('notes') is-invalid @enderror">{{ old('notes') }}</textarea>
+                                    @error('notes')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -158,23 +185,27 @@
                                     </div>
 
                                     <!-- Shipping Options -->
-                                    <div class="your-order-bottom total-shipping" style="padding: 20px 0; border-bottom: 1px solid #ebebeb;">
-                                        <h5 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Shipping Method</h5>
-                                        <ul style="display: block;">
-                                            @foreach($shippingMethods as $method)
-                                                <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; width: 100%;">
-                                                    <label style="margin: 0; cursor: pointer; display: flex; align-items: center;">
-                                                        <input type="radio" name="shipping_method_id" value="{{ $method->id }}"
-                                                            {{ $loop->first ? 'checked' : '' }}
-                                                            onclick="updateGrandTotal({{ $method->charge }})"
-                                                            style="width: auto; height: auto; margin-right: 10px;">
-                                                        {{ $method->name }}
-                                                    </label>
-                                                    <span>{{ $method->charge > 0 ? '$' . number_format($method->charge, 2) : 'Free' }}</span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+                                     <div class="your-order-bottom total-shipping" style="padding: 20px 0; border-bottom: 1px solid #ebebeb;">
+                                         <h5 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Shipping Method</h5>
+                                         <ul style="display: block;">
+                                             @foreach($shippingMethods as $method)
+                                                 <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; width: 100%;">
+                                                     <label style="margin: 0; cursor: pointer; display: flex; align-items: center;">
+                                                         <input type="radio" name="shipping_method_id" value="{{ $method->id }}"
+                                                             {{ (old('shipping_method_id', $loop->first ? $method->id : null) == $method->id) ? 'checked' : '' }}
+                                                             onclick="updateGrandTotal({{ $method->charge }})"
+                                                             style="width: auto; height: auto; margin-right: 10px;"
+                                                             class="@error('shipping_method_id') is-invalid @enderror">
+                                                         {{ $method->name }}
+                                                     </label>
+                                                     <span>{{ $method->charge > 0 ? '$' . number_format($method->charge, 2) : 'Free' }}</span>
+                                                 </li>
+                                             @endforeach
+                                         </ul>
+                                         @error('shipping_method_id')
+                                             <span class="text-danger small">{{ $message }}</span>
+                                         @enderror
+                                     </div>
 
                                     <div class="your-order-total">
                                         <ul>
