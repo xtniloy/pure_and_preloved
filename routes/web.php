@@ -79,3 +79,7 @@ Route::post('/checkout', [\App\Http\Controllers\Public\HomeController::class, 'p
 Route::get('/order-success/{reference}', [\App\Http\Controllers\Public\HomeController::class, 'orderSuccess'])->name('order.success');
 
 Route::get('/product-quickview/{product}', [\App\Http\Controllers\Public\HomeController::class, 'quickView'])->name('product.quickview');
+
+Route::get('/shop', function () {
+    return view('public.home.shop_list');
+});
