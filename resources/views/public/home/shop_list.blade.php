@@ -219,7 +219,7 @@
                                 @foreach($categories as $category)
                                     <div class="card">
                                         <div class="card-header" id="heading-{{ $category->id }}">
-                                            <a href="{{ route('shop.index', ['category' => $category->slug]) }}" 
+                                            <a href="{{ route('shop.index', ['category' => $category->slug, 'gender' => $activeGender]) }}" 
                                                class="{{ request('category') == $category->slug ? '' : 'collapsed' }}"
                                                data-bs-toggle="{{ $category->children->count() ? 'collapse' : '' }}" 
                                                data-bs-target="#collapse-{{ $category->id }}">
@@ -232,7 +232,7 @@
                                                 <div class="card-body">
                                                     <ul class="category-list">
                                                         @foreach($category->children as $child)
-                                                            <li><a href="{{ route('shop.index', ['category' => $child->slug]) }}" class="{{ request('category') == $child->slug ? 'active text-primary' : '' }}">{{ $child->name }}</a></li>
+                                                            <li><a href="{{ route('shop.index', ['category' => $child->slug, 'gender' => $activeGender]) }}" class="{{ request('category') == $child->slug ? 'active text-primary' : '' }}">{{ $child->name }}</a></li>
                                                         @endforeach
                                                     </ul>
                                                 </div>
