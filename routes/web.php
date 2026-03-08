@@ -80,6 +80,4 @@ Route::get('/order-success/{reference}', [\App\Http\Controllers\Public\HomeContr
 
 Route::get('/product-quickview/{product}', [\App\Http\Controllers\Public\HomeController::class, 'quickView'])->name('product.quickview');
 
-Route::get('/shop', function () {
-    return view('public.home.shop_list');
-});
+Route::get('/shop', [\App\Http\Controllers\Public\ProductController::class, 'index'])->name('shop.index');
