@@ -44,9 +44,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="search-element media-body">
-                    <form class="d-flex" action="#">
-                        <input type="text" placeholder="Enter your search key ... " />
-                        <button><i class="lnr lnr-magnifier"></i></button>
+                    <form class="d-flex" action="{{ route('shop.index') }}" method="GET">
+                        <input type="hidden" name="gender" value="{{ $activeGender ?? 'women' }}">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Enter your search key ... " />
+                        <button type="submit"><i class="lnr lnr-magnifier"></i></button>
                     </form>
                 </div>
             </div>

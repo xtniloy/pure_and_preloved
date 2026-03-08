@@ -20,10 +20,10 @@
                 <div class="col-md-7 justify-content-end"  style="padding: 20px 0;">
                     <div class="header-right-element d-flex">
                         <div class="search-element media-body mr-20px">
-                            <form class="d-flex" action="#">
-                                <input type="text" placeholder="Enter your search key ... " />
-                                <!--                                <button>Search</button>-->
-                                <button><i class="lnr lnr-magnifier"></i></button>
+                            <form class="d-flex" action="{{ route('shop.index') }}" method="GET">
+                                <input type="hidden" name="gender" value="{{ $activeGender }}">
+                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Enter your search key ... " />
+                                <button type="submit"><i class="lnr lnr-magnifier"></i></button>
                             </form>
                         </div>
                         <!--Cart info Start -->
@@ -58,19 +58,19 @@
                                 @endphp
                                 @foreach($categories as $category)
                                     <li class="menu-dropdown">
-                                        <a href="#">{{ $category->name }} <i class="ion-ios-arrow-down"></i></a>
+                                        <a href="{{ route('shop.index', ['category' => $category->slug, 'gender' => $activeGender]) }}">{{ $category->name }} <i class="ion-ios-arrow-down"></i></a>
                                         <ul class="mega-menu-wrap">
                                             <li class="mega-menu-inner">
                                                 <!-- LEFT COLUMN -->
                                                 <div class="mega-menu-left">
                                                     <ul>
                                                         <li class="mega-menu-title">
-                                                            <a href="#">{{ $category->name }}</a>
+                                                            <a href="{{ route('shop.index', ['category' => $category->slug, 'gender' => $activeGender]) }}">{{ $category->name }}</a>
                                                         </li>
 
                                                         @foreach($category->children as $child)
                                                             <li>
-                                                                <a href="#">{{ $child->name }}</a>
+                                                                <a href="{{ route('shop.index', ['category' => $child->slug, 'gender' => $activeGender]) }}">{{ $child->name }}</a>
                                                             </li>
                                                         @endforeach
                                                     </ul>
@@ -81,20 +81,20 @@
                                                     @php
                                                         $megaMenuImages = [];
                                                         if($category->asset && $category->asset->url){
-                                                            $megaMenuImages[] = $category->asset->url;
+                                                            $megaMenuImages[] = ['url' => $category->asset->url, 'slug' => $category->slug];
                                                         }
                                                         foreach($category->children as $child){
                                                             if(count($megaMenuImages) >= 3) break;
                                                             if($child->asset && $child->asset->url){
-                                                                $megaMenuImages[] = $child->asset->url;
+                                                                $megaMenuImages[] = ['url' => $child->asset->url, 'slug' => $child->slug];
                                                             }
                                                         }
                                                     @endphp
 
-                                                    @foreach($megaMenuImages as $imgUrl)
+                                                    @foreach($megaMenuImages as $imgData)
                                                         <div class="mega-img">
-                                                            <a href="#">
-                                                                <img src="{{ $imgUrl }}">
+                                                            <a href="{{ route('shop.index', ['category' => $imgData['slug'], 'gender' => $activeGender]) }}">
+                                                                <img src="{{ $imgData['url'] }}">
                                                             </a>
                                                         </div>
                                                     @endforeach

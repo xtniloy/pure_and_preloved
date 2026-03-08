@@ -226,17 +226,15 @@
 {{--                        @endphp--}}
                         @foreach($womenCategories as $category)
                             <li >
-                                <a href="#"> <span class="menu-text">{{ $category->name }}</span></a>
+                                <a href="{{ route('shop.index', ['category' => $category->slug, 'gender' => 'women']) }}"> <span class="menu-text">{{ $category->name }}</span></a>
                                 <ul class="sub-menu">
                                     <li>
                                         <ul>
                                             @foreach($category->children as $child)
-                                                <li><a href="{{ url('/') }}index.html"><span class="menu-text">{{ $child->name }}</span></a></li>
+                                                <li><a href="{{ route('shop.index', ['category' => $child->slug, 'gender' => 'women']) }}"><span class="menu-text">{{ $child->name }}</span></a></li>
                                             @endforeach
                                         </ul>
                                     </li>
-                                    {{--                                            <li class="mega-menu-title"><a href="#">{{ $category->name }}</a></li>--}}
-
                                 </ul>
                             </li>
                         @endforeach
@@ -251,17 +249,15 @@
                     <ul>
                         @foreach($manCategories as $category)
                             <li >
-                                <a href="#"> <span class="menu-text">{{ $category->name }}</span></a>
+                                <a href="{{ route('shop.index', ['category' => $category->slug, 'gender' => 'man']) }}"> <span class="menu-text">{{ $category->name }}</span></a>
                                 <ul class="sub-menu">
                                     <li>
                                         <ul>
                                             @foreach($category->children as $child)
-                                                <li><a href="{{ url('/') }}index.html"><span class="menu-text">{{ $child->name }}</span></a></li>
+                                                <li><a href="{{ route('shop.index', ['category' => $child->slug, 'gender' => 'man']) }}"><span class="menu-text">{{ $child->name }}</span></a></li>
                                             @endforeach
                                         </ul>
                                     </li>
-                                    {{--                                            <li class="mega-menu-title"><a href="#">{{ $category->name }}</a></li>--}}
-
                                 </ul>
                             </li>
                         @endforeach
