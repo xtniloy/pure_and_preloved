@@ -56,10 +56,7 @@
                                     <div class="billing-select mb-20px">
                                         <label>Country</label>
                                         <select name="billing_country" class="@error('billing_country') is-invalid @enderror">
-                                            <option value="">Select a country</option>
-                                            <option value="United Kingdom" @selected(old('billing_country') === 'United Kingdom')>United Kingdom</option>
-                                            <option value="United States" @selected(old('billing_country') === 'United States')>United States</option>
-                                            <option value="Canada" @selected(old('billing_country') === 'Canada')>Canada</option>
+                                            <option value="United Kingdom" @selected(old('billing_country', 'United Kingdom') === 'United Kingdom')>United Kingdom</option>
                                         </select>
                                         @error('billing_country')
                                             <span class="text-danger small">{{ $message }}</span>
