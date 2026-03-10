@@ -63,11 +63,7 @@ class CategoryController extends Controller
             }
         }
 
-        $slug = Str::slug($request->name);
-        $count = Category::where('slug', $slug)->count();
-        if ($count > 0) {
-            $slug = $slug . '-' . ($count + 1);
-        }
+        $slug = $this->generateUniqueSlug($request->name, $request->parent_id);
 
         Category::create([
             'name' => $request->name,
@@ -103,13 +99,8 @@ class CategoryController extends Controller
             }
         }
 
-        $slug = Str::slug($request->name);
-        if ($slug != $category->slug) {
-             $count = Category::where('slug', $slug)->where('id', '!=', $category->id)->count();
-             if ($count > 0) {
-                 $slug = $slug . '-' . ($count + 1);
-             }
-             $category->slug = $slug;
+        if ($request->name != $category->name || $request->parent_id != $category->parent_id) {
+            $category->slug = $this->generateUniqueSlug($request->name, $request->parent_id, $category->id);
         }
 
         $category->name = $request->name;
@@ -126,5 +117,56 @@ class CategoryController extends Controller
     {
         $category->delete();
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+    }
+
+    private function generateUniqueSlug($name, $parentId = null, $excludeId = null, $step = 1, $counter = 1)
+    {
+        $baseSlug = Str::slug($name);
+
+        if ($step === 1) {
+            if ($this->isSlugUnique($baseSlug, $excludeId)) {
+                return $baseSlug;
+            }
+            return $this->generateUniqueSlug($name, $parentId, $excludeId, 2);
+        }
+
+        if ($step === 2) {
+            if ($parentId) {
+                $parent = Category::find($parentId);
+                if ($parent) {
+                    $prefixedSlug = Str::slug($parent->slug . '-' . $name);
+                    if ($this->isSlugUnique($prefixedSlug, $excludeId)) {
+                        return $prefixedSlug;
+                    }
+                    return $this->generateUniqueSlug($name, $parentId, $excludeId, 3, 1);
+                }
+            }
+            return $this->generateUniqueSlug($name, $parentId, $excludeId, 3, 1);
+        }
+
+        // Step 3: Numbering
+        $base = $baseSlug;
+        if ($parentId) {
+            $parent = Category::find($parentId);
+            if ($parent) {
+                $base = Str::slug($parent->slug . '-' . $name);
+            }
+        }
+
+        $slugWithNumber = $base . '-' . $counter;
+        if ($this->isSlugUnique($slugWithNumber, $excludeId)) {
+            return $slugWithNumber;
+        }
+
+        return $this->generateUniqueSlug($name, $parentId, $excludeId, 3, $counter + 1);
+    }
+
+    private function isSlugUnique($slug, $excludeId = null)
+    {
+        $query = Category::where('slug', $slug);
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+        return $query->count() === 0;
     }
 }
