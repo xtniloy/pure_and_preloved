@@ -189,7 +189,7 @@
                                 <li><a href="#">Refunds</a></li>
                                 <li><a href="#">Checkout</a></li>
                                 <li><a href="#">Discount</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="{{ route('terms.index') }}">Terms & Conditions</a></li>
                             </ul>
                         </div>
                     </div>

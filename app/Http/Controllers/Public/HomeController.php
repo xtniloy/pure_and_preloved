@@ -420,4 +420,9 @@ class HomeController extends Controller
 
         return view('public.modal.quickview_content', compact('product', 'gender', 'categorySlug'));
     }
+
+    public function terms()
+    {
+        return view('public.home.terms');
+    }
 }
