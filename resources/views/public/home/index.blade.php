@@ -1,6 +1,6 @@
 @extends('public.layouts.main')
 @section('title')
-    Dashboard
+    Pure & Preloved
 @endsection
 @section('content')
     <!-- Slider Start -->
@@ -15,7 +15,7 @@
                             Beautiful Jewellery
                         </h1>
                         <p class="animated color-gray">Pure and Preloved.</p>
-                        <a href="shop-4-column.html" class="shop-btn animated">SHOP NOW</a>
+                        <a href="{{route('shop.index')}}" class="shop-btn animated">SHOP NOW</a>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                             Beautiful Jewellery
                         </h1>
                         <p class="animated color-gray">Pure and Preloved.</p>
-                        <a href="shop-4-column.html" class="shop-btn animated">SHOP NOW</a>
+                        <a href="{{route('shop.index')}}" class="shop-btn animated">SHOP NOW</a>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                             Beautiful Jewellery
                         </h1>
                         <p class="animated color-gray">Pure and Preloved.</p>
-                        <a href="shop-4-column.html" class="shop-btn animated">SHOP NOW</a>
+                        <a href="{{route('shop.index')}}" class="shop-btn animated">SHOP NOW</a>
                     </div>
                 </div>
             </div>
@@ -214,7 +214,7 @@
                                         <div class="img-block">
                                             <a href="{{ $gender && $categorySlug ? route('product.show', [$gender, $categorySlug, $product->slug]) : '#' }}" class="thumbnail">
                                                 <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
-                                                <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                                <img class="second-img" src="{{ isset($product->assets[0]) ? $product->assets[0]?->public_url: $imageUrl}}" alt="{{ $product->name }}" />
                                             </a>
                                             <div class="add-to-link">
                                                 <ul>
