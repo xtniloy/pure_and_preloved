@@ -11,18 +11,55 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::with('parent');
+        // Drill into the children of a specific category.
+        if ($request->filled('parent_id')) {
+            $parent = Category::with('parent')->findOrFail($request->parent_id);
 
-        if ($request->has('parent_id')) {
-            $query->where('parent_id', $request->parent_id);
-            $parent = Category::find($request->parent_id);
-        } else {
-            $query->whereNull('parent_id');
-            $parent = null;
+            $categories = Category::with('parent')
+                ->withCount('children')
+                ->where('parent_id', $parent->id)
+                ->orderBy('sort_order', 'asc')
+                ->latest()
+                ->paginate(30);
+
+            return view('admin.sections.categories.index', [
+                'categories' => $categories,
+                'parent' => $parent,
+                'gender' => $parent->gender,
+            ]);
         }
 
-        $categories = $query->orderBy('sort_order', 'asc')->latest()->paginate(30);
-        return view('admin.sections.categories.index', compact('categories', 'parent'));
+        // Show the root categories for a chosen gender.
+        if ($request->filled('gender')) {
+            $gender = $request->gender;
+            abort_unless(in_array($gender, ['man', 'women', 'unisex'], true), 404);
+
+            $categories = Category::with('parent')
+                ->withCount('children')
+                ->whereNull('parent_id')
+                ->where('gender', $gender)
+                ->orderBy('sort_order', 'asc')
+                ->latest()
+                ->paginate(30);
+
+            return view('admin.sections.categories.index', [
+                'categories' => $categories,
+                'parent' => null,
+                'gender' => $gender,
+            ]);
+        }
+
+        // Landing: choose a gender to manage.
+        $genders = ['man', 'women'];
+        if (Category::where('gender', 'unisex')->exists()) {
+            $genders[] = 'unisex';
+        }
+
+        $counts = Category::selectRaw('gender, count(*) as total')
+            ->groupBy('gender')
+            ->pluck('total', 'gender');
+
+        return view('admin.sections.categories.landing', compact('genders', 'counts'));
     }
 
     public function updateOrder(Request $request)
@@ -44,7 +81,25 @@ class CategoryController extends Controller
     {
         $parents = Category::all();
         $parent_id = $request->query('parent_id');
-        return view('admin.sections.categories.form', compact('parents', 'parent_id'));
+        $gender = $request->query('gender');
+
+        // When adding under a parent, the gender is dictated by that parent.
+        if ($parent_id && $parent = Category::find($parent_id)) {
+            $gender = $parent->gender;
+        }
+
+        return view('admin.sections.categories.form', compact('parents', 'parent_id', 'gender'));
+    }
+
+    /**
+     * URL of the list a category belongs to: its parent's children list when
+     * nested, otherwise the gender root list.
+     */
+    private function listUrlFor($parentId, $gender)
+    {
+        return $parentId
+            ? route('admin.categories.index', ['parent_id' => $parentId])
+            : route('admin.categories.index', ['gender' => $gender]);
     }
 
     public function store(Request $request)
@@ -74,7 +129,8 @@ class CategoryController extends Controller
             'status' => $request->has('status') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
+        return redirect($this->listUrlFor($request->parent_id, $request->gender))
+            ->with('success', 'Category created successfully.');
     }
 
     public function edit(Category $category)
@@ -110,13 +166,15 @@ class CategoryController extends Controller
         $category->status = $request->has('status') ? 1 : 0;
         $category->save();
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
+        return redirect($this->listUrlFor($category->parent_id, $category->gender))
+            ->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category)
     {
+        $redirect = $this->listUrlFor($category->parent_id, $category->gender);
         $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+        return redirect($redirect)->with('success', 'Category deleted successfully.');
     }
 
     private function generateUniqueSlug($name, $parentId = null, $excludeId = null, $step = 1, $counter = 1)

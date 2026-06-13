@@ -2,20 +2,35 @@
 @section('page-title')
     Category Management
 @endsection
+@php
+    $genderLabels = ['man' => 'Mens Category', 'women' => 'Womens Category', 'unisex' => 'Unisex Category'];
+    $genderLabel = $genderLabels[$gender] ?? ucfirst($gender);
+    $ancestors = isset($parent) ? $parent->ancestors() : collect();
+    $backUrl = isset($parent)
+        ? ($parent->parent_id
+            ? route('admin.categories.index', ['parent_id' => $parent->parent_id])
+            : route('admin.categories.index', ['gender' => $parent->gender]))
+        : route('admin.categories.index');
+@endphp
+
 @section('content')
     <div class="container-lg px-4">
-        <div class="fs-2 fw-semibold" data-coreui-i18n="dashboard">
-            Category Management
+        <div class="fs-2 fw-semibold">
+            {{ $genderLabel }}
             @if(isset($parent))
-                <small class="text-muted fs-5"> > {{ $parent->name }}</small>
+                <small class="text-body-secondary fs-5">/ {{ $parent->name }}</small>
             @endif
         </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}" data-coreui-i18n="home">Home</a>
+                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('admin.categories.index')}}">Categories</a></li>
+                <li class="breadcrumb-item {{ isset($parent) ? '' : 'active' }}">
+                    <a href="{{route('admin.categories.index', ['gender' => $gender])}}">{{ $genderLabel }}</a>
                 </li>
-                <li class="breadcrumb-item active"><a href="{{route('admin.categories.index')}}">Category Management</a>
-                </li>
+                @foreach($ancestors as $ancestor)
+                    <li class="breadcrumb-item"><a href="{{route('admin.categories.index', ['parent_id' => $ancestor->id])}}">{{ $ancestor->name }}</a></li>
+                @endforeach
                 @if(isset($parent))
                     <li class="breadcrumb-item active">{{ $parent->name }}</li>
                 @endif
@@ -27,24 +42,26 @@
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>Category list</strong>
+                            <strong>{{ isset($parent) ? $parent->name . ' — subcategories' : $genderLabel }}</strong>
                             @if(isset($parent))
                                 <span class="badge bg-info ms-2">Parent: {{ $parent->name }}</span>
-                                <a href="{{ $parent->parent_id ? route('admin.categories.index', ['parent_id' => $parent->parent_id]) : route('admin.categories.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Back</a>
                             @endif
                         </div>
-                        <span class="small ms-1">Total: {{$categories->total()??0}}</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small">Total: {{$categories->total()??0}}</span>
+                            <a href="{{ $backUrl }}" class="btn btn-sm btn-outline-secondary">Back</a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row align-items-center mx-2 mb-3">
                             <div class="col-auto ml-0 ml-lg-auto text-left text-lg-right mt-3 mt-lg-0 ms-auto">
-                                <a href="{{route('admin.categories.create', ['parent_id' => isset($parent) ? $parent->id : null])}}">
+                                <a href="{{route('admin.categories.create', isset($parent) ? ['parent_id' => $parent->id] : ['gender' => $gender])}}">
                                     <button class="btn btn-outline-secondary">
                                         <svg class="icon me-2">
                                             <use
                                                 xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-plus')}}"></use>
                                         </svg>
-                                        Add
+                                        {{ isset($parent) ? 'Add subcategory' : 'Add category' }}
                                     </button>
                                 </a>
                                 <button type="submit" form="orderForm" class="btn btn-outline-primary ms-2">
@@ -90,9 +107,13 @@
                                                 @if($category->image)
                                                     <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" style="width: 30px; height: 30px; object-fit: cover; margin-right: 5px;">
                                                 @endif
-                                                <a href="{{ route('admin.categories.index', ['parent_id' => $category->id]) }}" class="text-decoration-none">
+                                                <a href="{{ route('admin.categories.index', ['parent_id' => $category->id]) }}" class="text-decoration-none fw-medium">
                                                     {{$category->name}}
                                                 </a>
+                                                @if(($category->children_count ?? 0) > 0)
+                                                    <span class="badge bg-brand-soft ms-1">{{ $category->children_count }} sub</span>
+                                                @endif
+                                                <svg class="icon icon-sm text-body-secondary ms-1"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-chevron-right')}}"></use></svg>
                                             </td>
                                             <td>{{$category->parent ? $category->parent->name : '-'}}</td>
                                             <td>{{ucfirst($category->gender)}}</td>
@@ -163,5 +184,6 @@
         .cursor-grab:active {
             cursor: grabbing;
         }
+        .bg-brand-soft { background: rgba(15, 118, 111, .12); color: #0f766f; }
     </style>
 @endpush

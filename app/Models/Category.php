@@ -34,4 +34,21 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    /**
+     * Ancestor chain from the top-level root down to this category's parent,
+     * used to build the drill-down breadcrumb.
+     */
+    public function ancestors()
+    {
+        $chain = collect();
+        $node = $this->parent;
+
+        while ($node) {
+            $chain->prepend($node);
+            $node = $node->parent;
+        }
+
+        return $chain;
+    }
 }

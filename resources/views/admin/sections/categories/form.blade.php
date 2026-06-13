@@ -84,9 +84,9 @@
                                 <div class="col-md-6">
                                     <label for="gender" class="form-label">Gender <b class="text-danger">*</b></label>
                                     <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender" required>
-                                        <option value="unisex" {{ (old('gender', isset($category) ? $category->gender : '') == 'unisex') ? 'selected' : '' }}>Unisex</option>
-                                        <option value="man" {{ (old('gender', isset($category) ? $category->gender : '') == 'man') ? 'selected' : '' }}>Man</option>
-                                        <option value="women" {{ (old('gender', isset($category) ? $category->gender : '') == 'women') ? 'selected' : '' }}>Women</option>
+                                        <option value="unisex" {{ (old('gender', isset($category) ? $category->gender : ($gender ?? '')) == 'unisex') ? 'selected' : '' }}>Unisex</option>
+                                        <option value="man" {{ (old('gender', isset($category) ? $category->gender : ($gender ?? '')) == 'man') ? 'selected' : '' }}>Man</option>
+                                        <option value="women" {{ (old('gender', isset($category) ? $category->gender : ($gender ?? '')) == 'women') ? 'selected' : '' }}>Women</option>
                                     </select>
                                     @error('gender')
                                         <div class="invalid-feedback">{{ $message }}</div>
