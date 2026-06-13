@@ -64,12 +64,7 @@
                                         {{ isset($parent) ? 'Add subcategory' : 'Add category' }}
                                     </button>
                                 </a>
-                                <button type="submit" form="orderForm" class="btn btn-outline-primary ms-2">
-                                    <svg class="icon me-2">
-                                        <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-save')}}"></use>
-                                    </svg>
-                                    Save Order
-                                </button>
+                                <span id="order-status" class="ms-2 small text-body-secondary align-middle d-none"></span>
                             </div>
                         </div>
 
@@ -90,7 +85,7 @@
                                         <th scope="col">Action</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="category-list">
+                                    <tbody id="category-list" data-first-item="{{ $categories->firstItem() ?? 1 }}">
                                     @foreach($categories as $k=> $category)
                                         <tr class="align-middle" data-id="{{ $category->id }}">
                                             <td class="cursor-grab text-center">
@@ -154,25 +149,69 @@
 @endsection
 
 @push('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var el = document.getElementById('category-list');
-            var sortable = Sortable.create(el, {
-                handle: '.cursor-grab', // Drag handle selector within list items
+            var list = document.getElementById('category-list');
+            if (!list) return;
+
+            // Continue numbering across pages (e.g. page 2 starts at 31, not 1).
+            var firstItem = parseInt(list.dataset.firstItem, 10) || 1;
+            var statusEl = document.getElementById('order-status');
+            var saveUrl = "{{ route('admin.categories.update_order') }}";
+            var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            Sortable.create(list, {
+                handle: '.cursor-grab',
                 animation: 150,
-                onEnd: function (evt) {
-                    updateSortOrders();
+                ghostClass: 'bg-brand-soft',
+                onEnd: function () {
+                    renumber();
+                    saveOrder();
                 }
             });
 
-            function updateSortOrders() {
-                var rows = document.querySelectorAll('#category-list tr');
-                rows.forEach(function (row, index) {
+            function renumber() {
+                list.querySelectorAll('tr').forEach(function (row, index) {
                     var input = row.querySelector('.sort-order-input');
-                    if (input) {
-                        input.value = index + 1; // Start order from 1
-                    }
+                    if (input) input.value = firstItem + index;
+                });
+            }
+
+            function setStatus(message, type) {
+                if (!statusEl) return;
+                statusEl.textContent = message;
+                statusEl.className = 'ms-2 small align-middle text-' + type;
+            }
+
+            function saveOrder() {
+                var categories = [];
+                list.querySelectorAll('tr[data-id]').forEach(function (row, index) {
+                    categories.push({ id: row.dataset.id, sort_order: firstItem + index });
+                });
+
+                setStatus('Saving order…', 'body-secondary');
+
+                fetch(saveUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ categories: categories })
+                })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('Request failed');
+                    return res.json();
+                })
+                .then(function () {
+                    setStatus('✓ Order saved', 'success');
+                    setTimeout(function () { if (statusEl) statusEl.classList.add('d-none'); }, 2000);
+                })
+                .catch(function () {
+                    setStatus('✗ Could not save order — please retry', 'danger');
                 });
             }
         });

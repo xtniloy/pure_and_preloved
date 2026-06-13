@@ -78,7 +78,11 @@ class ProductController extends Controller
         $categories = Category::where('status', true)
             ->where('gender', $activeGender)
             ->whereNull('parent_id')
-            ->with('children')
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'asc')
+            ->with(['children' => function ($query) {
+                $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
+            }])
             ->get();
         
         $conditions = Product::where('status', true)->whereNotNull('condition')->distinct()->pluck('condition');

@@ -30,8 +30,9 @@ class AppServiceProvider extends ServiceProvider
                 ->whereNull('parent_id')
                 ->where('status', true)
                 ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'asc')
                 ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc');
+                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
                 }, 'children.asset', 'asset'])
                 ->get();
 
@@ -39,8 +40,9 @@ class AppServiceProvider extends ServiceProvider
                 ->whereNull('parent_id')
                 ->where('status', true)
                 ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'asc')
                 ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc');
+                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
                 }, 'children.asset', 'asset'])
                 ->get();
 
@@ -54,8 +56,9 @@ class AppServiceProvider extends ServiceProvider
                 ->whereNull('parent_id')
                 ->where('status', true)
                 ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'asc')
                 ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc');
+                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
                 }])
                 ->get();
 
@@ -63,8 +66,9 @@ class AppServiceProvider extends ServiceProvider
                 ->whereNull('parent_id')
                 ->where('status', true)
                 ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'asc')
                 ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc');
+                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
                 }])
                 ->get();
 

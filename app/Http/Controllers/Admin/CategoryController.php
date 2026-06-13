@@ -19,7 +19,7 @@ class CategoryController extends Controller
                 ->withCount('children')
                 ->where('parent_id', $parent->id)
                 ->orderBy('sort_order', 'asc')
-                ->latest()
+                ->orderBy('id', 'asc')
                 ->paginate(30);
 
             return view('admin.sections.categories.index', [
@@ -39,7 +39,7 @@ class CategoryController extends Controller
                 ->whereNull('parent_id')
                 ->where('gender', $gender)
                 ->orderBy('sort_order', 'asc')
-                ->latest()
+                ->orderBy('id', 'asc')
                 ->paginate(30);
 
             return view('admin.sections.categories.index', [
@@ -72,6 +72,10 @@ class CategoryController extends Controller
 
         foreach ($request->categories as $categoryData) {
             Category::where('id', $categoryData['id'])->update(['sort_order' => $categoryData['sort_order']]);
+        }
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Order updated successfully.']);
         }
 
         return back()->with('success', 'Order updated successfully.');
@@ -120,6 +124,11 @@ class CategoryController extends Controller
 
         $slug = $this->generateUniqueSlug($request->name, $request->parent_id);
 
+        // Append new categories at the end of their list (parent/gender group).
+        $sortOrder = (Category::where('parent_id', $request->parent_id)
+            ->where('gender', $request->gender)
+            ->max('sort_order') ?? 0) + 1;
+
         Category::create([
             'name' => $request->name,
             'slug' => $slug,
@@ -127,6 +136,7 @@ class CategoryController extends Controller
             'gender' => $request->gender,
             'asset_id' => $request->asset_id,
             'status' => $request->has('status') ? 1 : 0,
+            'sort_order' => $sortOrder,
         ]);
 
         return redirect($this->listUrlFor($request->parent_id, $request->gender))
