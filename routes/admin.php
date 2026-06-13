@@ -37,6 +37,18 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('shipping_methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->except(['show']);
+
+    // Contact messages
+    Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
+
+    // Web (in-app) notifications
+    Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'readAll'])->name('notifications.read_all');
+    Route::get('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'read'])->name('notifications.read');
+
+    // Settings
+    Route::get('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'index'])->name('settings.notifications');
+    Route::post('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'update'])->name('settings.notifications.update');
     Route::get('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'index'])->name('featured-products.index');
     Route::put('featured-products/{product}', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'toggle'])->name('featured-products.toggle');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update']);

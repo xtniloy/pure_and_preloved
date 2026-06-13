@@ -86,6 +86,10 @@ Route::get('/product-quickview/{product}', [\App\Http\Controllers\Public\HomeCon
 
 Route::get('/shop', [\App\Http\Controllers\Public\ProductController::class, 'index'])->name('shop.index');
 
+// Contact (static, independent page)
+Route::get('/contact-us', [\App\Http\Controllers\Public\ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact-us', [\App\Http\Controllers\Public\ContactController::class, 'store'])->name('contact.submit');
+
 // Legacy terms URL now served by the CMS "terms" page (kept for existing links)
 Route::get('/terms-and-conditions', fn () => redirect()->route('pages.show', 'terms', 301))->name('terms.index');
 

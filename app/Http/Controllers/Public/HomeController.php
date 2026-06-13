@@ -8,6 +8,8 @@ use App\Jobs\OrderConfirmationEmailJob;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Notifications\NewOrderPlaced;
+use App\Services\AdminNotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -472,6 +474,13 @@ class HomeController extends Controller
             OrderConfirmationEmailJob::dispatch($order);
         } catch (\Throwable $e) {
             Log::error('Order confirmation email dispatch failed: ' . $e->getMessage());
+        }
+
+        // Notify admins of the new order (email + web, per their preferences).
+        try {
+            app(AdminNotificationService::class)->notifyAdmins(new NewOrderPlaced($order));
+        } catch (\Throwable $e) {
+            Log::error('New order admin notification failed: ' . $e->getMessage());
         }
 
         return redirect()->route('order.success', $order->reference);

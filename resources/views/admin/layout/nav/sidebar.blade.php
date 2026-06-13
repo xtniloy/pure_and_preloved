@@ -81,6 +81,36 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.contact-messages.index'))
+            @php $contactUnread = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.contact-messages.index')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-envelope-letter') }}"></use>
+                    </svg><span data-coreui-i18n="file">Contact Messages</span>
+                    @if($contactUnread > 0)
+                        <span class="badge badge-sm bg-danger ms-auto">{{ $contactUnread }}</span>
+                    @endif
+                </a>
+            </li>
+        @endif
+
+        @if(Route::has('admin.settings.notifications'))
+            <li class="nav-group">
+                <a class="nav-link nav-group-toggle" href="#">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-settings') }}"></use>
+                    </svg><span data-coreui-i18n="settings">Settings</span>
+                </a>
+                <ul class="nav-group-items compact">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.settings.notifications')}}">
+                            <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Notification Settings
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
          @if(Route::has('admin.file.index'))
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.file.index')}}">
