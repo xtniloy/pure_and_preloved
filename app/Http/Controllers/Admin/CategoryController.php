@@ -15,7 +15,7 @@ class CategoryController extends Controller
         if ($request->filled('parent_id')) {
             $parent = Category::with('parent')->findOrFail($request->parent_id);
 
-            $categories = Category::with('parent')
+            $categories = Category::with(['parent', 'asset'])
                 ->withCount('children')
                 ->where('parent_id', $parent->id)
                 ->orderBy('sort_order', 'asc')
@@ -34,7 +34,7 @@ class CategoryController extends Controller
             $gender = $request->gender;
             abort_unless(in_array($gender, ['man', 'women', 'unisex'], true), 404);
 
-            $categories = Category::with('parent')
+            $categories = Category::with(['parent', 'asset'])
                 ->withCount('children')
                 ->whereNull('parent_id')
                 ->where('gender', $gender)

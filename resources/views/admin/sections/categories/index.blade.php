@@ -76,8 +76,8 @@
                                     <tr>
                                         <th scope="col" style="width: 50px;"></th>
                                         <th scope="col">#</th>
-                                        <th scope="col" style="width: 100px;">Order</th>
                                         <th scope="col">Name</th>
+                                        <th scope="col" style="width: 100px;">Order</th>
                                         <th scope="col">Parent</th>
                                         <th scope="col">Gender</th>
                                         <th scope="col">Status</th>
@@ -94,12 +94,13 @@
                                             </td>
                                             <th scope="row">{{$categories->firstItem() + $k}}</th>
                                             <td>
-                                                <input type="hidden" name="categories[{{ $k }}][id]" value="{{ $category->id }}">
-                                                <input type="number" name="categories[{{ $k }}][sort_order]" value="{{ $category->sort_order }}" class="form-control form-control-sm sort-order-input" style="width: 80px;" readonly>
-                                            </td>
-                                            <td>
-                                                @if($category->image)
-                                                    <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}" style="width: 30px; height: 30px; object-fit: cover; margin-right: 5px;">
+                                                @php $thumb = $category->asset?->thumbnail_url ?? $category->asset?->url; @endphp
+                                                @if($thumb)
+                                                    <img src="{{ $thumb }}" alt="{{ $category->name }}" class="rounded" style="width: 32px; height: 32px; object-fit: cover; margin-right: 6px;">
+                                                @else
+                                                    <span class="d-inline-flex align-items-center justify-content-center rounded bg-brand-soft text-body-secondary" style="width: 32px; height: 32px; margin-right: 6px;">
+                                                        <svg class="icon icon-sm"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-image')}}"></use></svg>
+                                                    </span>
                                                 @endif
                                                 <a href="{{ route('admin.categories.index', ['parent_id' => $category->id]) }}" class="text-decoration-none fw-medium">
                                                     {{$category->name}}
@@ -108,6 +109,10 @@
                                                     <span class="badge bg-brand-soft ms-1">{{ $category->children_count }} sub</span>
                                                 @endif
                                                 <svg class="icon icon-sm text-body-secondary ms-1"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-chevron-right')}}"></use></svg>
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="categories[{{ $k }}][id]" value="{{ $category->id }}">
+                                                <input type="number" name="categories[{{ $k }}][sort_order]" value="{{ $category->sort_order }}" class="form-control form-control-sm sort-order-input" style="width: 80px;" readonly>
                                             </td>
                                             <td>{{$category->parent ? $category->parent->name : '-'}}</td>
                                             <td>{{ucfirst($category->gender)}}</td>
