@@ -25,12 +25,6 @@
                 }
 
                 function applySelectedState(id, selected) {
-                    const row = document.getElementById('file-' + id);
-                    if (row) {
-                        row.classList.toggle('selected-file', selected);
-                        updateSelectButton(row.querySelector('.select-file-btn'), selected);
-                    }
-
                     const grid = document.getElementById('grid-file-' + id);
                     if (grid) {
                         grid.classList.toggle('selected-file', selected);
@@ -46,7 +40,7 @@
                 }
 
                 // Re-apply the highlight to any currently-selected files. Called after
-                // infinite scroll appends new file rows/cards so they reflect selection.
+                // infinite scroll appends new file cards so they reflect selection.
                 window.__applySelectionHighlights = function() {
                     selectedIds.forEach(function(id) {
                         applySelectedState(id, true);
@@ -166,86 +160,23 @@
 
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <div><strong>Uploaded Files </strong><span class="small ms-1">File List Section</span></div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="badge bg-primary" id="fileCount">0 files</span>
-                    {{-- View Toggle --}}
-                    <div class="btn-group btn-group-sm" role="group" aria-label="View toggle">
-                        <button type="button" class="btn btn-outline-secondary active" id="listViewBtn" title="List View">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="8" y1="6" x2="21" y2="6"></line>
-                                <line x1="8" y1="12" x2="21" y2="12"></line>
-                                <line x1="8" y1="18" x2="21" y2="18"></line>
-                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                            </svg>
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" id="gridViewBtn" title="Grid View">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
+                <div><strong>Uploaded Files</strong></div>
+                <span class="badge bg-primary" id="fileCount">0 files</span>
             </div>
             <div class="card-body">
-                <p class="text-body-secondary small">Files will be dynamically added here</p>
-
-                {{-- List View --}}
-                <div class="tab-content rounded-bottom" id="listView">
-                    <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1000">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th style="width: 35%">File Name</th>
-                                <th style="width: 10%">Type</th>
-                                <th style="width: 10%">Size</th>
-                                <th style="width: 15%">Upload Time</th>
-                                <th style="width: 15%">Progress</th>
-                                <th style="width: 8%">Status</th>
-                                <th style="width: 7%" class="text-end">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody id="fileListBody">
-                            @if($files->total() > 0)
-                                @foreach($files as $file)
-                                    @include('files::partials.list_row', ['file' => $file])
-                                @endforeach
-                            @else
-                                <tr id="emptyState">
-                                    <td colspan="7" class="text-center py-5 text-medium-emphasis">
-                                        <svg class="mb-3" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                            <polyline points="13 2 13 9 20 9"></polyline>
-                                        </svg>
-                                        <p class="mb-0">No files uploaded yet</p>
-                                    </td>
-                                </tr>
-                            @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
                 {{-- Grid View --}}
-                <div class="d-none" id="gridView">
-                    <div class="row g-4" id="fileGridBody">
-                        @if($files->total() > 0)
-                            @foreach($files as $file)
-                                @include('files::partials.grid_card', ['file' => $file])
-                            @endforeach
-                        @endif
-                        <div class="col-12 text-center py-5 text-medium-emphasis {{ $files->total() > 0 ? 'd-none' : '' }}" id="gridEmptyState">
-                            <svg class="mb-3" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
-                            <p class="mb-0">No files uploaded yet</p>
-                        </div>
+                <div class="row g-4" id="fileGridBody">
+                    @if($files->total() > 0)
+                        @foreach($files as $file)
+                            @include('files::partials.grid_card', ['file' => $file])
+                        @endforeach
+                    @endif
+                    <div class="col-12 text-center py-5 text-medium-emphasis {{ $files->total() > 0 ? 'd-none' : '' }}" id="gridEmptyState">
+                        <svg class="mb-3" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
+                        </svg>
+                        <p class="mb-0">No files uploaded yet</p>
                     </div>
                 </div>
 
@@ -278,21 +209,6 @@
             border-color: var(--cui-primary) !important;
         }
 
-        .file-row {
-            transition: background-color 0.2s ease;
-        }
-
-        .action-btn {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .upload-speed {
-            font-size: 0.75rem;
-            color: #6c757d;
-        }
-
-        /* Grid View Styles */
         .file-card {
             transition: all 0.2s ease;
             cursor: pointer;
@@ -308,30 +224,7 @@
             border-radius: var(--cui-card-border-radius);
         }
 
-        .file-thumbnail img {
-            transition: transform 0.2s ease;
-        }
-
-        .file-card:hover .file-thumbnail img {
-            transform: scale(1.05);
-        }
-
-        /* View Toggle Active State */
-        .btn-group .btn.active {
-            background-color: var(--cui-primary);
-            border-color: var(--cui-primary);
-            color: white;
-        }
-
         /* Multi-select highlight */
-        .file-row.selected-file {
-            background-color: var(--cui-primary-bg-subtle);
-        }
-
-        .file-row.selected-file td:first-child {
-            box-shadow: inset 4px 0 0 var(--cui-primary);
-        }
-
         .file-grid-item.selected-file .file-card {
             border: 2px solid var(--cui-primary);
             box-shadow: 0 0 0 0.2rem var(--cui-primary-bg-subtle);
@@ -343,15 +236,9 @@
             const uploadArea = document.getElementById('uploadArea');
             const fileInput = document.getElementById('fileInput');
             const browseBtn = document.getElementById('browseBtn');
-            const fileListBody = document.getElementById('fileListBody');
             const fileGridBody = document.getElementById('fileGridBody');
-            const emptyState = document.getElementById('emptyState');
             const gridEmptyState = document.getElementById('gridEmptyState');
             const fileCount = document.getElementById('fileCount');
-            const listView = document.getElementById('listView');
-            const gridView = document.getElementById('gridView');
-            const listViewBtn = document.getElementById('listViewBtn');
-            const gridViewBtn = document.getElementById('gridViewBtn');
 
             const CHUNK_SIZE = 2 * 1024 * 1024; // 2MB chunks
             const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
@@ -359,7 +246,6 @@
             const uploadQueue = [];
             let activeUploads = 0;
             const MAX_CONCURRENT_UPLOADS = 2;
-            let currentView = 'grid';
 
             // CSRF Token
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -368,76 +254,33 @@
             const fileTypeConfig = {
                 image: {
                     extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'],
-                    mimes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp', 'image/x-icon'],
-                    icon: 'image',
-                    color: 'text-success'
+                    mimes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp', 'image/x-icon']
                 },
                 video: {
                     extensions: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
-                    mimes: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'],
-                    icon: 'video',
-                    color: 'text-primary'
+                    mimes: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo']
                 },
                 audio: {
                     extensions: ['mp3', 'wav', 'ogg', 'flac', 'aac'],
-                    mimes: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/flac', 'audio/aac'],
-                    icon: 'audio',
-                    color: 'text-success'
+                    mimes: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/flac', 'audio/aac']
                 },
                 pdf: {
                     extensions: ['pdf'],
-                    mimes: ['application/pdf'],
-                    icon: 'pdf',
-                    color: 'text-danger'
+                    mimes: ['application/pdf']
                 },
                 text: {
                     extensions: ['txt', 'json', 'xml', 'csv', 'md', 'html', 'css', 'js'],
-                    mimes: ['text/plain', 'application/json', 'application/xml', 'text/csv', 'text/markdown', 'text/html', 'text/css', 'application/javascript'],
-                    icon: 'text',
-                    color: 'text-info'
+                    mimes: ['text/plain', 'application/json', 'application/xml', 'text/csv', 'text/markdown', 'text/html', 'text/css', 'application/javascript']
                 },
                 archive: {
                     extensions: ['zip', 'rar', '7z', 'tar', 'gz'],
-                    mimes: ['application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed', 'application/x-tar', 'application/gzip'],
-                    icon: 'archive',
-                    color: 'text-warning'
+                    mimes: ['application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed', 'application/x-tar', 'application/gzip']
                 },
                 document: {
                     extensions: ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'],
-                    mimes: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
-                    icon: 'document',
-                    color: 'text-primary'
+                    mimes: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
                 }
             };
-
-            // View Toggle
-            listViewBtn.addEventListener('click', () => {
-                currentView = 'list';
-                listView.classList.remove('d-none');
-                gridView.classList.add('d-none');
-                listViewBtn.classList.add('active');
-                gridViewBtn.classList.remove('active');
-                localStorage.setItem('fileViewPreference', 'list');
-            });
-
-            gridViewBtn.addEventListener('click', () => {
-                currentView = 'grid';
-                gridView.classList.remove('d-none');
-                listView.classList.add('d-none');
-                gridViewBtn.classList.add('active');
-                listViewBtn.classList.remove('active');
-                localStorage.setItem('fileViewPreference', 'grid');
-            });
-
-            // Restore view preference (default to grid)
-            const savedView = localStorage.getItem('fileViewPreference');
-            if (savedView === 'grid') {
-                gridViewBtn.click();
-            } else if (savedView === 'list') {
-                listViewBtn.click();
-            } else {
-                gridViewBtn.click();
-            }
 
             // ---- Infinite scroll pagination ----
             const loadFilesUrl = "{{ route('admin.file.iframe.load') }}";
@@ -447,20 +290,18 @@
             let hasMorePages = @json($files->hasMorePages());
             let isLoadingPage = false;
 
-            function insertFiles(html, mode) {
-                const wrapper = document.createElement(mode === 'list' ? 'tbody' : 'div');
+            function insertGridFiles(html) {
+                const wrapper = document.createElement('div');
                 wrapper.innerHTML = html;
                 Array.from(wrapper.children).forEach(function(node) {
                     // Skip duplicates already rendered (e.g. just-uploaded files)
                     if (node.id && document.getElementById(node.id)) {
                         return;
                     }
-                    if (mode === 'grid' && gridEmptyState) {
+                    if (gridEmptyState) {
                         fileGridBody.insertBefore(node, gridEmptyState);
-                    } else if (mode === 'grid') {
-                        fileGridBody.appendChild(node);
                     } else {
-                        fileListBody.appendChild(node);
+                        fileGridBody.appendChild(node);
                     }
                 });
             }
@@ -481,13 +322,8 @@
                     }
                     const data = await response.json();
 
-                    // Append, skipping any ids already in the DOM (offset pagination can
-                    // repeat a boundary row if files were uploaded since the page loaded).
-                    if (data.listHtml) {
-                        insertFiles(data.listHtml, 'list');
-                    }
                     if (data.gridHtml) {
-                        insertFiles(data.gridHtml, 'grid');
+                        insertGridFiles(data.gridHtml);
                     }
 
                     hasMorePages = data.hasMore;
@@ -609,7 +445,6 @@
                     file: file,
                     name: file.name,
                     size: formatFileSize(file.size),
-                    time: new Date().toLocaleString(),
                     progress: 0,
                     status: 'queued',
                     uploadedChunks: 0,
@@ -630,7 +465,6 @@
                 }
 
                 uploadQueue.push(fileData);
-                addFileToList(fileData);
                 addFileToGrid(fileData);
                 updateFileCount();
             }
@@ -653,7 +487,7 @@
                         ctx.imageSmoothingQuality = 'high';
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         fileData.thumbnailUrl = canvas.toDataURL('image/jpeg', 0.6);
-                        updateThumbnails(fileData);
+                        updateThumbnail(fileData);
                     };
                     img.src = e.target.result;
                 };
@@ -674,22 +508,12 @@
                     ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     fileData.thumbnailUrl = canvas.toDataURL('image/jpeg', 0.6);
-                    updateThumbnails(fileData);
+                    updateThumbnail(fileData);
                     URL.revokeObjectURL(video.src);
                 };
             }
 
-            function updateThumbnails(fileData) {
-                // Update list view thumbnail
-                const listRow = document.getElementById(`file-${fileData.id}`);
-                if (listRow) {
-                    const thumbnailContainer = listRow.querySelector('.file-thumbnail');
-                    if (thumbnailContainer && fileData.thumbnailUrl) {
-                        thumbnailContainer.innerHTML = `<img src="${fileData.thumbnailUrl}" alt="" class="rounded" style="width: 32px; height: 32px; object-fit: cover;">`;
-                    }
-                }
-
-                // Update grid view thumbnail
+            function updateThumbnail(fileData) {
                 const gridCard = document.getElementById(`grid-file-${fileData.id}`);
                 if (gridCard && fileData.thumbnailUrl) {
                     const imgContainer = gridCard.querySelector('.card-img-top');
@@ -714,54 +538,6 @@
                         }
                     }
                 }
-            }
-
-            function getFileIcon(fileType, size = 20) {
-                const icons = {
-                    image: `<svg class="me-2 text-success" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                        <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>`,
-                    video: `<svg class="me-2 text-primary" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                    </svg>`,
-                    audio: `<svg class="me-2 text-success" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 18V5l12-2v13"></path>
-                        <circle cx="6" cy="18" r="3"></circle>
-                        <circle cx="18" cy="16" r="3"></circle>
-                    </svg>`,
-                    pdf: `<svg class="me-2 text-danger" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>`,
-                    text: `<svg class="me-2 text-info" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <line x1="10" y1="9" x2="8" y2="9"></line>
-                    </svg>`,
-                    archive: `<svg class="me-2 text-warning" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 8v13H3V8"></path>
-                        <path d="M1 3h22v5H1z"></path>
-                        <path d="M10 12h4"></path>
-                    </svg>`,
-                    document: `<svg class="me-2 text-primary" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>`,
-                    other: `<svg class="me-2 text-secondary" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                        <polyline points="13 2 13 9 20 9"></polyline>
-                    </svg>`
-                };
-                return icons[fileType] || icons.other;
             }
 
             function getGridFileIcon(fileType) {
@@ -827,7 +603,6 @@
                 fileData.startTime = Date.now();
                 fileData.uploadIdentifier = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-                updateFileStatus(fileData.id, 'Uploading', 'warning');
                 showGridOverlay(fileData.id, true);
 
                 try {
@@ -862,14 +637,7 @@
                         const result = await response.json();
                         fileData.uploadedChunks = chunkIndex + 1;
                         const progress = Math.round((fileData.uploadedChunks / totalChunks) * 100);
-                        updateProgress(fileData.id, progress);
                         updateGridProgress(fileData.id, progress);
-
-                        // Calculate and display upload speed
-                        const elapsedTime = (Date.now() - fileData.startTime) / 1000;
-                        const uploadedBytes = (chunkIndex + 1) * CHUNK_SIZE;
-                        const speed = formatSpeed(uploadedBytes / elapsedTime);
-                        updateSpeed(fileData.id, speed);
 
                         if (result.completed) {
                             fileData.status = 'completed';
@@ -881,8 +649,6 @@
                             updateElementIds(fileData);
 
                             fileData.id = fileData.db_id;
-                            updateFileStatus(fileData.id, 'Completed', 'success');
-                            updateProgressBarCompleted(fileData.id);
                             showGridOverlay(fileData.db_id, false);
 
                             if (fileData.thumbnailUrl) {
@@ -891,20 +657,19 @@
                                     if (thumbRes && thumbRes.thumbnailUrl) {
                                         fileData.serverThumbnailUrl = thumbRes.thumbnailUrl;
                                         fileData.thumbnailUrl = thumbRes.thumbnailUrl;
-                                        updateThumbnails(fileData);
+                                        updateThumbnail(fileData);
                                     }
                                 } catch (e) {
                                     console.error('Thumbnail upload failed', e);
                                 }
                             }
 
-                            ensureSelectButtons(fileData);
+                            ensureSelectButton(fileData);
                         }
                     }
                 } catch (error) {
                     console.error('Upload error:', error);
                     fileData.status = 'failed';
-                    updateFileStatus(fileData.id, 'Failed', 'danger');
                     showGridOverlay(fileData.id, false);
                     alert(`Failed to upload ${fileData.name}: ${error.message}`);
                 } finally {
@@ -933,89 +698,32 @@
             }
 
             function updateElementIds(fileData) {
-                const oldRow = document.getElementById(`file-${fileData.id}`);
-                if (oldRow) oldRow.id = `file-${fileData.db_id}`;
-
                 const oldGrid = document.getElementById(`grid-file-${fileData.id}`);
                 if (oldGrid) oldGrid.id = `grid-file-${fileData.db_id}`;
-
-                const oldProgressBarId = document.getElementById(`progress-${fileData.id}`);
-                if (oldProgressBarId) oldProgressBarId.id = `progress-${fileData.db_id}`;
 
                 const oldOverlayId = document.getElementById(`grid-overlay-${fileData.id}`);
                 if (oldOverlayId) oldOverlayId.id = `grid-overlay-${fileData.db_id}`;
 
-                const progressText = document.getElementById(`progress-text-${fileData.id}`);
-                const speed = document.getElementById(`speed-${fileData.id}`);
-                const status = document.getElementById(`status-${fileData.id}`);
-                const downloadBtn = document.getElementById(`download-${fileData.id}`);
-                const viewBtn = document.getElementById(`view-${fileData.id}`);
-
-                if (progressText) progressText.id = `progress-text-${fileData.db_id}`;
-                if (speed) speed.id = `speed-${fileData.db_id}`;
-                if (status) status.id = `status-${fileData.db_id}`;
-
-                if (downloadBtn) {
-                    downloadBtn.id = `download-${fileData.db_id}`;
-                    downloadBtn.disabled = false;
-                    downloadBtn.setAttribute('onclick', `downloadFile('${fileData.db_id}')`);
-                }
-
-                if (viewBtn) {
-                    viewBtn.id = `view-${fileData.db_id}`;
-                    viewBtn.disabled = false;
-                    viewBtn.setAttribute('onclick', `viewFile('${fileData.db_id}')`);
-                }
-
-                // Update delete buttons
-                const listDeleteBtn = document.querySelector(`#file-${fileData.db_id} .btn-outline-danger`);
-                if (listDeleteBtn) {
-                    listDeleteBtn.setAttribute('onclick', `deleteFile('${fileData.db_id}')`);
-                }
+                const oldProgressId = document.getElementById(`grid-progress-${fileData.id}`);
+                if (oldProgressId) oldProgressId.id = `grid-progress-${fileData.db_id}`;
 
                 const gridCard = document.getElementById(`grid-file-${fileData.db_id}`);
                 if (gridCard) {
-                    const gridBtns = gridCard.querySelectorAll('button');
-                    gridBtns.forEach(btn => {
+                    gridCard.querySelectorAll('button').forEach(btn => {
                         const onclick = btn.getAttribute('onclick');
                         if (onclick) {
                             if (onclick.includes('viewFile')) btn.setAttribute('onclick', `viewFile('${fileData.db_id}')`);
                             if (onclick.includes('downloadFile')) btn.setAttribute('onclick', `downloadFile('${fileData.db_id}')`);
                             if (onclick.includes('deleteFile')) btn.setAttribute('onclick', `deleteFile('${fileData.db_id}')`);
                         }
+                        btn.disabled = false;
                     });
                 }
             }
 
-            function ensureSelectButtons(fileData) {
+            function ensureSelectButton(fileData) {
                 const finalId = fileData.db_id || fileData.id;
                 const fileUrl = fileData.serverThumbnailUrl || fileData.serverPath || fileData.url || '';
-                console.log(fileData);
-
-                const listRow = document.getElementById(`file-${finalId}`);
-                if (listRow) {
-                    const container = listRow.querySelector('.d-flex.align-items-center');
-                    if (container) {
-                        let selectWrapper = container.querySelector('.select-file-wrapper');
-                        if (!selectWrapper) {
-                            selectWrapper = document.createElement('div');
-                            selectWrapper.className = 'form-check me-2 select-file-wrapper';
-                            container.prepend(selectWrapper);
-                        }
-
-                        selectWrapper.innerHTML = `
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-outline-primary select-file-btn"
-                                data-id="${finalId}"
-                                data-original-name="${fileData.name}"
-                                data-url="${fileUrl}"
-                            >
-                                Select
-                            </button>
-                        `;
-                    }
-                }
 
                 const gridItem = document.getElementById(`grid-file-${finalId}`);
                 if (gridItem) {
@@ -1035,74 +743,6 @@
                         selectBtn.dataset.url = fileUrl;
                     }
                 }
-            }
-
-            function addFileToList(fileData) {
-                if (emptyState) {
-                    emptyState.style.display = 'none';
-                }
-
-                const row = document.createElement('tr');
-                row.className = 'file-row';
-                row.id = `file-${fileData.id}`;
-
-                const thumbnailHtml = ['image', 'video'].includes(fileData.fileType)
-                    ? `<div class="file-thumbnail me-2" style="width: 32px; height: 32px;">
-                         <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                           <div class="spinner-border spinner-border-sm text-muted" role="status"><span class="visually-hidden">Loading...</span></div>
-                         </div>
-                       </div>`
-                    : getFileIcon(fileData.fileType);
-
-                row.innerHTML = `
-                    <td>
-                        <div class="d-flex align-items-center">
-                            ${thumbnailHtml}
-                            <span class="fw-medium text-truncate" style="max-width: 250px;" title="${fileData.name}">${fileData.name}</span>
-                        </div>
-                    </td>
-                    <td><span class="badge bg-light text-dark">${fileData.extension.toUpperCase()}</span></td>
-                    <td>${fileData.size}</td>
-                    <td><small class="text-medium-emphasis">${fileData.time}</small></td>
-                    <td>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                 role="progressbar"
-                                 style="width: 0%"
-                                 id="progress-${fileData.id}"></div>
-                        </div>
-                        <small class="text-muted" id="progress-text-${fileData.id}">0%</small>
-                        <small class="upload-speed" id="speed-${fileData.id}"></small>
-                    </td>
-                    <td>
-                        <span class="badge bg-secondary" id="status-${fileData.id}">Queued</span>
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-outline-primary action-btn" onclick="viewFile('${fileData.id}')" title="View" disabled id="view-${fileData.id}">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </button>
-                            <button type="button" class="btn btn-outline-success action-btn" onclick="downloadFile('${fileData.id}')" title="Download" disabled id="download-${fileData.id}">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                            </button>
-                            <button type="button" class="btn btn-outline-danger action-btn" onclick="deleteFile('${fileData.id}')" title="Delete">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                `;
-
-                fileListBody.prepend(row);
             }
 
             function addFileToGrid(fileData) {
@@ -1156,7 +796,11 @@
                     </div>
                 `;
 
-                fileGridBody.prepend(col);
+                if (gridEmptyState) {
+                    fileGridBody.insertBefore(col, gridEmptyState);
+                } else {
+                    fileGridBody.prepend(col);
+                }
             }
 
             function showGridOverlay(fileId, show) {
@@ -1166,52 +810,10 @@
                 }
             }
 
-            function updateProgressBarCompleted(fileId){
-                const progressBar = document.getElementById(`progress-${fileId}`);
-                if (progressBar) {
-                    progressBar.classList.remove('progress-bar-animated', 'progress-bar-striped');
-                    progressBar.classList.add('bg-success');
-                }
-            }
-
             function updateGridProgress(fileId, progress) {
                 const progressEl = document.getElementById(`grid-progress-${fileId}`);
                 if (progressEl) {
                     progressEl.textContent = progress + '%';
-                }
-            }
-
-            function updateProgress(fileId, progress) {
-                const progressBar = document.getElementById(`progress-${fileId}`);
-                const progressText = document.getElementById(`progress-text-${fileId}`);
-
-                if (progressBar) progressBar.style.width = progress + '%';
-                if (progressText) progressText.textContent = progress + '%';
-            }
-
-            function updateSpeed(fileId, speed) {
-                const speedElement = document.getElementById(`speed-${fileId}`);
-                if (speedElement) speedElement.textContent = ` (${speed})`;
-            }
-
-            function updateFileStatus(fileId, statusText, statusType) {
-                const statusBadge = document.getElementById(`status-${fileId}`);
-                if (statusBadge) {
-                    statusBadge.textContent = statusText;
-                    statusBadge.className = `badge bg-${statusType}`;
-                }
-
-                if (statusText === 'Completed') {
-                    const downloadBtn = document.getElementById(`download-${fileId}`);
-                    const viewBtn = document.getElementById(`view-${fileId}`);
-                    if (downloadBtn) downloadBtn.disabled = false;
-                    if (viewBtn) viewBtn.disabled = false;
-
-                    // Enable grid buttons
-                    const gridCard = document.getElementById(`grid-file-${fileId}`);
-                    if (gridCard) {
-                        gridCard.querySelectorAll('button[disabled]').forEach(btn => btn.disabled = false);
-                    }
                 }
             }
 
@@ -1223,16 +825,8 @@
                 return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
             }
 
-            function formatSpeed(bytesPerSecond) {
-                if (bytesPerSecond === 0) return '0 B/s';
-                const k = 1024;
-                const sizes = ['B/s', 'KB/s', 'MB/s', 'GB/s'];
-                const i = Math.floor(Math.log(bytesPerSecond) / Math.log(k));
-                return Math.round(bytesPerSecond / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-            }
-
             function updateFileCount() {
-                const totalFiles = document.querySelectorAll('.file-row').length;
+                const totalFiles = document.querySelectorAll('.file-grid-item').length;
                 fileCount.textContent = `${totalFiles} file${totalFiles !== 1 ? 's' : ''}`;
             }
 
@@ -1258,20 +852,14 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Remove from list view
-                                const row = document.getElementById(`file-${fileId}`);
-                                if (row) row.remove();
-
-                                // Remove from grid view
                                 const gridItem = document.getElementById(`grid-file-${fileId}`);
                                 if (gridItem) gridItem.remove();
 
                                 updateFileCount();
 
-                                const remainingFiles = document.querySelectorAll('.file-row').length;
-                                if (remainingFiles === 0) {
-                                    if (emptyState) emptyState.style.display = '';
-                                    if (gridEmptyState) gridEmptyState.classList.remove('d-none');
+                                const remainingFiles = document.querySelectorAll('.file-grid-item').length;
+                                if (remainingFiles === 0 && gridEmptyState) {
+                                    gridEmptyState.classList.remove('d-none');
                                 }
                             }
                         })
@@ -1280,6 +868,9 @@
                         });
                 }
             };
+
+            // Initial count from server-rendered items
+            updateFileCount();
         });
     </script>
 @endsection
