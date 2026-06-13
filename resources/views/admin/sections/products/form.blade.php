@@ -272,9 +272,56 @@
 
             btnFileManagerMulti.addEventListener('click', function() {
                 currentSelectionMode = 'multi';
-                fileManagerIframe.src = "{{ route('admin.file.iframe') }}";
+                fileManagerIframe.src = "{{ route('admin.file.iframe') }}?mode=multi";
                 fileManagerModal.show();
             });
+
+            function getSelectedGalleryIds() {
+                return Array.from(selectedImagesContainer.querySelectorAll('.image-item'))
+                    .map(function(el) { return el.getAttribute('data-id'); });
+            }
+
+            function addGalleryImage(file) {
+                // Avoid duplicates
+                if (selectedImagesContainer.querySelector(`.image-item[data-id="${file.id}"]`)) {
+                    return;
+                }
+
+                const div = document.createElement('div');
+                div.className = 'position-relative image-item';
+                div.setAttribute('data-id', file.id);
+
+                const img = document.createElement('img');
+                img.src = file.url;
+                img.className = 'img-thumbnail';
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+
+                const closeBtn = document.createElement('button');
+                closeBtn.type = 'button';
+                closeBtn.className = 'btn-close position-absolute top-0 end-0 bg-white';
+                closeBtn.ariaLabel = 'Close';
+                closeBtn.onclick = function() { removeImage(closeBtn); };
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'images[]';
+                input.value = file.id;
+
+                div.appendChild(img);
+                div.appendChild(closeBtn);
+                div.appendChild(input);
+
+                selectedImagesContainer.appendChild(div);
+            }
+
+            function removeGalleryImageById(id) {
+                const el = selectedImagesContainer.querySelector(`.image-item[data-id="${id}"]`);
+                if (el) {
+                    el.remove();
+                }
+            }
 
             btnFileManagerThumbnail.addEventListener('click', function() {
                 currentSelectionMode = 'thumbnail';
@@ -290,59 +337,41 @@
 
             // Listen for messages from the iframe
             window.addEventListener('message', function(event) {
-                if (event.data.type === 'fileSelected') {
-                    const file = event.data.file;
+                const data = event.data || {};
 
-                    if (currentSelectionMode === 'multi') {
-                        // Check if image is already added
-                        if (document.querySelector(`.image-item[data-id="${file.id}"]`)) {
-                            return;
-                        }
+                // The multi-select iframe asks for the currently selected gallery
+                // images on load, so it can pre-highlight them.
+                if (data.type === 'iframeReady') {
+                    if (currentSelectionMode === 'multi' && fileManagerIframe.contentWindow) {
+                        fileManagerIframe.contentWindow.postMessage({
+                            type: 'initSelection',
+                            selectedIds: getSelectedGalleryIds()
+                        }, '*');
+                    }
+                    return;
+                }
 
-                        // Create image element
-                        const div = document.createElement('div');
-                        div.className = 'position-relative image-item';
-                        div.setAttribute('data-id', file.id);
+                // Multi-select: a file was toggled on/off in the (still open) modal.
+                if (data.type === 'fileToggled') {
+                    if (data.selected) {
+                        addGalleryImage(data.file);
+                    } else {
+                        removeGalleryImageById(data.file.id);
+                    }
+                    return;
+                }
 
-                        const img = document.createElement('img');
-                        img.src = file.url;
-                        img.className = 'img-thumbnail';
-                        img.style.width = '100px';
-                        img.style.height = '100px';
-                        img.style.objectFit = 'cover';
+                // Single-select modes (thumbnail / meta): pick one and close.
+                if (data.type === 'fileSelected') {
+                    const file = data.file;
 
-                        const closeBtn = document.createElement('button');
-                        closeBtn.type = 'button';
-                        closeBtn.className = 'btn-close position-absolute top-0 end-0 bg-white';
-                        closeBtn.ariaLabel = 'Close';
-                        closeBtn.onclick = function() { removeImage(closeBtn); };
-
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'images[]';
-                        input.value = file.id;
-
-                        div.appendChild(img);
-                        div.appendChild(closeBtn);
-                        div.appendChild(input);
-
-                        selectedImagesContainer.appendChild(div);
-
-                    } else if (currentSelectionMode === 'thumbnail') {
-                        // Replace content
+                    if (currentSelectionMode === 'thumbnail') {
                         thumbnailContainer.innerHTML = '';
-                        const div = createSingleImageElement(file, 'thumbnail_image_id');
-                        thumbnailContainer.appendChild(div);
+                        thumbnailContainer.appendChild(createSingleImageElement(file, 'thumbnail_image_id'));
                         fileManagerModal.hide();
                     } else if (currentSelectionMode === 'meta') {
-                        // Replace content
                         metaImageContainer.innerHTML = '';
-                        const div = createSingleImageElement(file, 'meta_image_id');
-                        metaImageContainer.appendChild(div);
-                        fileManagerModal.hide();
-                    }
-                    
-                    if (currentSelectionMode !== 'multi') {
+                        metaImageContainer.appendChild(createSingleImageElement(file, 'meta_image_id'));
                         fileManagerModal.hide();
                     }
                 }

@@ -5,6 +5,46 @@
     @push('js')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                const params = new URLSearchParams(window.location.search);
+                const isMulti = (params.get('mode') || 'single') === 'multi';
+                const selectedIds = new Set();
+
+                function updateSelectButton(btn, selected) {
+                    if (!btn) {
+                        return;
+                    }
+                    if (selected) {
+                        btn.classList.remove('btn-outline-primary');
+                        btn.classList.add('btn-primary');
+                        btn.textContent = '✓ Selected';
+                    } else {
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-outline-primary');
+                        btn.textContent = 'Select';
+                    }
+                }
+
+                function applySelectedState(id, selected) {
+                    const row = document.getElementById('file-' + id);
+                    if (row) {
+                        row.classList.toggle('selected-file', selected);
+                        updateSelectButton(row.querySelector('.select-file-btn'), selected);
+                    }
+
+                    const grid = document.getElementById('grid-file-' + id);
+                    if (grid) {
+                        grid.classList.toggle('selected-file', selected);
+                        updateSelectButton(grid.querySelector('.select-file-btn'), selected);
+                    }
+                }
+
+                function updateCount() {
+                    const counter = document.getElementById('multiSelectCount');
+                    if (counter) {
+                        counter.textContent = selectedIds.size;
+                    }
+                }
+
                 document.addEventListener('click', function(event) {
                     const btn = event.target.closest('.select-file-btn');
                     if (!btn) {
@@ -17,10 +57,54 @@
                         url: btn.dataset.url
                     };
 
+                    // Single-select modes: pick one, parent closes the modal.
+                    if (!isMulti) {
+                        if (window.parent && window.parent !== window) {
+                            window.parent.postMessage({ type: 'fileSelected', file: file }, '*');
+                        }
+                        return;
+                    }
+
+                    // Multi-select: toggle this file on/off and highlight it.
+                    const id = String(file.id);
+                    const nowSelected = !selectedIds.has(id);
+                    if (nowSelected) {
+                        selectedIds.add(id);
+                    } else {
+                        selectedIds.delete(id);
+                    }
+                    applySelectedState(id, nowSelected);
+                    updateCount();
+
                     if (window.parent && window.parent !== window) {
-                        window.parent.postMessage({ type: 'fileSelected', file: file }, '*');
+                        window.parent.postMessage({ type: 'fileToggled', file: file, selected: nowSelected }, '*');
                     }
                 });
+
+                if (isMulti) {
+                    const banner = document.getElementById('multiSelectBanner');
+                    if (banner) {
+                        banner.classList.remove('d-none');
+                    }
+
+                    // Receive the gallery's already-selected images and pre-highlight them.
+                    window.addEventListener('message', function(event) {
+                        const data = event.data || {};
+                        if (data.type === 'initSelection' && Array.isArray(data.selectedIds)) {
+                            data.selectedIds.forEach(function(rawId) {
+                                const id = String(rawId);
+                                selectedIds.add(id);
+                                applySelectedState(id, true);
+                            });
+                            updateCount();
+                        }
+                    });
+
+                    // Tell the parent we're ready to receive the current selection.
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage({ type: 'iframeReady' }, '*');
+                    }
+                }
             });
         </script>
     @endpush
@@ -29,6 +113,20 @@
 @section('content')
     <div class="px-4">
         <div class="fs-2 fw-semibold mb-2">File Uploader</div>
+
+        {{-- Multi-select instructions (shown only when opened in multi mode) --}}
+        <div class="alert alert-info d-flex align-items-center py-2 d-none" id="multiSelectBanner">
+            <svg class="me-2 flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <div>
+                Click an image to <strong>select</strong> it, click again to <strong>deselect</strong>.
+                Selected images are added to the gallery instantly —
+                <strong><span id="multiSelectCount">0</span></strong> selected.
+                Close this window when you're done.
+            </div>
+        </div>
 
         {{-- Upload Section --}}
         <div class="card mb-4">
@@ -420,6 +518,20 @@
             background-color: var(--cui-primary);
             border-color: var(--cui-primary);
             color: white;
+        }
+
+        /* Multi-select highlight */
+        .file-row.selected-file {
+            background-color: var(--cui-primary-bg-subtle);
+        }
+
+        .file-row.selected-file td:first-child {
+            box-shadow: inset 4px 0 0 var(--cui-primary);
+        }
+
+        .file-grid-item.selected-file .file-card {
+            border: 2px solid var(--cui-primary);
+            box-shadow: 0 0 0 0.2rem var(--cui-primary-bg-subtle);
         }
     </style>
 
