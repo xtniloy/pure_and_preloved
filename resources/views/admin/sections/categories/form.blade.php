@@ -8,130 +8,163 @@
 @endsection
 
 @php
-    if(isset($category)) {
-    $actionUrl = route('admin.categories.update', ['category' => $category]);
-    $method = 'PATCH';
+    $isEdit = isset($category);
+
+    if ($isEdit) {
+        $actionUrl = route('admin.categories.update', ['category' => $category]);
+        $method = 'PATCH';
     } else {
-    $actionUrl = route('admin.categories.store') ;
-    $method = 'POST';
+        $actionUrl = route('admin.categories.store');
+        $method = 'POST';
     }
+
+    // Where "Cancel" returns to: the list this category belongs (or will belong) to.
+    $cancelParentId = $isEdit ? $category->parent_id : ($parent_id ?? null);
+    $cancelGender   = $isEdit ? $category->gender : ($gender ?? null);
+    $cancelUrl = $cancelParentId
+        ? route('admin.categories.index', ['parent_id' => $cancelParentId])
+        : ($cancelGender
+            ? route('admin.categories.index', ['gender' => $cancelGender])
+            : route('admin.categories.index'));
+
+    $currentImageUrl = $isEdit && $category->asset
+        ? route('admin.file.uploaded_asset', ['stored_name' => $category->asset->stored_name])
+        : null;
+    $currentImageName = $isEdit && $category->asset ? $category->asset->original_name : '';
 @endphp
+
+@push('css')
+    <style>
+        .image-dropzone {
+            border: 2px dashed var(--cui-border-color);
+            border-radius: .5rem;
+            cursor: pointer;
+            transition: border-color .15s ease, background-color .15s ease;
+            min-height: 112px;
+        }
+        .image-dropzone:hover { border-color: #0f766f; background: rgba(15, 118, 111, .04); }
+        .image-dropzone img { width: 88px; height: 88px; object-fit: cover; border-radius: .5rem; }
+        .image-dropzone .dz-placeholder-icon {
+            width: 40px; height: 40px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: rgba(15, 118, 111, .12); color: #0f766f;
+        }
+        .image-dropzone .dz-placeholder-icon .icon { width: 22px; height: 22px; }
+    </style>
+@endpush
 
 @section('content')
     <div class="container-lg px-4">
-        <div class="fs-2 fw-semibold" data-coreui-i18n="dashboard">
-            Category
-            @if(isset($category))
-                Update
-            @else
-                Create
-            @endif
-        </div>
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}" data-coreui-i18n="home">Home</a>
-                </li>
-                <li class="breadcrumb-item active"><span data-coreui-i18n="dashboard"><a href="{{route('admin.categories.index')}}">Category Management </a> </span>
-                </li>
-                <li class="breadcrumb-item active"><span data-coreui-i18n="dashboard">Category @if(isset($category)) Update @else Create @endif</span>
-                </li>
+            <ol class="breadcrumb mt-2 mb-3">
+                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('admin.categories.index')}}">Category Management</a></li>
+                <li class="breadcrumb-item active">Category {{ $isEdit ? 'Update' : 'Create' }}</li>
             </ol>
         </nav>
 
-        <div class="row ">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <h5 class="card-title mb-0">
-                            @if(isset($category))
-                                Update
-                            @else
-                                Create
-                            @endif
-                            Category
-                        </h5>
+        @include('partials.notification')
+
+        <form action="{{ $actionUrl }}" enctype="multipart/form-data" method="post">
+            @method($method)
+            @csrf
+
+            <div class="card mb-4">
+                {{-- Header doubles as the action bar — always visible, no scrolling --}}
+                <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2 py-3">
+                    <h5 class="card-title mb-0 fw-semibold">{{ $isEdit ? 'Update Category' : 'Create Category' }}</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{{ $cancelUrl }}" class="btn btn-sm btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <svg class="icon me-1"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-save')}}"></use></svg>
+                            {{ $isEdit ? 'Update' : 'Create' }}
+                        </button>
                     </div>
-                    <div class="card-body">
-                        @include('partials.notification')
+                </div>
 
-                        <form action="{{ $actionUrl }}" enctype="multipart/form-data" method="post">
-                            @method($method)
-                            @csrf
+                <div class="card-body">
+                    <div class="row g-4">
+                        {{-- Main details --}}
+                        <div class="col-lg-8">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $isEdit ? $category->name : '') }}" placeholder="e.g. Necklaces" required autofocus>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', isset($category) ? $category->name : '') }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="parent_id" class="form-label">Parent Category</label>
                                     <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                        <option value="">None</option>
+                                        <option value="">None (top-level)</option>
                                         @foreach($parents as $parent)
-                                            <option value="{{ $parent->id }}" data-gender="{{ $parent->gender }}" {{ (old('parent_id', isset($category) ? $category->parent_id : (isset($parent_id) ? $parent_id : '')) == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} - {{$parent->gender??""}}</option>
+                                            <option value="{{ $parent->id }}" data-gender="{{ $parent->gender }}" {{ (old('parent_id', $isEdit ? $category->parent_id : ($parent_id ?? '')) == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} — {{ ucfirst($parent->gender ?? '') }}</option>
                                         @endforeach
                                     </select>
                                     @error('parent_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="gender" class="form-label">Gender <b class="text-danger">*</b></label>
                                     <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender" required>
-                                        <option value="unisex" {{ (old('gender', isset($category) ? $category->gender : ($gender ?? '')) == 'unisex') ? 'selected' : '' }}>Unisex</option>
-                                        <option value="man" {{ (old('gender', isset($category) ? $category->gender : ($gender ?? '')) == 'man') ? 'selected' : '' }}>Man</option>
-                                        <option value="women" {{ (old('gender', isset($category) ? $category->gender : ($gender ?? '')) == 'women') ? 'selected' : '' }}>Women</option>
+                                        <option value="unisex" {{ (old('gender', $isEdit ? $category->gender : ($gender ?? '')) == 'unisex') ? 'selected' : '' }}>Unisex</option>
+                                        <option value="man" {{ (old('gender', $isEdit ? $category->gender : ($gender ?? '')) == 'man') ? 'selected' : '' }}>Man</option>
+                                        <option value="women" {{ (old('gender', $isEdit ? $category->gender : ($gender ?? '')) == 'women') ? 'selected' : '' }}>Women</option>
                                     </select>
+                                    <div class="form-text mt-1" id="gender-hint">Matches the parent when one is selected.</div>
                                     @error('gender')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="image" class="form-label">Image</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control @error('asset_id') is-invalid @enderror" id="image_name" value="{{ isset($category) && $category->asset ? $category->asset->original_name : '' }}" readonly placeholder="Select or upload an image">
-                                        <input type="hidden" id="asset_id" name="asset_id" value="{{ old('asset_id', isset($category) ? $category->asset_id : '') }}">
-                                        <button class="btn btn-outline-secondary" type="button" id="btn-file-manager">Choose Image</button>
-@if(isset($category) && $category->asset)
-    <button class="btn btn-outline-danger" type="button" id="btn-remove-image">Remove</button>
-@else
-    <button class="btn btn-outline-danger" type="button" id="btn-remove-image" style="display: none;">Remove</button>
-@endif
-                                    </div>
-                                    <div class="mt-2" id="image-preview">
-                                        @if(isset($category) && $category->asset)
-                                            <img src="{{ route('admin.file.uploaded_asset', ['stored_name' => $category->asset->stored_name]) }}" alt="Current Image" style="max-height: 100px;">
-                                        @endif
-                                    </div>
-                                    @error('asset_id')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
+                            </div>
+
+                            <div class="mt-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="status" name="status" {{ (old('status', $isEdit ? $category->status : 1)) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="status">Active <span class="text-body-secondary small">— visible on the storefront</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Image --}}
+                        <div class="col-lg-4">
+                            <label class="form-label">Image</label>
+                            <div class="image-dropzone d-flex flex-column align-items-center justify-content-center text-center p-2" id="image-dropzone">
+                                <div id="image-preview" class="{{ $currentImageUrl ? '' : 'd-none' }}">
+                                    @if($currentImageUrl)
+                                        <img src="{{ $currentImageUrl }}" alt="{{ $currentImageName }}">
+                                    @endif
+                                </div>
+                                <div id="image-empty" class="{{ $currentImageUrl ? 'd-none' : '' }}">
+                                    <span class="dz-placeholder-icon mb-1">
+                                        <svg class="icon"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-image-plus')}}"></use></svg>
+                                    </span>
+                                    <div class="small fw-medium">Click to choose an image</div>
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="status" name="status" {{ (old('status', isset($category) ? $category->status : 1)) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="status">
-                                            Active
-                                        </label>
-                                    </div>
-                                </div>
+                            <div class="small text-body-secondary text-truncate mt-1" id="image-caption">{{ $currentImageName }}</div>
+
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-secondary flex-fill" type="button" id="btn-file-manager">
+                                    {{ $currentImageUrl ? 'Change' : 'Choose' }}
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger {{ $currentImageUrl ? '' : 'd-none' }}" type="button" id="btn-remove-image">Remove</button>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
+                            <input type="hidden" id="image_name" value="{{ $currentImageName }}">
+                            <input type="hidden" id="asset_id" name="asset_id" value="{{ old('asset_id', $isEdit ? $category->asset_id : '') }}">
+                            @error('asset_id')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <!-- File Manager Modal -->
@@ -158,40 +191,55 @@
                 const assetIdInput = document.getElementById('asset_id');
                 const imageNameInput = document.getElementById('image_name');
                 const imagePreview = document.getElementById('image-preview');
+                const imageEmpty = document.getElementById('image-empty');
+                const imageCaption = document.getElementById('image-caption');
+                const dropzone = document.getElementById('image-dropzone');
 
-                btnFileManager.addEventListener('click', function() {
+                function openManager() {
                     fileManagerModal.show();
-                });
+                }
 
-                btnRemoveImage.addEventListener('click', function() {
+                btnFileManager.addEventListener('click', openManager);
+                dropzone.addEventListener('click', openManager);
+
+                btnRemoveImage.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     assetIdInput.value = '';
                     imageNameInput.value = '';
+                    imageCaption.textContent = '';
                     imagePreview.innerHTML = '';
-                    this.style.display = 'none';
+                    imagePreview.classList.add('d-none');
+                    imageEmpty.classList.remove('d-none');
+                    btnRemoveImage.classList.add('d-none');
+                    btnFileManager.textContent = 'Choose';
                 });
 
-                // Listen for message from iframe
+                // Listen for message from the file manager iframe
                 window.addEventListener('message', function(event) {
                     if (event.data.type === 'fileSelected') {
                         const file = event.data.file;
                         assetIdInput.value = file.id;
                         imageNameInput.value = file.original_name;
+                        imageCaption.textContent = file.original_name;
 
-                        // Update preview
-                        imagePreview.innerHTML = `<img src="${file.url}" alt="${file.original_name}" style="max-height: 100px;">`;
-                        btnRemoveImage.style.display = '';
+                        imagePreview.innerHTML = `<img src="${file.url}" alt="${file.original_name}">`;
+                        imagePreview.classList.remove('d-none');
+                        imageEmpty.classList.add('d-none');
+                        btnRemoveImage.classList.remove('d-none');
+                        btnFileManager.textContent = 'Change';
 
                         fileManagerModal.hide();
                     }
                 });
 
+                // Gender <-> Parent sync
                 const genderSelect = document.getElementById('gender');
                 const parentSelect = document.getElementById('parent_id');
+                const genderHint = document.getElementById('gender-hint');
                 const parentOptions = parentSelect.querySelectorAll('option:not([value=""])');
 
                 function filterParents() {
                     const selectedGender = genderSelect.value;
-
                     parentOptions.forEach(option => {
                         const parentGender = option.getAttribute('data-gender');
                         if (selectedGender === 'unisex' || parentGender === 'unisex' || parentGender === selectedGender) {
@@ -199,7 +247,7 @@
                         } else {
                             option.style.display = 'none';
                             if (parentSelect.value === option.value) {
-                                parentSelect.value = ''; // Deselect if hidden
+                                parentSelect.value = '';
                             }
                         }
                     });
@@ -210,26 +258,21 @@
                     if (selectedParentId) {
                         const selectedOption = parentSelect.options[parentSelect.selectedIndex];
                         const parentGender = selectedOption.getAttribute('data-gender');
-
-                        // If parent has a specific gender (not unisex), force child to that gender
-                        // Or if child is currently something else that contradicts parent, update it.
-                        // Actually requirement says: "gender will automatically slelect baseed on Parent Category's gender"
-
                         if (parentGender && parentGender !== 'unisex') {
-                             genderSelect.value = parentGender;
-                             // Make gender read-only or disable options?
-                             // Requirement: "i should not select another gender by mistake"
-                             // Let's just update it for now. User can change it back, but then filterParents will run again.
+                            genderSelect.value = parentGender;
+                            if (genderHint) genderHint.textContent = 'Locked to the parent’s gender.';
                         }
+                    } else if (genderHint) {
+                        genderHint.textContent = 'Matches the parent when one is selected.';
                     }
-                    filterParents(); // Re-filter based on the (potentially new) gender
+                    filterParents();
                 }
 
                 genderSelect.addEventListener('change', filterParents);
                 parentSelect.addEventListener('change', syncGender);
 
                 // Initial run
-                filterParents();
+                syncGender();
             });
         </script>
     @endpush
