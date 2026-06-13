@@ -130,6 +130,10 @@ Scaffolding only — no migrations/models/controllers. Either build it or delete
 5. **Reviews, coupons, CMS pages** — growth/trust features once the core is solid.
 6. **Cleanups**: status enum (F), filter validation (G), image-delete guard (E), remove/finish Gallery
    module (H).
+7. admin crud
+8. rbac
+9. blog
+10. dynamic home page
 
 **Suggested first step:** #1 (inventory + transactional checkout) — it's the most damaging gap and a
 contained change: a migration + stock validation/decrement in `placeOrder`.

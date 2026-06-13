@@ -21,10 +21,20 @@
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.users.index')}}">
                 <svg class="nav-icon">
-                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
-                </svg><span data-coreui-i18n="dashboard">Users</span>
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-people') }}"></use>
+                </svg><span>Users</span>
             </a>
         </li>
+
+        @if(Route::has('admin.admins.index'))
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('admin.admins.index')}}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-shield-alt') }}"></use>
+                </svg><span>Admins</span>
+            </a>
+        </li>
+        @endif
 
         @if(Route::has('admin.orders.index'))
             <li class="nav-item">

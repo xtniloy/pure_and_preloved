@@ -19,7 +19,16 @@ Route::middleware('guest:admin')
     ->group(function () {
         Route::get('/login', 'AuthController@index')->name('admin.login');
         Route::post('/login', 'AuthController@login')->name('admin.auth');
+        Route::get('/forget-password', 'AuthController@forget_password')->name('admin.forget_password');
+        Route::post('/forget-password', 'AuthController@request_forget_password')->name('admin.request_forget_password');
+        Route::get('/set-password/{token?}', 'AuthController@set_password')->name('admin.set_password');
+        Route::post('/set-password/{token?}', 'AuthController@save_password')->name('admin.save_password');
     });
+
+Route::middleware('guest:admin')->group(function () {
+    Route::get('/email-success/{admin}', [\App\Http\Controllers\Admin\Auth\AuthController::class, 'email_success'])->name('admin.email_success');
+    Route::post('/email-resend/{admin}', [\App\Http\Controllers\Admin\Auth\AuthController::class, 'email_resend'])->name('admin.email_resend');
+});
 
 Route::middleware('auth:admin')->group(function () {
     Route::get('/logout',[\App\Http\Controllers\Admin\Auth\AuthController::class,'logout'])->name('admin.logout');
@@ -32,6 +41,8 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::post('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'update'])->name('profile');
 
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
+    Route::get('/admins/{admin}/resend-email', [\App\Http\Controllers\Admin\AdminController::class, 'resend_email'])->name('admins.email.resend');
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::post('/categories/update-order', [\App\Http\Controllers\Admin\CategoryController::class, 'updateOrder'])->name('categories.update_order');
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
