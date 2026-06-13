@@ -15,6 +15,9 @@ class CategoryController extends Controller
         if ($request->filled('parent_id')) {
             $parent = Category::with('parent')->findOrFail($request->parent_id);
 
+            // A category at the deepest level has no children list to show.
+            abort_unless($parent->canHaveChildren(), 404);
+
             $categories = Category::with(['parent', 'asset'])
                 ->withCount('children')
                 ->where('parent_id', $parent->id)
@@ -26,6 +29,8 @@ class CategoryController extends Controller
                 'categories' => $categories,
                 'parent' => $parent,
                 'gender' => $parent->gender,
+                // Level of the items shown here (root=1). Used to stop drilling past MAX_DEPTH.
+                'currentLevel' => $parent->depth() + 1,
             ]);
         }
 
@@ -46,6 +51,7 @@ class CategoryController extends Controller
                 'categories' => $categories,
                 'parent' => null,
                 'gender' => $gender,
+                'currentLevel' => 1,
             ]);
         }
 
@@ -83,9 +89,16 @@ class CategoryController extends Controller
 
     public function create(Request $request)
     {
-        $parents = Category::all();
+        $parents = $this->eligibleParents();
         $parent_id = $request->query('parent_id');
         $gender = $request->query('gender');
+
+        // Can't add a child under a category that's already at the deepest level.
+        if ($this->parentTooDeep($parent_id)) {
+            $parent = Category::find($parent_id);
+            return redirect($this->listUrlFor($parent->parent_id, $parent->gender))
+                ->with('error', 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.');
+        }
 
         // When adding under a parent, the gender is dictated by that parent.
         if ($parent_id && $parent = Category::find($parent_id)) {
@@ -93,6 +106,40 @@ class CategoryController extends Controller
         }
 
         return view('admin.sections.categories.form', compact('parents', 'parent_id', 'gender'));
+    }
+
+    /**
+     * Categories eligible to be a parent: those still shallower than MAX_DEPTH
+     * (a level-3 category can't take children). Depth is resolved in-memory to
+     * avoid a query per category.
+     */
+    private function eligibleParents($excludeId = null)
+    {
+        $all = Category::orderBy('name')->get()->keyBy('id');
+
+        $depthOf = function ($category) use ($all) {
+            $depth = 1;
+            $parentId = $category->parent_id;
+            while ($parentId && isset($all[$parentId])) {
+                $depth++;
+                $parentId = $all[$parentId]->parent_id;
+            }
+            return $depth;
+        };
+
+        return $all->filter(function ($category) use ($depthOf, $excludeId) {
+            return $category->id !== $excludeId && $depthOf($category) < Category::MAX_DEPTH;
+        })->values();
+    }
+
+    /** True when nesting under $parentId would exceed the allowed depth. */
+    private function parentTooDeep($parentId): bool
+    {
+        if (!$parentId) {
+            return false;
+        }
+        $parent = Category::find($parentId);
+        return $parent && $parent->depth() >= Category::MAX_DEPTH;
     }
 
     /**
@@ -114,6 +161,10 @@ class CategoryController extends Controller
             'gender' => 'required|in:man,women,unisex',
             'asset_id' => 'nullable|exists:assets,id',
         ]);
+
+        if ($this->parentTooDeep($request->parent_id)) {
+            return back()->withErrors(['parent_id' => 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.'])->withInput();
+        }
 
         if ($request->parent_id) {
             $parent = Category::find($request->parent_id);
@@ -145,7 +196,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $parents = Category::where('id', '!=', $category->id)->get();
+        $parents = $this->eligibleParents($category->id);
         return view('admin.sections.categories.form', compact('category', 'parents'));
     }
 
@@ -157,6 +208,10 @@ class CategoryController extends Controller
             'gender' => 'required|in:man,women,unisex',
             'asset_id' => 'nullable|exists:assets,id',
         ]);
+
+        if ($this->parentTooDeep($request->parent_id)) {
+            return back()->withErrors(['parent_id' => 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.'])->withInput();
+        }
 
         if ($request->parent_id) {
             $parent = Category::find($request->parent_id);

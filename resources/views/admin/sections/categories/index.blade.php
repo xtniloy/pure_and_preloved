@@ -54,6 +54,7 @@
                     <div class="card-body">
                         <div class="row align-items-center mx-2 mb-3">
                             <div class="col-auto ml-0 ml-lg-auto text-left text-lg-right mt-3 mt-lg-0 ms-auto">
+                                @if(!isset($parent) || $parent->canHaveChildren())
                                 <a href="{{route('admin.categories.create', isset($parent) ? ['parent_id' => $parent->id] : ['gender' => $gender])}}">
                                     <button class="btn btn-outline-secondary">
                                         <svg class="icon me-2">
@@ -63,6 +64,7 @@
                                         {{ isset($parent) ? 'Add subcategory' : 'Add category' }}
                                     </button>
                                 </a>
+                                @endif
                                 <span id="order-status" class="ms-2 small text-body-secondary align-middle d-none"></span>
                             </div>
                         </div>
@@ -102,13 +104,19 @@
                                                         <svg class="icon icon-sm"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-image')}}"></use></svg>
                                                     </span>
                                                 @endif
-                                                <a href="{{ route('admin.categories.index', ['parent_id' => $category->id]) }}" class="text-decoration-none fw-medium">
-                                                    {{$category->name}}
-                                                </a>
-                                                @if(($category->children_count ?? 0) > 0)
-                                                    <span class="badge bg-brand-soft ms-1">{{ $category->children_count }} sub</span>
+                                                @if(($currentLevel ?? 1) < \App\Models\Category::MAX_DEPTH)
+                                                    {{-- Drill into children (not yet at the deepest level). --}}
+                                                    <a href="{{ route('admin.categories.index', ['parent_id' => $category->id]) }}" class="text-decoration-none fw-medium">
+                                                        {{$category->name}}
+                                                    </a>
+                                                    @if(($category->children_count ?? 0) > 0)
+                                                        <span class="badge bg-brand-soft ms-1">{{ $category->children_count }} sub</span>
+                                                    @endif
+                                                    <svg class="icon icon-sm text-body-secondary ms-1"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-chevron-right')}}"></use></svg>
+                                                @else
+                                                    {{-- Deepest level (e.g. Rings): a leaf, no drilling further. --}}
+                                                    <span class="fw-medium">{{$category->name}}</span>
                                                 @endif
-                                                <svg class="icon icon-sm text-body-secondary ms-1"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-chevron-right')}}"></use></svg>
                                             </td>
                                             <td>
                                                 <input type="hidden" name="categories[{{ $k }}][id]" value="{{ $category->id }}">
