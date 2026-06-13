@@ -4,11 +4,7 @@
 @endsection
 
 @php
-    $genderMeta = [
-        'man'    => ['label' => 'Mens Category',   'icon' => 'cil-user',        'desc' => 'Manage all categories for men'],
-        'women'  => ['label' => 'Womens Category', 'icon' => 'cil-user-female', 'desc' => 'Manage all categories for women'],
-        'unisex' => ['label' => 'Unisex Category', 'icon' => 'cil-people',      'desc' => 'Categories available to everyone'],
-    ];
+    $genderMeta = \App\Enum\General::$gender_meta;
 @endphp
 
 @push('css')

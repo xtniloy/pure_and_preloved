@@ -3,8 +3,7 @@
     Category Management
 @endsection
 @php
-    $genderLabels = ['man' => 'Mens Category', 'women' => 'Womens Category', 'unisex' => 'Unisex Category'];
-    $genderLabel = $genderLabels[$gender] ?? ucfirst($gender);
+    $genderLabel = \App\Enum\General::$gender_meta[$gender]['label'] ?? ucfirst($gender);
     $ancestors = isset($parent) ? $parent->ancestors() : collect();
     $backUrl = isset($parent)
         ? ($parent->parent_id

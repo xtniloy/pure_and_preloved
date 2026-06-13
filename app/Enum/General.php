@@ -40,6 +40,12 @@ class General
         'Restricted' => 0,
     ];
 
+    public static array $gender_meta = [
+        'man'    => ['label' => 'Mens Category',   'icon' => 'cil-user',        'desc' => 'Manage all categories for men'],
+        'women'  => ['label' => 'Womens Category', 'icon' => 'cil-user-female', 'desc' => 'Manage all categories for women'],
+        'unisex' => ['label' => 'Unisex Category', 'icon' => 'cil-people',      'desc' => 'Categories available to everyone'],
+    ];
+
 
 }
 
