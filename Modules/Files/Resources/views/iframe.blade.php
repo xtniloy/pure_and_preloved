@@ -45,6 +45,14 @@
                     }
                 }
 
+                // Re-apply the highlight to any currently-selected files. Called after
+                // infinite scroll appends new file rows/cards so they reflect selection.
+                window.__applySelectionHighlights = function() {
+                    selectedIds.forEach(function(id) {
+                        applySelectedState(id, true);
+                    });
+                };
+
                 document.addEventListener('click', function(event) {
                     const btn = event.target.closest('.select-file-btn');
                     if (!btn) {
@@ -203,113 +211,9 @@
                             </tr>
                             </thead>
                             <tbody id="fileListBody">
-                            @if($files->count() > 0)
-                                @foreach($files as $k=>$file)
-                                    <tr class="file-row" id="file-{{$file->id}}" data-file-id="{{$file->id}}" data-file-type="{{$file->mime_type}}" data-file-name="{{$file->original_name}}" data-thumbnail="{{$file->thumbnail_url ?? ''}}">
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                @php
-                                                    $iconClass = 'text-secondary';
-                                                    $mimeType = $file->mime_type ?? '';
-                                                @endphp
-
-                                                <div class="form-check me-2">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary select-file-btn" data-id="{{ $file->id }}" data-original-name="{{ $file->original_name }}" data-url="{{ $file->url }}">Select</button>
-                                                </div>
-
-                                                @if(str_starts_with($mimeType, 'image/'))
-                                                    <div class="file-thumbnail me-2" style="width: 32px; height: 32px;">
-                                                        <img src="{{ $file->thumbnail_url ?? $file->url }}" alt="" class="rounded" style="width: 32px; height: 32px; object-fit: cover;">
-                                                    </div>
-                                                @elseif(str_starts_with($mimeType, 'video/'))
-                                                    <div class="file-thumbnail me-2 position-relative" style="width: 32px; height: 32px;">
-                                                        @if($file->thumbnail_url)
-                                                            <img src="{{ $file->thumbnail_url }}" alt="" class="rounded" style="width: 32px; height: 32px; object-fit: cover;">
-                                                        @else
-                                                            <div class="bg-dark rounded d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                                                                <svg class="text-white" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                                                </svg>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                @elseif($mimeType === 'application/pdf')
-                                                    <svg class="me-2 text-danger" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                        <polyline points="10 9 9 9 8 9"></polyline>
-                                                    </svg>
-                                                @elseif(str_starts_with($mimeType, 'text/') || in_array($mimeType, ['application/json', 'application/xml']))
-                                                    <svg class="me-2 text-info" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                        <line x1="10" y1="9" x2="8" y2="9"></line>
-                                                    </svg>
-                                                @elseif(str_starts_with($mimeType, 'audio/'))
-                                                    <svg class="me-2 text-success" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M9 18V5l12-2v13"></path>
-                                                        <circle cx="6" cy="18" r="3"></circle>
-                                                        <circle cx="18" cy="16" r="3"></circle>
-                                                    </svg>
-                                                @elseif(in_array($mimeType, ['application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed']))
-                                                    <svg class="me-2 text-warning" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M21 8v13H3V8"></path>
-                                                        <path d="M1 3h22v5H1z"></path>
-                                                        <path d="M10 12h4"></path>
-                                                    </svg>
-                                                @else
-                                                    <svg class="me-2 text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                                        <polyline points="13 2 13 9 20 9"></polyline>
-                                                    </svg>
-                                                @endif
-                                                <span class="fw-medium text-truncate" style="max-width: 250px;" title="{{$file->original_name}}">{{$file->original_name}}</span>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge bg-light text-dark">{{ $file->file_extension ?? pathinfo($file->original_name, PATHINFO_EXTENSION) }}</span></td>
-                                        <td>{{$file->file_size}}</td>
-                                        <td><small class="text-medium-emphasis">{{$file->upload_time}}</small></td>
-                                        <td>
-                                            <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar progress-bar bg-success"
-                                                     role="progressbar"
-                                                     style="width: 100%"
-                                                     id="progress-{{$file->id}}"></div>
-                                            </div>
-                                            <small class="text-muted" id="progress-text-{{$file->id}}">100%</small>
-                                            <small class="upload-speed" id="speed-{{$file->id}}"></small>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-success" id="status-{{$file->id}}">{{$file->status}}</span>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <button type="button" class="btn btn-outline-primary action-btn" onclick="viewFile('{{$file->id}}')" title="View">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                        <circle cx="12" cy="12" r="3"></circle>
-                                                    </svg>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-success action-btn" onclick="downloadFile('{{$file->id}}')" title="Download" id="download-{{$file->id}}">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                                        <polyline points="7 10 12 15 17 10"></polyline>
-                                                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                                                    </svg>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-danger action-btn" onclick="deleteFile('{{$file->id}}')" title="Delete">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                            @if($files->total() > 0)
+                                @foreach($files as $file)
+                                    @include('files::partials.list_row', ['file' => $file])
                                 @endforeach
                             @else
                                 <tr id="emptyState">
@@ -330,122 +234,12 @@
                 {{-- Grid View --}}
                 <div class="d-none" id="gridView">
                     <div class="row g-4" id="fileGridBody">
-                        @if($files->count() > 0)
+                        @if($files->total() > 0)
                             @foreach($files as $file)
-                                <div class="col-6 col-md-4 col-lg-3 col-xl-2 file-grid-item" id="grid-file-{{$file->id}}" data-file-id="{{$file->id}}">
-                                    <div class="card h-100 file-card">
-                                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center position-relative" style="height: 140px; overflow: hidden;">
-                                            @php
-                                                $mimeType = $file->mime_type ?? '';
-                                            @endphp
-
-                                            @if(str_starts_with($mimeType, 'image/'))
-                                                <img src="{{ $file->thumbnail_url ?? $file->url }}" alt="{{ $file->original_name }}" class="w-100 h-100" style="object-fit: cover;">
-                                            @elseif(str_starts_with($mimeType, 'video/'))
-                                                @if($file->thumbnail_url)
-                                                    <img src="{{ $file->thumbnail_url }}" alt="{{ $file->original_name }}" class="w-100 h-100" style="object-fit: cover;">
-                                                    <div class="position-absolute top-50 start-50 translate-middle">
-                                                        <div class="bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                            <svg class="text-white" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <div class="bg-dark w-100 h-100 d-flex align-items-center justify-content-center">
-                                                        <svg class="text-white" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                            <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                                                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                                                        </svg>
-                                                    </div>
-                                                @endif
-                                            @elseif($mimeType === 'application/pdf')
-                                                <svg class="text-danger" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                </svg>
-                                            @elseif(str_starts_with($mimeType, 'audio/'))
-                                                <svg class="text-success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M9 18V5l12-2v13"></path>
-                                                    <circle cx="6" cy="18" r="3"></circle>
-                                                    <circle cx="18" cy="16" r="3"></circle>
-                                                </svg>
-                                            @elseif(str_starts_with($mimeType, 'text/') || in_array($mimeType, ['application/json', 'application/xml']))
-                                                <svg class="text-info" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                    <line x1="10" y1="9" x2="8" y2="9"></line>
-                                                </svg>
-                                            @elseif(in_array($mimeType, ['application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed']))
-                                                <svg class="text-warning" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M21 8v13H3V8"></path>
-                                                    <path d="M1 3h22v5H1z"></path>
-                                                    <path d="M10 12h4"></path>
-                                                </svg>
-                                            @else
-                                                <svg class="text-primary" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                                    <polyline points="13 2 13 9 20 9"></polyline>
-                                                </svg>
-                                            @endif
-
-                                            {{-- File type badge --}}
-                                            <span class="position-absolute top-0 end-0 m-2 badge bg-dark bg-opacity-75">
-                                                {{ strtoupper($file->file_extension ?? pathinfo($file->original_name, PATHINFO_EXTENSION)) }}
-                                            </span>
-                                        </div>
-                                        <div class="card-body p-2">
-                                            <p class="card-text small mb-1 text-truncate fw-medium" title="{{ $file->original_name }}">{{ $file->original_name }}</p>
-                                            <p class="card-text small text-muted mb-2">{{ $file->file_size }}</p>
-                                            <div class="d-flex gap-1">
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-sm btn-outline-primary flex-fill select-file-btn"
-                                                    data-id="{{ $file->id }}"
-                                                    data-original-name="{{ $file->original_name }}"
-                                                    data-url="{{ $file->url }}"
-                                                >
-                                                    Select
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-primary flex-fill" onclick="viewFile('{{$file->id}}')" title="View">
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                        <circle cx="12" cy="12" r="3"></circle>
-                                                    </svg>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-success flex-fill" onclick="downloadFile('{{$file->id}}')" title="Download">
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                                        <polyline points="7 10 12 15 17 10"></polyline>
-                                                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                                                    </svg>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger flex-fill" onclick="deleteFile('{{$file->id}}')" title="Delete">
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        {{-- Upload Progress Overlay --}}
-                                        <div class="upload-overlay position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-none" id="grid-overlay-{{$file->id}}">
-                                            <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                                <div class="spinner-border text-primary mb-2" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
-                                                </div>
-                                                <small class="text-muted" id="grid-progress-{{$file->id}}">100%</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('files::partials.grid_card', ['file' => $file])
                             @endforeach
                         @endif
-                        <div class="col-12 text-center py-5 text-medium-emphasis {{ $files->count() > 0 ? 'd-none' : '' }}" id="gridEmptyState">
+                        <div class="col-12 text-center py-5 text-medium-emphasis {{ $files->total() > 0 ? 'd-none' : '' }}" id="gridEmptyState">
                             <svg class="mb-3" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                                 <polyline points="13 2 13 9 20 9"></polyline>
@@ -454,6 +248,15 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Infinite-scroll loader / end-of-list indicator --}}
+                <div id="filesLoader" class="text-center py-3 d-none">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2 text-muted small">Loading more files…</span>
+                </div>
+                <div id="filesEnd" class="text-center py-3 text-muted small d-none">No more files</div>
             </div>
         </div>
     </div>
@@ -635,6 +438,96 @@
             } else {
                 gridViewBtn.click();
             }
+
+            // ---- Infinite scroll pagination ----
+            const loadFilesUrl = "{{ route('admin.file.iframe.load') }}";
+            const filesLoader = document.getElementById('filesLoader');
+            const filesEnd = document.getElementById('filesEnd');
+            let nextPage = {{ $files->currentPage() + 1 }};
+            let hasMorePages = @json($files->hasMorePages());
+            let isLoadingPage = false;
+
+            function insertFiles(html, mode) {
+                const wrapper = document.createElement(mode === 'list' ? 'tbody' : 'div');
+                wrapper.innerHTML = html;
+                Array.from(wrapper.children).forEach(function(node) {
+                    // Skip duplicates already rendered (e.g. just-uploaded files)
+                    if (node.id && document.getElementById(node.id)) {
+                        return;
+                    }
+                    if (mode === 'grid' && gridEmptyState) {
+                        fileGridBody.insertBefore(node, gridEmptyState);
+                    } else if (mode === 'grid') {
+                        fileGridBody.appendChild(node);
+                    } else {
+                        fileListBody.appendChild(node);
+                    }
+                });
+            }
+
+            async function loadNextPage() {
+                if (isLoadingPage || !hasMorePages) {
+                    return;
+                }
+                isLoadingPage = true;
+                if (filesLoader) filesLoader.classList.remove('d-none');
+
+                try {
+                    const response = await fetch(`${loadFilesUrl}?page=${nextPage}`, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    if (!response.ok) {
+                        throw new Error(`Failed to load files: ${response.statusText}`);
+                    }
+                    const data = await response.json();
+
+                    // Append, skipping any ids already in the DOM (offset pagination can
+                    // repeat a boundary row if files were uploaded since the page loaded).
+                    if (data.listHtml) {
+                        insertFiles(data.listHtml, 'list');
+                    }
+                    if (data.gridHtml) {
+                        insertFiles(data.gridHtml, 'grid');
+                    }
+
+                    hasMorePages = data.hasMore;
+                    nextPage = data.nextPage;
+                    updateFileCount();
+
+                    // Re-highlight any newly loaded files that are already selected (multi mode)
+                    if (typeof window.__applySelectionHighlights === 'function') {
+                        window.__applySelectionHighlights();
+                    }
+
+                    if (!hasMorePages && filesEnd) {
+                        filesEnd.classList.remove('d-none');
+                    }
+                } catch (error) {
+                    console.error('Pagination error:', error);
+                } finally {
+                    isLoadingPage = false;
+                    if (filesLoader) filesLoader.classList.add('d-none');
+
+                    // The freshly loaded page may still not fill the viewport.
+                    maybeLoadMore();
+                }
+            }
+
+            function maybeLoadMore() {
+                if (!hasMorePages || isLoadingPage) {
+                    return;
+                }
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const threshold = document.documentElement.scrollHeight - 300;
+                if (scrollPosition >= threshold) {
+                    loadNextPage();
+                }
+            }
+
+            window.addEventListener('scroll', maybeLoadMore, { passive: true });
+            window.addEventListener('resize', maybeLoadMore, { passive: true });
+            // Kick off in case the first 30 don't fill the iframe height.
+            maybeLoadMore();
 
             // Click to upload
             uploadArea.addEventListener('click', (e) => {

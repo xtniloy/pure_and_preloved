@@ -8,6 +8,7 @@ Route::middleware(['web', 'auth:admin'])
     ->group(function () {
         Route::get('/', [FilesController::class, 'index'])->name('admin.file.index');
         Route::get('/iframe', [FilesController::class, 'iframe'])->name('admin.file.iframe');
+        Route::get('/iframe/load', [FilesController::class, 'iframeFiles'])->name('admin.file.iframe.load');
         Route::post('/upload-chunk', [FilesController::class, 'uploadChunk'])
             ->name('admin.file.upload.chunk');
         Route::post('/upload-thumbnail', [FilesController::class, 'uploadThumbnail'])

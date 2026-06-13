@@ -28,11 +28,32 @@ class FilesController extends Controller
         return view('files::index',compact('files'));
     }
 
+    public int $perPage = 30;
+
     public function iframe()
     {
-        $files = Asset::orderBy('id','desc')->get();
+        $files = Asset::orderBy('id','desc')->paginate($this->perPage);
 
         return view('files::iframe',compact('files'));
+    }
+
+    public function iframeFiles(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $files = Asset::orderBy('id','desc')->paginate($this->perPage);
+
+        $listHtml = '';
+        $gridHtml = '';
+        foreach ($files as $file) {
+            $listHtml .= view('files::partials.list_row', compact('file'))->render();
+            $gridHtml .= view('files::partials.grid_card', compact('file'))->render();
+        }
+
+        return response()->json([
+            'listHtml' => $listHtml,
+            'gridHtml' => $gridHtml,
+            'hasMore'  => $files->hasMorePages(),
+            'nextPage' => $files->currentPage() + 1,
+        ]);
     }
 
 
