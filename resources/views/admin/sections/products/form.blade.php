@@ -19,46 +19,47 @@
 
 @section('content')
     <div class="container-lg px-4">
-        <div class="fs-2 fw-semibold" data-coreui-i18n="dashboard">
-            Product
-            @if(isset($product))
-                Update
-            @else
-                Create
-            @endif
+
+        {{-- Page heading + breadcrumb + top actions --}}
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <div class="fs-2 fw-semibold">
+                    Product @if(isset($product)) Update @else Create @endif
+                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('admin.products.index')}}">Product Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">@if(isset($product)) Update @else Create @endif</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" form="product-form" class="btn btn-primary text-white px-4">
+                    Save Product
+                </button>
+            </div>
         </div>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}" data-coreui-i18n="home">Home</a>
-                </li>
-                <li class="breadcrumb-item active"><span data-coreui-i18n="dashboard"><a href="{{route('admin.products.index')}}">Product Management </a> </span>
-                </li>
-                <li class="breadcrumb-item active"><span data-coreui-i18n="dashboard">Product @if(isset($product)) Update @else Create @endif</span>
-                </li>
-            </ol>
-        </nav>
 
-        <div class="row ">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <h5 class="card-title mb-0">
-                            @if(isset($product))
-                                Update
-                            @else
-                                Create
-                            @endif
-                            Product
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        @include('partials.notification')
+        @include('partials.notification')
 
-                        <form action="{{ $actionUrl }}" enctype="multipart/form-data" method="post">
-                            @method($method)
-                            @csrf
+        <form id="product-form" action="{{ $actionUrl }}" enctype="multipart/form-data" method="post">
+            @method($method)
+            @csrf
 
-                            <div class="row mb-3">
+            <div class="row g-4">
+
+                {{-- ============ MAIN COLUMN ============ --}}
+                <div class="col-lg-8">
+
+                    {{-- Basic Information --}}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">Basic Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Name <b class="text-danger">*</b></label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', isset($product) ? $product->name : '') }}" required>
@@ -73,47 +74,24 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="product_gender" class="form-label">Gender Selection</label>
-                                    <select class="form-select" id="product_gender" name="product_gender">
-                                        <option value="">Select Gender</option>
-                                        <option value="man">Man</option>
-                                        <option value="women">Woman</option>
-                                        <option value="unisex">Unisex</option>
-                                    </select>
-                                    <div class="form-text">Selecting a new gender will clear current category selections.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="status" class="form-label">Status</label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="status" name="status" value="1" {{ old('status', isset($product) && $product->status ? 'checked' : '') }}>
-                                        <label class="form-check-label" for="status">Active</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="categories" class="form-label">Categories <b class="text-danger">*</b></label>
-                                    <select class="form-select @error('categories') is-invalid @enderror" id="categories" name="categories[]" multiple required style="height: 200px;">
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" data-gender="{{ $category->gender }}"
-                                                {{ (in_array($category->id, old('categories', isset($product) ? $product->categories->pluck('id')->toArray() : []))) ? 'selected' : '' }}>
-                                                {{ $category->parent ? $category->parent->name . ' > ' : '' }}{{ $category->name }} ({{ $category->gender }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="form-text">Hold Ctrl/Cmd to select multiple. Only categories matching the selected gender are shown.</div>
-                                    @error('categories')
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="5">{{ old('description', isset($product) ? $product->description : '') }}</textarea>
+                                    @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="row mb-3">
+                    {{-- Pricing --}}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">Pricing</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="price" class="form-label">Price <b class="text-danger">*</b></label>
                                     <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', isset($product) ? $product->price : '') }}" required>
@@ -129,43 +107,48 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description', isset($product) ? $product->description : '') }}</textarea>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <h5 class="mt-4 mb-3">Product Attributes</h5>
-                            <div class="row mb-3">
-                                <div class="col-md-3">
+                    {{-- Product Attributes --}}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">Product Attributes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-6 col-md-3">
                                     <label for="condition" class="form-label">Condition</label>
                                     <input type="text" class="form-control" id="condition" name="condition" value="{{ old('condition', isset($product) ? $product->condition : 'Pre-owned') }}" placeholder="e.g. Pre-owned">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-6 col-md-3">
                                     <label for="material" class="form-label">Material</label>
                                     <input type="text" class="form-control" id="material" name="material" value="{{ old('material', isset($product) ? $product->material : 'Gold') }}" placeholder="e.g. Gold">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-6 col-md-3">
                                     <label for="weight" class="form-label">Weight</label>
                                     <input type="text" class="form-control" id="weight" name="weight" value="{{ old('weight', isset($product) ? $product->weight : '') }}" placeholder="e.g. 5g">
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-6 col-md-3">
                                     <label for="carat" class="form-label">Carat</label>
                                     <input type="text" class="form-control" id="carat" name="carat" value="{{ old('carat', isset($product) ? $product->carat : '') }}" placeholder="e.g. 24K">
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <h5 class="mt-4 mb-3">Images</h5>
-
-                            <!-- Thumbnail Image -->
-                            <div class="mb-3">
+                    {{-- Media / Images --}}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">Media</h6>
+                        </div>
+                        <div class="card-body">
+                            {{-- Thumbnail Image --}}
+                            <div class="mb-4">
                                 <label class="form-label">Thumbnail Image</label>
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3 flex-wrap">
                                     <button class="btn btn-outline-secondary" type="button" id="btn-file-manager-thumbnail">Select Thumbnail</button>
-                                    <div id="thumbnail-container">
+                                    <div id="thumbnail-container" class="d-flex flex-wrap gap-2">
                                         @if(isset($product) && $product->thumbnailImage)
                                             <div class="position-relative image-item-single">
                                                 <img src="{{ route('admin.file.view', ['fileId' => $product->thumbnail_image_id]) }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
@@ -175,10 +158,13 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="form-text">Used as the main product image in listings.</div>
                             </div>
 
-                            <!-- Gallery Images -->
-                            <div class="mb-3">
+                            <hr class="text-body-secondary">
+
+                            {{-- Gallery Images --}}
+                            <div>
                                 <label class="form-label">Gallery Images</label>
                                 <div>
                                     <button class="btn btn-outline-secondary mb-2" type="button" id="btn-file-manager-multi">Select Images</button>
@@ -193,17 +179,24 @@
                                             @endforeach
                                         @endif
                                     </div>
+                                    <div class="form-text">Add multiple images to showcase the product.</div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <h5 class="mt-4 mb-3">SEO Information</h5>
-                            
-                            <!-- Meta Image -->
+                    {{-- SEO Information --}}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">SEO Information</h6>
+                        </div>
+                        <div class="card-body">
+                            {{-- Meta Image --}}
                             <div class="mb-3">
                                 <label class="form-label">Meta Image</label>
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3 flex-wrap">
                                     <button class="btn btn-outline-secondary" type="button" id="btn-file-manager-meta">Select Meta Image</button>
-                                    <div id="meta-image-container">
+                                    <div id="meta-image-container" class="d-flex flex-wrap gap-2">
                                         @if(isset($product) && $product->metaImage)
                                             <div class="position-relative image-item-single">
                                                 <img src="{{ route('admin.file.view', ['fileId' => $product->meta_image_id]) }}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
@@ -222,18 +215,75 @@
                                 <label for="meta_description" class="form-label">Meta Description</label>
                                 <textarea class="form-control" id="meta_description" name="meta_description" rows="2">{{ old('meta_description', isset($product) ? $product->meta_description : '') }}</textarea>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-0">
                                 <label for="meta_keywords" class="form-label">Meta Keywords</label>
                                 <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords', isset($product) ? $product->meta_keywords : '') }}">
                             </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <button type="submit" class="btn btn-primary text-white">Save Product</button>
-                            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Cancel</a>
-                        </form>
+                {{-- ============ SIDEBAR ============ --}}
+                <div class="col-lg-4">
+                    <div class="position-sticky" style="top: 1rem;">
+
+                        {{-- Publish --}}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0 fw-semibold">Publish</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <label class="form-label mb-0" for="status">Status</label>
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input" type="checkbox" id="status" name="status" value="1" {{ old('status', isset($product) && $product->status ? 'checked' : '') }}>
+                                        <label class="form-check-label" for="status">Active</label>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary text-white">Save Product</button>
+                                    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Organization --}}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0 fw-semibold">Organization</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="product_gender" class="form-label">Gender Selection</label>
+                                    <select class="form-select" id="product_gender" name="product_gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="man">Man</option>
+                                        <option value="women">Woman</option>
+                                        <option value="unisex">Unisex</option>
+                                    </select>
+                                    <div class="form-text">Changing gender clears current category selections.</div>
+                                </div>
+                                <div class="mb-0">
+                                    <label for="categories" class="form-label">Categories <b class="text-danger">*</b></label>
+                                    <select class="form-select @error('categories') is-invalid @enderror" id="categories" name="categories[]" multiple required style="height: 260px;">
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" data-gender="{{ $category->gender }}"
+                                                {{ (in_array($category->id, old('categories', isset($product) ? $product->categories->pluck('id')->toArray() : []))) ? 'selected' : '' }}>
+                                                {{ $category->parent ? $category->parent->name . ' > ' : '' }}{{ $category->name }} ({{ $category->gender }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="form-text">Hold Ctrl/Cmd to select multiple. Only categories matching the selected gender are shown.</div>
+                                    @error('categories')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 
     <!-- File Manager Modal -->
@@ -257,7 +307,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const fileManagerModal = new coreui.Modal(document.getElementById('fileManagerModal'));
             const fileManagerIframe = document.getElementById('fileManagerIframe');
-            
+
             // Containers
             const selectedImagesContainer = document.getElementById('selected-images-container');
             const thumbnailContainer = document.getElementById('thumbnail-container');
@@ -410,11 +460,11 @@
         // Gender -> Category Flow
         const genderSelect = document.getElementById('product_gender');
         const categoriesSelect = document.getElementById('categories');
-        
+
         if (genderSelect && categoriesSelect) {
             // Initial setup
             initializeGenderFlow();
-            
+
             // Listen for gender changes
             genderSelect.addEventListener('change', function() {
                 // Clear existing selections when gender changes
@@ -427,9 +477,9 @@
             // Check if we have old input or existing product gender
             // If gender is already selected (e.g. by old input), filter based on it.
             // If not, but we have selected categories, infer gender.
-            
+
             const selectedCategories = Array.from(categoriesSelect.selectedOptions);
-            
+
             if (genderSelect.value) {
                 // Gender explicitly selected (e.g. old input)
                 filterCategories();
@@ -441,8 +491,8 @@
                     filterCategories();
                 }
             } else {
-                // No gender, no categories. 
-                // Maybe hide all categories until gender is selected? 
+                // No gender, no categories.
+                // Maybe hide all categories until gender is selected?
                 // Or show all but disable? User said "based on gender it will show".
                 // Let's hide all initially if no gender selected.
                 filterCategories();
@@ -451,13 +501,13 @@
 
         function filterCategories() {
             const selectedGender = genderSelect.value;
-            
+
             Array.from(categoriesSelect.options).forEach(opt => {
                 const optGender = opt.getAttribute('data-gender');
-                
+
                 if (!selectedGender) {
                     // No gender selected -> Hide all or Show all?
-                    // User flow: "first i slect the gender...". 
+                    // User flow: "first i slect the gender...".
                     // So we should probably hide everything or disable everything.
                     opt.hidden = true;
                     opt.disabled = true;
