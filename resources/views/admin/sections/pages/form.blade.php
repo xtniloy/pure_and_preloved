@@ -72,11 +72,11 @@
 
                             <div class="mb-0">
                                 <label for="body" class="form-label">Body</label>
-                                <textarea class="form-control @error('body') is-invalid @enderror" id="body" name="body" rows="18" style="font-family: monospace;">{{ old('body', isset($page) ? $page->body : '') }}</textarea>
+                                <textarea class="form-control @error('body') is-invalid @enderror" id="body" name="body" rows="18">{{ old('body', isset($page) ? $page->body : '') }}</textarea>
                                 @error('body')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <div class="form-text">HTML is supported (headings, paragraphs, lists, links, etc.).</div>
+                                <div class="form-text">Use the toolbar to format headings, lists, links, tables and more.</div>
                             </div>
                         </div>
                     </div>
@@ -121,3 +121,37 @@
         </form>
     </div>
 @endsection
+
+@push('css')
+    <style>
+        /* Give the CKEditor editing area a comfortable height */
+        .ck-editor__editable[role="textbox"] { min-height: 350px; }
+        .ck.ck-editor { width: 100%; }
+    </style>
+@endpush
+
+@push('js')
+    {{-- CKEditor 5 (Classic) — free GPL build, pinned to the last key-free release --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bodyField = document.querySelector('#body');
+
+            if (bodyField && window.ClassicEditor) {
+                ClassicEditor
+                    .create(bodyField, {
+                        toolbar: [
+                            'heading', '|',
+                            'bold', 'italic', 'link', '|',
+                            'bulletedList', 'numberedList', '|',
+                            'blockQuote', 'insertTable', '|',
+                            'undo', 'redo'
+                        ]
+                    })
+                    .catch(function (error) {
+                        console.error('CKEditor failed to load:', error);
+                    });
+            }
+        });
+    </script>
+@endpush
