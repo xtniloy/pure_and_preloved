@@ -9,6 +9,8 @@
 
 @php
     $isEdit = isset($category);
+    // "Subcategory" when it sits under a parent (level 3), otherwise a top "Category" (level 2).
+    $entityLabel = $parent ? 'Subcategory' : 'Category';
 
     if ($isEdit) {
         $actionUrl = route('admin.categories.update', ['category' => $category]);
@@ -19,18 +21,21 @@
     }
 
     // Where "Cancel" returns to: the list this category belongs (or will belong) to.
-    $cancelParentId = $isEdit ? $category->parent_id : ($parent_id ?? null);
-    $cancelGender   = $isEdit ? $category->gender : ($gender ?? null);
-    $cancelUrl = $cancelParentId
-        ? route('admin.categories.index', ['parent_id' => $cancelParentId])
-        : ($cancelGender
-            ? route('admin.categories.index', ['gender' => $cancelGender])
-            : route('admin.categories.index'));
+    $cancelUrl = $parent_id
+        ? route('admin.categories.index', ['parent_id' => $parent_id])
+        : route('admin.categories.index', ['gender' => $gender]);
 
     $currentImageUrl = $isEdit && $category->asset
         ? route('admin.file.uploaded_asset', ['stored_name' => $category->asset->stored_name])
         : null;
     $currentImageName = $isEdit && $category->asset ? $category->asset->original_name : '';
+
+    // Hierarchy trail: gender (fixed level 1) > ancestor categories > this one.
+    $genderShort = ['man' => 'Men', 'women' => 'Women', 'unisex' => 'Unisex'][$gender] ?? ucfirst($gender);
+    $trailCats = $isEdit
+        ? $category->ancestors()
+        : ($parent ? $parent->ancestors()->push($parent) : collect());
+    $currentLabel = $isEdit ? $category->name : 'New ' . strtolower($entityLabel);
 @endphp
 
 @push('css')
@@ -50,6 +55,14 @@
             background: rgba(15, 118, 111, .12); color: #0f766f;
         }
         .image-dropzone .dz-placeholder-icon .icon { width: 22px; height: 22px; }
+
+        .cat-trail .crumb {
+            padding: .35rem .8rem; border-radius: 999px;
+            font-size: .82rem; font-weight: 600; white-space: nowrap; line-height: 1;
+        }
+        .cat-trail .crumb-context { background: rgba(15, 118, 111, .12); color: #0f766f; }
+        .cat-trail .crumb-current { background: #0f766f; color: #fff; }
+        .cat-trail .crumb-sep { width: 14px; height: 14px; color: var(--cui-secondary-color); opacity: .65; }
     </style>
 @endpush
 
@@ -59,7 +72,8 @@
             <ol class="breadcrumb mt-2 mb-3">
                 <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('admin.categories.index')}}">Category Management</a></li>
-                <li class="breadcrumb-item active">Category {{ $isEdit ? 'Update' : 'Create' }}</li>
+                <li class="breadcrumb-item"><a href="{{ $cancelUrl }}">{{ $genderShort }}</a></li>
+                <li class="breadcrumb-item active">{{ $isEdit ? 'Update' : 'Create' }} {{ $entityLabel }}</li>
             </ol>
         </nav>
 
@@ -69,10 +83,14 @@
             @method($method)
             @csrf
 
+            {{-- Gender and parent are fixed by context, submitted but not editable. --}}
+            <input type="hidden" name="gender" value="{{ $gender }}">
+            <input type="hidden" name="parent_id" value="{{ $parent_id ?? '' }}">
+
             <div class="card mb-4">
                 {{-- Header doubles as the action bar — always visible, no scrolling --}}
                 <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-2 py-3">
-                    <h5 class="card-title mb-0 fw-semibold">{{ $isEdit ? 'Update Category' : 'Create Category' }}</h5>
+                    <h5 class="card-title mb-0 fw-semibold">{{ $isEdit ? 'Update' : 'Create' }} {{ $entityLabel }}</h5>
                     <div class="d-flex gap-2">
                         <a href="{{ $cancelUrl }}" class="btn btn-sm btn-outline-secondary">Cancel</a>
                         <button type="submit" class="btn btn-sm btn-primary">
@@ -83,6 +101,22 @@
                 </div>
 
                 <div class="card-body">
+                    {{-- Hierarchy indicator: shows exactly where this category lives. --}}
+                    <div class="mb-4">
+                        <div class="small text-body-secondary mb-2">
+                            {{ $isEdit ? 'You are editing a category in:' : 'This category will be placed under:' }}
+                        </div>
+                        <div class="cat-trail d-flex align-items-center flex-wrap gap-2">
+                            <span class="crumb crumb-context">{{ $genderShort }}</span>
+                            @foreach($trailCats as $anc)
+                                <svg class="crumb-sep"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-chevron-right')}}"></use></svg>
+                                <span class="crumb crumb-context">{{ $anc->name }}</span>
+                            @endforeach
+                            <svg class="crumb-sep"><use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-chevron-right')}}"></use></svg>
+                            <span class="crumb crumb-current">{{ $currentLabel }}</span>
+                        </div>
+                    </div>
+
                     <div class="row g-4">
                         {{-- Main details --}}
                         <div class="col-lg-8">
@@ -92,33 +126,6 @@
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
-
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="parent_id" class="form-label">Parent Category</label>
-                                    <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                        <option value="">None (top-level)</option>
-                                        @foreach($parents as $parent)
-                                            <option value="{{ $parent->id }}" data-gender="{{ $parent->gender }}" {{ (old('parent_id', $isEdit ? $category->parent_id : ($parent_id ?? '')) == $parent->id) ? 'selected' : '' }}>{{ $parent->name }} — {{ ucfirst($parent->gender ?? '') }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('parent_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="gender" class="form-label">Gender <b class="text-danger">*</b></label>
-                                    <select class="form-select @error('gender') is-invalid @enderror" id="gender" name="gender" required>
-                                        <option value="unisex" {{ (old('gender', $isEdit ? $category->gender : ($gender ?? '')) == 'unisex') ? 'selected' : '' }}>Unisex</option>
-                                        <option value="man" {{ (old('gender', $isEdit ? $category->gender : ($gender ?? '')) == 'man') ? 'selected' : '' }}>Man</option>
-                                        <option value="women" {{ (old('gender', $isEdit ? $category->gender : ($gender ?? '')) == 'women') ? 'selected' : '' }}>Women</option>
-                                    </select>
-                                    <div class="form-text mt-1" id="gender-hint">Matches the parent when one is selected.</div>
-                                    @error('gender')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
                             </div>
 
                             <div class="mt-3">
@@ -231,48 +238,6 @@
                         fileManagerModal.hide();
                     }
                 });
-
-                // Gender <-> Parent sync
-                const genderSelect = document.getElementById('gender');
-                const parentSelect = document.getElementById('parent_id');
-                const genderHint = document.getElementById('gender-hint');
-                const parentOptions = parentSelect.querySelectorAll('option:not([value=""])');
-
-                function filterParents() {
-                    const selectedGender = genderSelect.value;
-                    parentOptions.forEach(option => {
-                        const parentGender = option.getAttribute('data-gender');
-                        if (selectedGender === 'unisex' || parentGender === 'unisex' || parentGender === selectedGender) {
-                            option.style.display = '';
-                        } else {
-                            option.style.display = 'none';
-                            if (parentSelect.value === option.value) {
-                                parentSelect.value = '';
-                            }
-                        }
-                    });
-                }
-
-                function syncGender() {
-                    const selectedParentId = parentSelect.value;
-                    if (selectedParentId) {
-                        const selectedOption = parentSelect.options[parentSelect.selectedIndex];
-                        const parentGender = selectedOption.getAttribute('data-gender');
-                        if (parentGender && parentGender !== 'unisex') {
-                            genderSelect.value = parentGender;
-                            if (genderHint) genderHint.textContent = 'Locked to the parent’s gender.';
-                        }
-                    } else if (genderHint) {
-                        genderHint.textContent = 'Matches the parent when one is selected.';
-                    }
-                    filterParents();
-                }
-
-                genderSelect.addEventListener('change', filterParents);
-                parentSelect.addEventListener('change', syncGender);
-
-                // Initial run
-                syncGender();
             });
         </script>
     @endpush

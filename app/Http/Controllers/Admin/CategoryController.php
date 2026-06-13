@@ -89,47 +89,28 @@ class CategoryController extends Controller
 
     public function create(Request $request)
     {
-        $parents = $this->eligibleParents();
         $parent_id = $request->query('parent_id');
         $gender = $request->query('gender');
+        $parent = null;
 
-        // Can't add a child under a category that's already at the deepest level.
-        if ($this->parentTooDeep($parent_id)) {
-            $parent = Category::find($parent_id);
-            return redirect($this->listUrlFor($parent->parent_id, $parent->gender))
-                ->with('error', 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.');
-        }
+        if ($parent_id) {
+            $parent = Category::with('parent')->find($parent_id);
+            abort_unless($parent, 404);
 
-        // When adding under a parent, the gender is dictated by that parent.
-        if ($parent_id && $parent = Category::find($parent_id)) {
+            // Can't add a child under a category that's already at the deepest level.
+            if ($this->parentTooDeep($parent_id)) {
+                return redirect($this->listUrlFor($parent->parent_id, $parent->gender))
+                    ->with('error', 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.');
+            }
+
+            // Gender is dictated by the parent — there is no choice to make.
             $gender = $parent->gender;
         }
 
-        return view('admin.sections.categories.form', compact('parents', 'parent_id', 'gender'));
-    }
+        // Gender is fixed by context (the landing selection or the parent).
+        abort_unless(in_array($gender, ['man', 'women', 'unisex'], true), 404);
 
-    /**
-     * Categories eligible to be a parent: those still shallower than MAX_DEPTH
-     * (a level-3 category can't take children). Depth is resolved in-memory to
-     * avoid a query per category.
-     */
-    private function eligibleParents($excludeId = null)
-    {
-        $all = Category::orderBy('name')->get()->keyBy('id');
-
-        $depthOf = function ($category) use ($all) {
-            $depth = 1;
-            $parentId = $category->parent_id;
-            while ($parentId && isset($all[$parentId])) {
-                $depth++;
-                $parentId = $all[$parentId]->parent_id;
-            }
-            return $depth;
-        };
-
-        return $all->filter(function ($category) use ($depthOf, $excludeId) {
-            return $category->id !== $excludeId && $depthOf($category) < Category::MAX_DEPTH;
-        })->values();
+        return view('admin.sections.categories.form', compact('parent', 'parent_id', 'gender'));
     }
 
     /** True when nesting under $parentId would exceed the allowed depth. */
@@ -166,38 +147,43 @@ class CategoryController extends Controller
             return back()->withErrors(['parent_id' => 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.'])->withInput();
         }
 
+        // A child always inherits its parent's gender; a root uses the chosen gender.
+        $gender = $request->gender;
         if ($request->parent_id) {
-            $parent = Category::find($request->parent_id);
-            if ($parent && $parent->gender !== 'unisex' && $request->gender !== $parent->gender) {
-                return back()->withErrors(['gender' => 'Gender must match parent category gender.'])->withInput();
-            }
+            $gender = Category::find($request->parent_id)->gender;
         }
 
         $slug = $this->generateUniqueSlug($request->name, $request->parent_id);
 
         // Append new categories at the end of their list (parent/gender group).
         $sortOrder = (Category::where('parent_id', $request->parent_id)
-            ->where('gender', $request->gender)
+            ->where('gender', $gender)
             ->max('sort_order') ?? 0) + 1;
 
         Category::create([
             'name' => $request->name,
             'slug' => $slug,
             'parent_id' => $request->parent_id,
-            'gender' => $request->gender,
+            'gender' => $gender,
             'asset_id' => $request->asset_id,
             'status' => $request->has('status') ? 1 : 0,
             'sort_order' => $sortOrder,
         ]);
 
-        return redirect($this->listUrlFor($request->parent_id, $request->gender))
+        return redirect($this->listUrlFor($request->parent_id, $gender))
             ->with('success', 'Category created successfully.');
     }
 
     public function edit(Category $category)
     {
-        $parents = $this->eligibleParents($category->id);
-        return view('admin.sections.categories.form', compact('category', 'parents'));
+        $category->load('parent');
+
+        return view('admin.sections.categories.form', [
+            'category'  => $category,
+            'parent'    => $category->parent,
+            'parent_id' => $category->parent_id,
+            'gender'    => $category->gender,
+        ]);
     }
 
     public function update(Request $request, Category $category)
@@ -213,11 +199,10 @@ class CategoryController extends Controller
             return back()->withErrors(['parent_id' => 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.'])->withInput();
         }
 
+        // A child always inherits its parent's gender; a root uses the chosen gender.
+        $gender = $request->gender;
         if ($request->parent_id) {
-            $parent = Category::find($request->parent_id);
-            if ($parent && $parent->gender !== 'unisex' && $request->gender !== $parent->gender) {
-                return back()->withErrors(['gender' => 'Gender must match parent category gender.'])->withInput();
-            }
+            $gender = Category::find($request->parent_id)->gender;
         }
 
         if ($request->name != $category->name || $request->parent_id != $category->parent_id) {
@@ -226,7 +211,7 @@ class CategoryController extends Controller
 
         $category->name = $request->name;
         $category->parent_id = $request->parent_id;
-        $category->gender = $request->gender;
+        $category->gender = $gender;
         $category->asset_id = $request->asset_id;
         $category->status = $request->has('status') ? 1 : 0;
         $category->save();
