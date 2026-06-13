@@ -17,6 +17,7 @@ class Product extends Model
         'description',
         'price',
         'sale_price',
+        'stock',
         'condition',
         'material',
         'weight',
@@ -36,9 +37,18 @@ class Product extends Model
         'images' => 'array',
         'price' => 'decimal:2',
         'sale_price' => 'decimal:2',
+        'stock' => 'integer',
         'status' => 'boolean',
         'is_featured' => 'boolean',
     ];
+
+    /**
+     * Whether the product currently has stock available.
+     */
+    public function getInStockAttribute(): bool
+    {
+        return (int) $this->stock > 0;
+    }
 
     // New relationship
     public function categories()

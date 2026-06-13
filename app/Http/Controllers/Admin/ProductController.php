@@ -30,6 +30,7 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku',
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric|lt:price',
+            'stock' => 'nullable|integer|min:0',
             'categories' => ['required', 'array', 'min:1'],
             'categories.*' => 'exists:categories,id',
             'images' => 'nullable|array', // Assuming array of asset IDs
@@ -56,6 +57,7 @@ class ProductController extends Controller
         $data = $request->except(['categories']);
         $data['slug'] = $slug;
         $data['status'] = $request->has('status');
+        $data['stock'] = (int) $request->input('stock', 0);
 
         $product = Product::create($data);
         $product->categories()->sync($request->categories);
@@ -76,6 +78,7 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku,' . $product->id,
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric|lt:price',
+            'stock' => 'nullable|integer|min:0',
             'categories' => ['required', 'array', 'min:1'],
             'categories.*' => 'exists:categories,id',
             'images' => 'nullable|array',
@@ -104,6 +107,7 @@ class ProductController extends Controller
         $data = $request->except(['categories']);
         $data['slug'] = $slug;
         $data['status'] = $request->has('status');
+        $data['stock'] = (int) $request->input('stock', 0);
 
         // Handle images if not present in request (clearing them)
         if (!$request->has('images')) {

@@ -85,26 +85,34 @@
                         </div>
                     </div>
 
-                    {{-- Pricing --}}
+                    {{-- Pricing & Inventory --}}
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h6 class="mb-0 fw-semibold">Pricing</h6>
+                            <h6 class="mb-0 fw-semibold">Pricing &amp; Inventory</h6>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="price" class="form-label">Price <b class="text-danger">*</b></label>
                                     <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', isset($product) ? $product->price : '') }}" required>
                                     @error('price')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="sale_price" class="form-label">Sale Price</label>
                                     <input type="number" step="0.01" class="form-control @error('sale_price') is-invalid @enderror" id="sale_price" name="sale_price" value="{{ old('sale_price', isset($product) ? $product->sale_price : '') }}">
                                     @error('sale_price')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="stock" class="form-label">Stock Qty <b class="text-danger">*</b></label>
+                                    <input type="number" step="1" min="0" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock', isset($product) ? $product->stock : 0) }}" required>
+                                    @error('stock')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Units in stock. 0 = out of stock.</div>
                                 </div>
                             </div>
                         </div>

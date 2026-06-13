@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Exceptions\InsufficientStockException;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -195,19 +197,32 @@ class HomeController extends Controller
             'quantity' => 'nullable|integer|min:1',
         ]);
 
-        $productId = (int) $data['product_id'];
+        $product = Product::where('id', $data['product_id'])->where('status', true)->first();
+
+        if (!$product) {
+            return back()->with('error', 'This product is not available.');
+        }
+
+        if (!$product->in_stock) {
+            return back()->with('error', '"' . $product->name . '" is out of stock.');
+        }
+
         $quantity = isset($data['quantity']) ? (int) $data['quantity'] : 1;
 
         $cart = $request->session()->get('cart', []);
+        $current = $cart[$product->id]['quantity'] ?? 0;
+        $desired = $current + $quantity;
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] += $quantity;
-        } else {
-            $cart[$productId] = [
-                'quantity' => $quantity,
-            ];
+        // Never let the cart hold more than what's in stock.
+        if ($desired > $product->stock) {
+            $cart[$product->id]['quantity'] = $product->stock;
+            $request->session()->put('cart', $cart);
+
+            return redirect()->route('cart.index')
+                ->with('error', 'Only ' . $product->stock . ' of "' . $product->name . '" are available; your cart was set to the maximum.');
         }
 
+        $cart[$product->id]['quantity'] = $desired;
         $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.index');
@@ -248,11 +263,28 @@ class HomeController extends Controller
         ]);
 
         $cart = $request->session()->get('cart', []);
+        $messages = [];
 
         if (!empty($data['quantities'])) {
+            $productIds = array_map('intval', array_keys($data['quantities']));
+            $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
             foreach ($data['quantities'] as $productId => $quantity) {
                 $productId = (int) $productId;
                 $quantity = (int) $quantity;
+                $product = $products[$productId] ?? null;
+
+                // Drop unknown products and zero/empty quantities from the cart.
+                if (!$product || $quantity <= 0) {
+                    unset($cart[$productId]);
+                    continue;
+                }
+
+                // Clamp to available stock.
+                if ($quantity > $product->stock) {
+                    $quantity = $product->stock;
+                    $messages[] = 'Only ' . $product->stock . ' of "' . $product->name . '" available.';
+                }
 
                 if ($quantity <= 0) {
                     unset($cart[$productId]);
@@ -264,7 +296,13 @@ class HomeController extends Controller
 
         $request->session()->put('cart', $cart);
 
-        return redirect()->route('cart.index');
+        $redirect = redirect()->route('cart.index');
+
+        if (!empty($messages)) {
+            $redirect->with('error', implode(' ', array_unique($messages)));
+        }
+
+        return $redirect;
     }
 
     public function removeFromCart(Request $request, Product $product)
@@ -288,66 +326,6 @@ class HomeController extends Controller
 
     public function placeOrder(Request $request)
     {
-        $items = [];
-        $subtotal = 0;
-
-        $itemsInput = $request->input('items', []);
-
-        if (!empty($itemsInput) && is_array($itemsInput)) {
-            $productIds = array_map('intval', array_keys($itemsInput));
-            $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
-
-            foreach ($itemsInput as $productId => $quantity) {
-                $productId = (int) $productId;
-                $quantity = (int) $quantity;
-
-                if ($quantity < 1 || !isset($products[$productId])) {
-                    continue;
-                }
-
-                $product = $products[$productId];
-                $unitPrice = $product->sale_price ?? $product->price;
-                $lineTotal = $unitPrice * $quantity;
-                $subtotal += $lineTotal;
-
-                $items[] = [
-                    'product' => $product,
-                    'quantity' => $quantity,
-                    'unit_price' => $unitPrice,
-                    'line_total' => $lineTotal,
-                ];
-            }
-        } else {
-            $cart = $request->session()->get('cart', []);
-
-            if (!empty($cart)) {
-                $productIds = array_keys($cart);
-                $products = Product::whereIn('id', $productIds)->get();
-
-                foreach ($products as $product) {
-                    $quantity = $cart[$product->id]['quantity'] ?? 0;
-                    if ($quantity < 1) {
-                        continue;
-                    }
-
-                    $unitPrice = $product->sale_price ?? $product->price;
-                    $lineTotal = $unitPrice * $quantity;
-                    $subtotal += $lineTotal;
-
-                    $items[] = [
-                        'product' => $product,
-                        'quantity' => $quantity,
-                        'unit_price' => $unitPrice,
-                        'line_total' => $lineTotal,
-                    ];
-                }
-            }
-        }
-
-        if (empty($items)) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
-        }
-
         $data = $request->validate([
             'billing_first_name' => 'required|string|max:255',
             'billing_last_name' => 'required|string|max:255',
@@ -359,43 +337,129 @@ class HomeController extends Controller
             'billing_email' => 'required|email:rfc,dns,filter|max:255',
             'notes' => 'nullable|string|max:2000',
             'shipping_method_id' => 'required|exists:shipping_methods,id',
+            'items' => 'nullable|array',
+            'items.*' => 'integer|min:1',
         ]);
+
+        // Build the desired quantities map (productId => quantity) from the
+        // submitted "buy now" items, or fall back to the session cart.
+        $desired = [];
+        $itemsInput = $request->input('items', []);
+
+        if (!empty($itemsInput) && is_array($itemsInput)) {
+            foreach ($itemsInput as $productId => $quantity) {
+                $productId = (int) $productId;
+                $quantity = (int) $quantity;
+                if ($productId > 0 && $quantity > 0) {
+                    $desired[$productId] = ($desired[$productId] ?? 0) + $quantity;
+                }
+            }
+        } else {
+            $cart = $request->session()->get('cart', []);
+            foreach ($cart as $productId => $row) {
+                $productId = (int) $productId;
+                $quantity = (int) ($row['quantity'] ?? 0);
+                if ($productId > 0 && $quantity > 0) {
+                    $desired[$productId] = $quantity;
+                }
+            }
+        }
+
+        if (empty($desired)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
 
         $shippingMethod = \App\Models\ShippingMethod::find($data['shipping_method_id']);
-        $shippingCharge = $shippingMethod->charge;
-        $grandTotal = $subtotal + $shippingCharge;
-
         $user = Auth::user();
 
-        $order = Order::create([
-            'user_id' => $user ? $user->id : null,
-            'reference' => 'ORD-' . strtoupper(Str::random(10)),
-            'subtotal' => $subtotal,
-            'shipping_method' => $shippingMethod->name,
-            'shipping_charge' => $shippingCharge,
-            'total' => $grandTotal,
-            'status' => 'pending',
-            'billing_first_name' => $data['billing_first_name'],
-            'billing_last_name' => $data['billing_last_name'],
-            'billing_address' => $data['billing_address'],
-            'billing_city' => $data['billing_city'],
-            'billing_postcode' => $data['billing_postcode'],
-            'billing_country' => $data['billing_country'],
-            'billing_phone' => $data['billing_phone'],
-            'billing_email' => $data['billing_email'],
-            'notes' => $data['notes'] ?? null,
-        ]);
+        try {
+            $order = DB::transaction(function () use ($desired, $data, $shippingMethod, $user) {
+                // Lock the rows we're about to sell so concurrent checkouts
+                // can't oversell the same stock.
+                $products = Product::whereIn('id', array_keys($desired))
+                    ->where('status', true)
+                    ->lockForUpdate()
+                    ->get()
+                    ->keyBy('id');
 
-        foreach ($items as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item['product']->id,
-                'product_name' => $item['product']->name,
-                'product_sku' => $item['product']->sku,
-                'unit_price' => $item['unit_price'],
-                'quantity' => $item['quantity'],
-                'line_total' => $item['line_total'],
-            ]);
+                $items = [];
+                $subtotal = 0;
+                $errors = [];
+
+                foreach ($desired as $productId => $quantity) {
+                    $product = $products[$productId] ?? null;
+
+                    if (!$product) {
+                        $errors[] = 'A product in your cart is no longer available.';
+                        continue;
+                    }
+
+                    if ($product->stock < $quantity) {
+                        $errors[] = $product->stock > 0
+                            ? 'Only ' . $product->stock . ' left in stock for "' . $product->name . '".'
+                            : '"' . $product->name . '" is out of stock.';
+                        continue;
+                    }
+
+                    // Price always comes from the DB, never the request.
+                    $unitPrice = $product->sale_price ?? $product->price;
+                    $lineTotal = $unitPrice * $quantity;
+                    $subtotal += $lineTotal;
+
+                    $items[] = [
+                        'product' => $product,
+                        'quantity' => $quantity,
+                        'unit_price' => $unitPrice,
+                        'line_total' => $lineTotal,
+                    ];
+                }
+
+                if (!empty($errors)) {
+                    // Rolls back the transaction.
+                    throw new InsufficientStockException(implode(' ', array_unique($errors)));
+                }
+
+                $shippingCharge = $shippingMethod->charge;
+                $grandTotal = $subtotal + $shippingCharge;
+
+                $order = Order::create([
+                    'user_id' => $user ? $user->id : null,
+                    'reference' => 'ORD-' . strtoupper(Str::random(10)),
+                    'subtotal' => $subtotal,
+                    'shipping_method' => $shippingMethod->name,
+                    'shipping_charge' => $shippingCharge,
+                    'total' => $grandTotal,
+                    'status' => 'pending',
+                    'billing_first_name' => $data['billing_first_name'],
+                    'billing_last_name' => $data['billing_last_name'],
+                    'billing_address' => $data['billing_address'],
+                    'billing_city' => $data['billing_city'],
+                    'billing_postcode' => $data['billing_postcode'],
+                    'billing_country' => $data['billing_country'],
+                    'billing_phone' => $data['billing_phone'],
+                    'billing_email' => $data['billing_email'],
+                    'notes' => $data['notes'] ?? null,
+                ]);
+
+                foreach ($items as $item) {
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item['product']->id,
+                        'product_name' => $item['product']->name,
+                        'product_sku' => $item['product']->sku,
+                        'unit_price' => $item['unit_price'],
+                        'quantity' => $item['quantity'],
+                        'line_total' => $item['line_total'],
+                    ]);
+
+                    // Decrement stock for the sold quantity.
+                    $item['product']->decrement('stock', $item['quantity']);
+                }
+
+                return $order;
+            });
+        } catch (InsufficientStockException $e) {
+            return redirect()->route('cart.index')->with('error', $e->getMessage());
         }
 
         $request->session()->forget('cart');
