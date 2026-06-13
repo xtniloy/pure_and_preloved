@@ -11,6 +11,30 @@ class Order extends Model
 {
     use HasFactory;
 
+    /**
+     * All valid order statuses.
+     */
+    public const STATUSES = [
+        'pending',
+        'processing',
+        'paid',
+        'shipped',
+        'completed',
+        'cancelled',
+    ];
+
+    /**
+     * The linear fulfilment progression shown in the customer status tracker
+     * ("cancelled" is a terminal state handled separately).
+     */
+    public const PROGRESS_STATUSES = [
+        'pending',
+        'processing',
+        'paid',
+        'shipped',
+        'completed',
+    ];
+
     protected $fillable = [
         'user_id',
         'reference',
@@ -38,5 +62,20 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Bootstrap contextual colour for the current status (badges, etc.).
+     */
+    public function getStatusColorAttribute(): string
+    {
+        return [
+            'pending' => 'secondary',
+            'processing' => 'info',
+            'paid' => 'primary',
+            'shipped' => 'warning',
+            'completed' => 'success',
+            'cancelled' => 'danger',
+        ][$this->status] ?? 'secondary';
     }
 }

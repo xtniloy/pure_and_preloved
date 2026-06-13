@@ -59,6 +59,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/profile', [\App\Http\Controllers\User\Auth\AuthController::class, 'profile'])->name('account.profile');
     Route::post('/account/profile', [\App\Http\Controllers\User\Auth\AuthController::class, 'updateProfile'])->name('account.profile.update');
     Route::post('/account/delete', [\App\Http\Controllers\User\Auth\AuthController::class, 'deleteAccount'])->name('account.delete');
+
+    // Customer order history ("My Orders")
+    Route::get('/account/orders', [\App\Http\Controllers\User\OrderController::class, 'index'])->name('account.orders');
+    Route::get('/account/orders/{reference}', [\App\Http\Controllers\User\OrderController::class, 'show'])->name('account.orders.show');
 });
 
 // Dynamic Product Route - Must be last to avoid conflicts with other 3-segment routes

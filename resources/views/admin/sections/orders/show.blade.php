@@ -28,7 +28,7 @@
                             Order Info
                         </div>
                         <div class="card-body">
-                            <p><strong>Status:</strong> <span class="badge bg-secondary text-uppercase">{{ $order->status }}</span></p>
+                            <p><strong>Status:</strong> <span class="badge bg-{{ $order->status_color }} text-uppercase">{{ $order->status }}</span></p>
                             <p><strong>Total:</strong> ${{ number_format($order->total, 2) }}</p>
                             <p><strong>Placed at:</strong> {{ $order->created_at->format('Y-m-d H:i') }}</p>
                         </div>

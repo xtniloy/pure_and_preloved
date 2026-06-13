@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Public;
 
 use App\Exceptions\InsufficientStockException;
 use App\Http\Controllers\Controller;
+use App\Jobs\OrderConfirmationEmailJob;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -463,6 +465,14 @@ class HomeController extends Controller
         }
 
         $request->session()->forget('cart');
+
+        // Send the order confirmation email (queued). A queue/mail hiccup must
+        // not break the successful checkout, so failures are logged, not thrown.
+        try {
+            OrderConfirmationEmailJob::dispatch($order);
+        } catch (\Throwable $e) {
+            Log::error('Order confirmation email dispatch failed: ' . $e->getMessage());
+        }
 
         return redirect()->route('order.success', $order->reference);
     }

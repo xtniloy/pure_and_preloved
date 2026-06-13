@@ -28,14 +28,7 @@ class OrderController extends Controller
             'status' => $request->status,
         ]);
 
-        $statuses = [
-            'pending',
-            'processing',
-            'paid',
-            'shipped',
-            'completed',
-            'cancelled',
-        ];
+        $statuses = Order::STATUSES;
 
         return view('admin.sections.orders.index', compact('orders', 'statuses'));
     }
@@ -44,14 +37,7 @@ class OrderController extends Controller
     {
         $order->load(['user', 'items.product']);
 
-        $statuses = [
-            'pending',
-            'processing',
-            'paid',
-            'shipped',
-            'completed',
-            'cancelled',
-        ];
+        $statuses = Order::STATUSES;
 
         return view('admin.sections.orders.show', compact('order', 'statuses'));
     }
@@ -59,7 +45,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $data = $request->validate([
-            'status' => 'required|string|in:pending,processing,paid,shipped,completed,cancelled',
+            'status' => 'required|string|in:' . implode(',', Order::STATUSES),
         ]);
 
         $order->update([
