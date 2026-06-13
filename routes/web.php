@@ -86,4 +86,13 @@ Route::get('/product-quickview/{product}', [\App\Http\Controllers\Public\HomeCon
 
 Route::get('/shop', [\App\Http\Controllers\Public\ProductController::class, 'index'])->name('shop.index');
 
-Route::get('/terms-and-conditions', [\App\Http\Controllers\Public\HomeController::class, 'terms'])->name('terms.index');
+// Legacy terms URL now served by the CMS "terms" page (kept for existing links)
+Route::get('/terms-and-conditions', fn () => redirect()->route('pages.show', 'terms', 301))->name('terms.index');
+
+// CMS pages — served at the root level (e.g. /terms) for SEO-friendly URLs.
+// This is a single-segment catch-all and MUST stay the very last route so it
+// never shadows real routes (/shop, /cart, /login, ...). The slug pattern keeps
+// it to slug-like segments only, so paths with dots/slashes fall through.
+Route::get('/{slug}', [\App\Http\Controllers\Public\PageController::class, 'show'])
+    ->where('slug', '[A-Za-z0-9][A-Za-z0-9\-_]*')
+    ->name('pages.show');

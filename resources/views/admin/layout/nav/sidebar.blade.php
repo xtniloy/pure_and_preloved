@@ -72,6 +72,15 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.pages.index'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.pages.index')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-description') }}"></use>
+                    </svg><span data-coreui-i18n="file">Pages</span>
+                </a>
+            </li>
+        @endif
          @if(Route::has('admin.file.index'))
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.file.index')}}">
