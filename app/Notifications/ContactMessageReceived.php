@@ -50,7 +50,9 @@ class ContactMessageReceived extends AdminNotification
             'color' => 'info',
             'title' => 'New contact message',
             'message' => $this->contactMessage->name . ' sent a message',
-            'url' => route('admin.contact-messages.show', $this->contactMessage->id),
+            // Relative path: queue workers don't know the request root, so an
+            // absolute URL here would be built from APP_URL and can be wrong.
+            'url' => route('admin.contact-messages.show', $this->contactMessage->id, false),
         ];
     }
 }

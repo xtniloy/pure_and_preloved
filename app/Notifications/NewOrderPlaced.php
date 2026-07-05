@@ -40,7 +40,9 @@ class NewOrderPlaced extends AdminNotification
             'color' => 'success',
             'title' => 'New order placed',
             'message' => $this->order->reference . ' · $' . number_format($this->order->total, 2),
-            'url' => route('admin.orders.show', $this->order->id),
+            // Relative path: queue workers don't know the request root, so an
+            // absolute URL here would be built from APP_URL and can be wrong.
+            'url' => route('admin.orders.show', $this->order->id, false),
         ];
     }
 }
