@@ -78,6 +78,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return !empty($this->verified_by);
     }
 
+    /**
+     * A generated initials avatar (users have no uploaded photo).
+     * Brand teal background with white initials.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        return 'https://ui-avatars.com/api/?'.http_build_query([
+            'name' => $this->name ?: 'User',
+            'background' => '0f766f',
+            'color' => 'ffffff',
+            'bold' => 'true',
+        ]);
+    }
+
     public function userAccessToken():HasOne
     {
         return $this->hasOne(UserAccessToken::class);

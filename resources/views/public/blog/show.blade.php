@@ -53,6 +53,7 @@
         .single-post-content table td, .single-post-content table th { border: 1px solid #eee; padding: .5rem; }
         .comment-alert { margin-bottom: 20px; }
         #reply-indicator { margin-bottom: 15px; }
+        .review-img img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
     </style>
 
     <div class="shop-category-area single-blog-page mtb-50px">
@@ -168,7 +169,7 @@
                                 @foreach($comments as $comment)
                                     <div class="single-review">
                                         <div class="review-img">
-                                            <img src="{{ asset('assets/images/review-image/1.png') }}" alt="" />
+                                            <img src="{{ $comment->user->avatar_url ?? 'https://ui-avatars.com/api/?name=Deleted+user&background=6b7280&color=ffffff&bold=true' }}" alt="{{ $comment->user->name ?? 'Deleted user' }}" />
                                         </div>
                                         <div class="review-content">
                                             <div class="review-top-wrap">
@@ -196,7 +197,7 @@
                                     @foreach($comment->replies as $reply)
                                         <div class="single-review child-review">
                                             <div class="review-img">
-                                                <img src="{{ asset('assets/images/review-image/2.png') }}" alt="" />
+                                                <img src="{{ $reply->user->avatar_url ?? 'https://ui-avatars.com/api/?name=Deleted+user&background=6b7280&color=ffffff&bold=true' }}" alt="{{ $reply->user->name ?? 'Deleted user' }}" />
                                             </div>
                                             <div class="review-content">
                                                 <div class="review-top-wrap">
