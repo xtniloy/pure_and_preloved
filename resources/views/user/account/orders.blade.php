@@ -1,60 +1,58 @@
-@extends('public.layouts.main')
-@section('title')
-    My Orders
-@endsection
-@section('content')
-    <div class="container mt-50px mb-40px">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                @include('partials.notification')
-                @include('user.account._nav')
+@extends('user.account.layout')
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">My Orders</h5>
-                    </div>
-                    <div class="card-body">
-                        @if($orders->isEmpty())
-                            <div class="text-center py-5">
-                                <p class="mb-3">You haven't placed any orders yet.</p>
-                                <a href="{{ route('shop.index') }}" class="btn btn-primary">Start Shopping</a>
-                            </div>
-                        @else
-                            <div class="table-responsive">
-                                <table class="table align-middle">
-                                    <thead>
-                                    <tr>
-                                        <th>Reference</th>
-                                        <th>Date</th>
-                                        <th>Items</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
-                                        <th class="text-end">Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($orders as $order)
-                                        <tr>
-                                            <td class="fw-semibold">{{ $order->reference }}</td>
-                                            <td>{{ $order->created_at->format('d M Y') }}</td>
-                                            <td>{{ $order->items_count }}</td>
-                                            <td>${{ number_format($order->total, 2) }}</td>
-                                            <td><span class="badge bg-{{ $order->status_color }} text-uppercase">{{ $order->status }}</span></td>
-                                            <td class="text-end">
-                                                <a href="{{ route('account.orders.show', $order->reference) }}" class="btn btn-sm btn-outline-primary">View</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="mt-3 d-flex justify-content-center">
-                                {{ $orders->links() }}
-                            </div>
-                        @endif
-                    </div>
-                </div>
+@section('title', 'My Orders')
+@section('breadcrumb', 'Orders')
+
+@section('account-content')
+    <div class="account-page-head">
+        <h4>My Orders</h4>
+        <p>Track, review and manage all your orders in one place.</p>
+    </div>
+
+    {{-- Status filter --}}
+    <div class="account-filter mb-4">
+        <a href="{{ route('account.orders') }}" class="{{ $status === null ? 'active' : '' }}">
+            All <span class="count">{{ $counts['all'] }}</span>
+        </a>
+        <a href="{{ route('account.orders', ['status' => 'in_progress']) }}" class="{{ $status === 'in_progress' ? 'active' : '' }}">
+            In Progress <span class="count">{{ $counts['in_progress'] }}</span>
+        </a>
+        <a href="{{ route('account.orders', ['status' => 'completed']) }}" class="{{ $status === 'completed' ? 'active' : '' }}">
+            Completed <span class="count">{{ $counts['completed'] }}</span>
+        </a>
+        <a href="{{ route('account.orders', ['status' => 'cancelled']) }}" class="{{ $status === 'cancelled' ? 'active' : '' }}">
+            Cancelled <span class="count">{{ $counts['cancelled'] }}</span>
+        </a>
+    </div>
+
+    @if($orders->isEmpty())
+        <div class="account-card">
+            <div class="account-empty">
+                <i class="lnr lnr-cart"></i>
+                @if($status)
+                    <h6>No {{ str_replace('_', ' ', $status) }} orders</h6>
+                    <p>You don't have any orders matching this filter.</p>
+                    <a href="{{ route('account.orders') }}" class="btn btn-outline-primary">Show All Orders</a>
+                @else
+                    <h6>No orders yet</h6>
+                    <p>When you place your first order, it will show up here.</p>
+                    <a href="{{ route('shop.index') }}" class="btn btn-primary">Start Shopping</a>
+                @endif
             </div>
         </div>
-    </div>
+    @else
+        <div class="account-card">
+            <div class="order-row-list">
+                @foreach($orders as $order)
+                    @include('user.account._order_row', ['order' => $order])
+                @endforeach
+            </div>
+        </div>
+
+        @if($orders->hasPages())
+            <div class="mt-4 d-flex justify-content-center">
+                {{ $orders->links() }}
+            </div>
+        @endif
+    @endif
 @endsection

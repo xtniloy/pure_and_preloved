@@ -35,6 +35,17 @@ class Order extends Model
         'completed',
     ];
 
+    /**
+     * Statuses that count as "in progress" from the customer's perspective
+     * (placed but not yet completed or cancelled).
+     */
+    public const OPEN_STATUSES = [
+        'pending',
+        'processing',
+        'paid',
+        'shipped',
+    ];
+
     protected $fillable = [
         'user_id',
         'reference',

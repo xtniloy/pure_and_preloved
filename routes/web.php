@@ -58,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [\App\Http\Controllers\User\Auth\AuthController::class, 'logout'])->name('logout');
     Route::get('/account/profile', [\App\Http\Controllers\User\Auth\AuthController::class, 'profile'])->name('account.profile');
     Route::post('/account/profile', [\App\Http\Controllers\User\Auth\AuthController::class, 'updateProfile'])->name('account.profile.update');
+    Route::post('/account/password', [\App\Http\Controllers\User\Auth\AuthController::class, 'updatePassword'])->name('account.password.update');
+    Route::get('/account/addresses', [\App\Http\Controllers\User\Auth\AuthController::class, 'addresses'])->name('account.addresses');
+    Route::post('/account/addresses', [\App\Http\Controllers\User\Auth\AuthController::class, 'updateAddresses'])->name('account.addresses.update');
     Route::post('/account/delete', [\App\Http\Controllers\User\Auth\AuthController::class, 'deleteAccount'])->name('account.delete');
 
     // Customer order history ("My Orders")

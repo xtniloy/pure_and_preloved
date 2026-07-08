@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\User\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\UpdatePasswordRequest;
 use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserRegistrationRequest;
 
+use App\Models\Order;
 use App\Models\User;
 use App\Models\UserAccessToken;
 
@@ -230,9 +232,18 @@ class AuthController extends Controller
     public function dashboard(): View
     {
         $user = Auth::user();
-        $orders = $user->orders()->latest()->get();
 
-        return view('user.account.dashboard', compact('user', 'orders'));
+        $orderStats = [
+            'total' => $user->orders()->count(),
+            'open' => $user->orders()->whereIn('status', Order::OPEN_STATUSES)->count(),
+            'completed' => $user->orders()->where('status', 'completed')->count(),
+        ];
+
+        $wishlistCount = count(session('wishlist', []));
+
+        $recentOrders = $user->orders()->withCount('items')->latest()->take(5)->get();
+
+        return view('user.account.dashboard', compact('user', 'orderStats', 'wishlistCount', 'recentOrders'));
     }
 
     public function profile(): View
@@ -250,13 +261,39 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email:rfc,dns,filter', 'max:255', 'unique:users,email,' . $user->id],
             'phone' => ['nullable', 'string', 'max:50'],
-            'billing_address' => ['nullable', 'string', 'max:1000'],
-            'delivery_address' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $user->update($data);
 
         return redirect()->route('account.profile')->with('success', 'Profile updated successfully.');
+    }
+
+    public function updatePassword(ChangePasswordRequest $request): RedirectResponse
+    {
+        $this->userAuthService->setPassword(Auth::user(), $request->password);
+
+        return redirect()->route('account.profile')->with('success', 'Password updated successfully.');
+    }
+
+    public function addresses(): View
+    {
+        $user = Auth::user();
+
+        return view('user.account.addresses', compact('user'));
+    }
+
+    public function updateAddresses(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'delivery_address' => ['nullable', 'string', 'max:1000'],
+            'billing_address' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $user->update($data);
+
+        return redirect()->route('account.addresses')->with('success', 'Addresses updated successfully.');
     }
 
     public function deleteAccount(Request $request): RedirectResponse

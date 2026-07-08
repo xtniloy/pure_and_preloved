@@ -1,0 +1,963 @@
+/* ==========================================================================
+   My Account area — customer dashboard, orders, addresses, account details
+   Brand: black / white / teal (#0f766f)
+   ========================================================================== */
+
+:root {
+    --account-accent: #0f766f;
+    --account-accent-dark: #0c5f59;
+    --account-accent-soft: #e9f4f3;
+    --account-ink: #272727;
+    --account-muted: #98a0a6;
+    --account-border: #ececec;
+    --account-radius: 12px;
+}
+
+.account-area {
+    padding: 40px 0 90px;
+}
+
+.account-area a {
+    transition: all 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Page heading
+   -------------------------------------------------------------------------- */
+.account-page-head {
+    margin-bottom: 24px;
+}
+
+.account-page-head h4 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--account-ink);
+    margin-bottom: 4px;
+}
+
+.account-page-head p {
+    font-size: 13.5px;
+    color: var(--account-muted);
+    margin: 0;
+}
+
+.account-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6b7075;
+    margin-bottom: 16px;
+}
+
+.account-back-link:hover {
+    color: var(--account-accent);
+}
+
+.account-back-link i {
+    font-size: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar
+   -------------------------------------------------------------------------- */
+.account-sidebar {
+    background: #ffffff;
+    border: 1px solid var(--account-border);
+    border-radius: var(--account-radius);
+    padding: 20px;
+}
+
+.account-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f1f1;
+    margin-bottom: 12px;
+    min-width: 0;
+}
+
+.account-user-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.account-user-info {
+    min-width: 0;
+}
+
+.account-user-name {
+    display: block;
+    font-weight: 700;
+    color: var(--account-ink);
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-user-email {
+    display: block;
+    font-size: 12px;
+    color: var(--account-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.account-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 8px;
+    color: #555555;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.account-menu a i {
+    font-size: 16px;
+    width: 18px;
+    text-align: center;
+    color: #8b9196;
+    flex-shrink: 0;
+}
+
+.account-menu a:hover {
+    background: #f6f7f7;
+    color: #111111;
+}
+
+.account-menu a:hover i {
+    color: #111111;
+}
+
+.account-menu a.active {
+    background: var(--account-accent-soft);
+    color: var(--account-accent);
+}
+
+.account-menu a.active i {
+    color: var(--account-accent);
+}
+
+.account-menu-count {
+    margin-left: auto;
+    background: #f0f1f2;
+    color: #6b7075;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    line-height: 1.5;
+}
+
+.account-menu a.active .account-menu-count {
+    background: var(--account-accent);
+    color: #ffffff;
+}
+
+.account-menu a.account-menu-logout {
+    color: #cf3d3d;
+    border-top: 1px solid #f1f1f1;
+    border-radius: 0 0 8px 8px;
+    margin-top: 8px;
+    padding-top: 15px;
+}
+
+.account-menu a.account-menu-logout i {
+    color: #cf3d3d;
+}
+
+.account-menu a.account-menu-logout:hover {
+    background: #fdf1f1;
+}
+
+@media (min-width: 992px) {
+    .account-sidebar {
+        position: sticky;
+        top: 100px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.account-card {
+    background: #ffffff;
+    border: 1px solid var(--account-border);
+    border-radius: var(--account-radius);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.account-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 18px 22px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.account-card-header h5 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--account-ink);
+    margin: 0;
+}
+
+.account-card-sub {
+    font-size: 12.5px;
+    color: var(--account-muted);
+    margin: 3px 0 0;
+}
+
+.account-card-body {
+    padding: 22px;
+}
+
+.account-card-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--account-accent);
+    white-space: nowrap;
+}
+
+.account-card-link:hover {
+    color: var(--account-accent-dark);
+    text-decoration: underline;
+}
+
+.account-header-icon {
+    color: var(--account-accent);
+    font-size: 15px;
+    margin-right: 6px;
+}
+
+.account-mini-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #a3abb1;
+    margin-bottom: 6px;
+}
+
+.account-divider {
+    margin: 16px 0;
+    border-color: #f0f0f0;
+    opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard stat tiles
+   -------------------------------------------------------------------------- */
+a.account-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #ffffff;
+    border: 1px solid var(--account-border);
+    border-radius: var(--account-radius);
+    padding: 18px;
+    height: 100%;
+    color: inherit;
+}
+
+a.account-stat:hover {
+    border-color: var(--account-accent);
+    box-shadow: 0 4px 14px rgba(15, 118, 111, 0.08);
+}
+
+.account-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--account-accent-soft);
+    color: var(--account-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.account-stat-text {
+    min-width: 0;
+}
+
+.account-stat-value {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: #111111;
+    line-height: 1.15;
+}
+
+.account-stat-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--account-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   Detail rows / address previews (dashboard summary cards)
+   -------------------------------------------------------------------------- */
+.account-detail-row {
+    display: flex;
+    gap: 10px;
+    font-size: 13.5px;
+    padding: 6px 0;
+}
+
+.account-detail-row .label {
+    width: 90px;
+    flex-shrink: 0;
+    color: #a3abb1;
+    font-weight: 600;
+}
+
+.account-detail-row .value {
+    color: #333333;
+    font-weight: 600;
+    word-break: break-word;
+    min-width: 0;
+}
+
+.address-preview {
+    font-size: 13.5px;
+    color: #5f676d;
+    line-height: 1.8;
+    white-space: pre-line;
+    margin-bottom: 0;
+}
+
+.address-preview.empty {
+    color: #adb4ba;
+    font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Status badges
+   -------------------------------------------------------------------------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.status-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+.status-badge.status-pending    { background: #f2f4f6; color: #5c6670; }
+.status-badge.status-processing { background: #e9f2fd; color: #1f5fb8; }
+.status-badge.status-paid       { background: #e6f4f2; color: #0f766f; }
+.status-badge.status-shipped    { background: #fdf3e2; color: #9a6a12; }
+.status-badge.status-completed  { background: #e7f6ec; color: #20803f; }
+.status-badge.status-cancelled  { background: #fceceb; color: #c53c33; }
+
+/* --------------------------------------------------------------------------
+   Order rows (dashboard + order list)
+   -------------------------------------------------------------------------- */
+.order-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto 18px;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 22px;
+    border-bottom: 1px solid #f3f3f3;
+    color: inherit;
+}
+
+.order-row:last-child {
+    border-bottom: none;
+}
+
+.order-row:hover {
+    background: #fafbfb;
+}
+
+.order-row-ref {
+    display: block;
+    font-weight: 700;
+    color: #111111;
+    font-size: 14px;
+}
+
+.order-row-meta {
+    display: block;
+    font-size: 12.5px;
+    color: var(--account-muted);
+    margin-top: 2px;
+}
+
+.order-row-total {
+    font-weight: 700;
+    color: #111111;
+    font-size: 14px;
+    text-align: right;
+}
+
+.order-row-arrow {
+    color: #b8bfc5;
+    font-size: 13px;
+    text-align: right;
+}
+
+.order-row:hover .order-row-arrow {
+    color: var(--account-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Filter pills (order list)
+   -------------------------------------------------------------------------- */
+.account-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.account-filter a {
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid #e2e4e6;
+    background: #ffffff;
+    color: #555555;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.account-filter a:hover {
+    border-color: #9aa2a9;
+    color: #111111;
+}
+
+.account-filter a.active {
+    background: #111111;
+    border-color: #111111;
+    color: #ffffff;
+}
+
+.account-filter a .count {
+    opacity: 0.6;
+    margin-left: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Order tracker (order detail)
+   -------------------------------------------------------------------------- */
+.order-tracker {
+    position: relative;
+    padding: 8px 0 2px;
+}
+
+.order-tracker-line {
+    position: absolute;
+    top: 24px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: #eef0f2;
+    border-radius: 2px;
+}
+
+.order-tracker-line span {
+    display: block;
+    height: 100%;
+    background: var(--account-accent);
+    border-radius: 2px;
+}
+
+.order-tracker-steps {
+    display: flex;
+    position: relative;
+}
+
+.order-step {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+}
+
+.order-step-dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 2px solid #e4e7ea;
+    color: #9aa4ab;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.order-step.is-done .order-step-dot {
+    background: var(--account-accent);
+    border-color: var(--account-accent);
+    color: #ffffff;
+}
+
+.order-step.is-current .order-step-dot {
+    box-shadow: 0 0 0 4px rgba(15, 118, 111, 0.15);
+}
+
+.order-step-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a6adb3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.order-step.is-done .order-step-label,
+.order-step.is-current .order-step-label {
+    color: var(--account-ink);
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Order items table + totals (order detail)
+   -------------------------------------------------------------------------- */
+.order-items-table {
+    width: 100%;
+    min-width: 520px;
+}
+
+.order-items-table th {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #9aa2a9;
+    font-weight: 700;
+    padding: 13px 22px;
+    border-bottom: 1px solid #f2f2f2;
+    text-align: left;
+}
+
+.order-items-table td {
+    padding: 14px 22px;
+    border-bottom: 1px solid #f6f6f6;
+    vertical-align: middle;
+    font-size: 13.5px;
+    color: #555555;
+}
+
+.order-items-table tr:last-child td {
+    border-bottom: none;
+}
+
+.order-item-thumb {
+    width: 54px;
+    height: 54px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #eeeeee;
+    flex-shrink: 0;
+}
+
+.order-item-name {
+    font-weight: 700;
+    color: #222222;
+    font-size: 13.5px;
+}
+
+.order-item-sku {
+    font-size: 12px;
+    color: #a3abb1;
+}
+
+.order-totals {
+    padding: 18px 22px 22px;
+    border-top: 1px solid #f2f2f2;
+}
+
+.order-totals-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13.5px;
+    color: #5f676d;
+    padding: 5px 0;
+}
+
+.order-totals-row.grand {
+    border-top: 1px solid #f0f0f0;
+    margin-top: 8px;
+    padding-top: 13px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #111111;
+}
+
+.order-address-name {
+    font-weight: 700;
+    color: #222222;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.order-address-text {
+    font-size: 13.5px;
+    color: #5f676d;
+    line-height: 1.8;
+    margin-bottom: 0;
+    white-space: pre-line;
+}
+
+.order-contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: #5f676d;
+    margin-bottom: 8px;
+    word-break: break-all;
+}
+
+.order-contact-row i {
+    color: var(--account-accent);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Help card (order detail)
+   -------------------------------------------------------------------------- */
+.account-help-card {
+    background: var(--account-accent-soft);
+    border: 1px solid #d7eae7;
+    border-radius: var(--account-radius);
+    padding: 26px 24px;
+    text-align: center;
+}
+
+.account-help-card i {
+    font-size: 26px;
+    color: var(--account-accent);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.account-help-card h6 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #203330;
+    margin-bottom: 6px;
+}
+
+.account-help-card p {
+    font-size: 13px;
+    color: #5c6d6a;
+    margin-bottom: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Empty states
+   -------------------------------------------------------------------------- */
+.account-empty {
+    text-align: center;
+    padding: 52px 24px;
+}
+
+.account-empty i {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f4f6f6;
+    color: #9aa4a3;
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.account-empty h6 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--account-ink);
+    margin-bottom: 6px;
+}
+
+.account-empty p {
+    font-size: 13px;
+    color: var(--account-muted);
+    margin-bottom: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   Danger zone (delete account)
+   -------------------------------------------------------------------------- */
+.account-danger-zone {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    border: 1px solid #f2d7d5;
+    background: #fffbfb;
+    border-radius: var(--account-radius);
+    padding: 20px 22px;
+}
+
+.account-danger-zone h6 {
+    color: #b3352c;
+    font-size: 14.5px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.account-danger-zone p {
+    font-size: 13px;
+    color: #8d8d8d;
+    margin: 0;
+    max-width: 520px;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons (scoped to the account area)
+   -------------------------------------------------------------------------- */
+.account-area .btn {
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 24px;
+}
+
+.account-area .btn-sm {
+    padding: 7px 16px;
+    font-size: 12.5px;
+}
+
+.account-area .btn-primary {
+    background-color: #111111;
+    border-color: #111111;
+    color: #ffffff;
+}
+
+.account-area .btn-primary:hover,
+.account-area .btn-primary:focus,
+.account-area .btn-primary:active {
+    background-color: var(--account-accent) !important;
+    border-color: var(--account-accent) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(15, 118, 111, 0.18) !important;
+}
+
+.account-area .btn-outline-primary {
+    color: #111111;
+    border-color: #cfd4d8;
+    background-color: transparent;
+}
+
+.account-area .btn-outline-primary:hover,
+.account-area .btn-outline-primary:focus,
+.account-area .btn-outline-primary:active {
+    background-color: #111111 !important;
+    border-color: #111111 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.account-area .btn-outline-danger {
+    color: #c0392b;
+    border-color: #e8b7b2;
+    background-color: transparent;
+}
+
+.account-area .btn-outline-danger:hover,
+.account-area .btn-outline-danger:focus {
+    background-color: #c0392b !important;
+    border-color: #c0392b !important;
+    color: #ffffff !important;
+}
+
+/* --------------------------------------------------------------------------
+   Forms (scoped to the account area)
+   -------------------------------------------------------------------------- */
+.account-area .form-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--account-ink);
+    margin-bottom: 6px;
+}
+
+.account-area .form-control {
+    border-radius: 8px;
+    border-color: #dfe3e6;
+    font-size: 14px;
+    padding: 10px 14px;
+    color: #333333;
+}
+
+.account-area .form-control::placeholder {
+    color: #b7bec4;
+}
+
+.account-area .form-control:focus {
+    border-color: var(--account-accent);
+    box-shadow: 0 0 0 3px rgba(15, 118, 111, 0.12);
+}
+
+.account-area .form-text {
+    font-size: 12px;
+    color: #9aa2a9;
+}
+
+.account-area .alert {
+    border-radius: 10px;
+    font-size: 13.5px;
+}
+
+/* --------------------------------------------------------------------------
+   Pagination (scoped to the account area)
+   -------------------------------------------------------------------------- */
+.account-area .page-link {
+    color: #333333;
+    border-color: #e6e6e6;
+    font-size: 13px;
+}
+
+.account-area .page-link:hover {
+    color: var(--account-accent);
+    background-color: #f6f7f7;
+}
+
+.account-area .page-link:focus {
+    box-shadow: none;
+}
+
+.account-area .page-item.active .page-link {
+    background-color: #111111;
+    border-color: #111111;
+    color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+    .account-area {
+        padding: 25px 0 60px;
+    }
+
+    .account-sidebar {
+        padding: 14px;
+        margin-bottom: 24px;
+    }
+
+    .account-user {
+        padding-bottom: 12px;
+        margin-bottom: 10px;
+    }
+
+    .account-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 6px;
+        padding-bottom: 2px;
+    }
+
+    .account-menu a {
+        white-space: nowrap;
+        padding: 9px 14px;
+        flex-shrink: 0;
+    }
+
+    .account-menu a.account-menu-logout {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 9px;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .account-page-head h4 {
+        font-size: 20px;
+    }
+
+    .account-card-header,
+    .account-card-body {
+        padding: 16px 18px;
+    }
+
+    .order-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 6px 16px;
+        padding: 14px 18px;
+    }
+
+    .order-row-arrow {
+        display: none;
+    }
+
+    .order-row .status-badge {
+        grid-row: 2;
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .order-row-total {
+        grid-row: 1;
+        grid-column: 2;
+    }
+
+    .order-totals {
+        padding: 16px 18px 18px;
+    }
+
+    .order-step-label {
+        font-size: 10.5px;
+    }
+
+    .order-step-dot {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .order-tracker-line {
+        top: 21px;
+    }
+}
