@@ -96,6 +96,15 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $rememberMe = $request->filled('remember_me');
 
+        $user = User::where('email', $credentials['email'])->first();
+
+        // Users created by an admin have no password until they use the
+        // "set password" email link. Attempting to authenticate against a
+        // null hash makes the bcrypt hasher throw, so handle it gracefully.
+        if ($user && empty($user->getRawOriginal('password'))) {
+            return redirect()->route('login')->with('warning', 'You have not set a password yet. Please check your email for the set-password link.');
+        }
+
         if (auth()->attempt($credentials, $rememberMe)) {
             $user = auth()->user();
 
