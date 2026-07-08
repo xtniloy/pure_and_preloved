@@ -48,86 +48,48 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4 ">
-                        <div class="single-wedge">
-                            <h4 class="footer-herading">From Our Blog</h4>
-                            <div class="footer-blog-slider">
-                                <div class="footer-blog-slider-wrapper slider-nav-style-3 ">
-                                    <!-- Single-item -->
-                                    <div class="single-slider-item">
-                                        <div class="footer-blog-post d-flex mb-30px">
-                                            <div class="footer-blog-post-top">
-                                                <div class="post-thumbnail">
-                                                    <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/product-image/homeengraving.jpg" alt="">
-                                                    </a>
-                                                </div>
+                    @php
+                        $footerBlogPosts = \App\Models\BlogPost::published()
+                            ->with(['featuredImage', 'author'])
+                            ->orderByDesc('published_at')
+                            ->take(4)
+                            ->get();
+                    @endphp
+                    @if($footerBlogPosts->count())
+                        <div class="col-md-6 col-lg-4 ">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">From Our Blog</h4>
+                                <div class="footer-blog-slider">
+                                    <div class="footer-blog-slider-wrapper slider-nav-style-3 ">
+                                        @foreach($footerBlogPosts->chunk(2) as $footerPostChunk)
+                                            <!-- Single-item -->
+                                            <div class="single-slider-item">
+                                                @foreach($footerPostChunk as $footerPost)
+                                                    <div class="footer-blog-post {{ $loop->first ? 'd-flex mb-30px' : '' }}">
+                                                        <div class="footer-blog-post-top">
+                                                            <div class="post-thumbnail">
+                                                                <a href="{{ route('blog.show', $footerPost->slug) }}">
+                                                                    <img src="{{ $footerPost->featuredImage->public_url ?? asset('assets/images/blog-image/blog-1.jpg') }}" alt="{{ $footerPost->title }}">
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="footer-blog-content">
+                                                            <h4><a href="{{ route('blog.show', $footerPost->slug) }}">{{ $footerPost->title }}</a></h4>
+                                                            <div class="footer-blog-meta">
+                                                                <span class="autor">Posted by <a href="#">{{ $footerPost->author->name ?? 'Admin' }}</a> </span>
+                                                                <span class="date">{{ $footerPost->display_date->format('M d,Y') }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is First Post For Jewellery</a></h4>
-                                                <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
-                                                    <span class="date">Jun 29,2022</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="footer-blog-post">
-                                            <div class="footer-blog-post-top">
-                                                <div class="post-thumbnail">
-                                                    <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/product-image/6.jpg" alt="">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is Secound Post For Jewellery</a></h4>
-                                                <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
-                                                    <span class="date">Jun 29,2022</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            <!-- Single-item end -->
+                                        @endforeach
                                     </div>
-                                    <!-- Single-item -->
-                                    <div class="single-slider-item">
-                                        <div class="footer-blog-post d-flex mb-30px">
-                                            <div class="footer-blog-post-top">
-                                                <div class="post-thumbnail">
-                                                    <a href="blog-single-left-sidebar.html">
-                                                        <img src="aassets/images/product-image/6.jpg" alt="">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is Third Post For Jewellery</a></h4>
-                                                <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
-                                                    <span class="date">Jun 29,2022</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="footer-blog-post">
-                                            <div class="footer-blog-post-top">
-                                                <div class="post-thumbnail">
-                                                    <a href="blog-single-left-sidebar.html">
-                                                        <img src="assets/images/product-image/homeengraving.jpg" alt="">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="footer-blog-content">
-                                                <h4><a href="blog-single-left-sidebar.html">This is Fourth Post For Jewellery</a></h4>
-                                                <div class="footer-blog-meta">
-                                                    <span class="autor">Posted by <a href="#">Demo User</a> </span>
-                                                    <span class="date">Jun 29,2022</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Single-item end -->
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>

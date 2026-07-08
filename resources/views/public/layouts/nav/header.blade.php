@@ -104,6 +104,9 @@
                                     </li>
                                 @endforeach
                                 <li class="menu-dropdown">
+                                    <a href="{{ route('blog.index') }}">Blog</a>
+                                </li>
+                                <li class="menu-dropdown">
                                     <a href="{{ route('contact.index') }}">Contact</a>
                                 </li>
                             </ul>

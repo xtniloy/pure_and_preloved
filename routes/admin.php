@@ -49,6 +49,14 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::resource('shipping_methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->except(['show']);
 
+    // Blog
+    Route::resource('blog-posts', \App\Http\Controllers\Admin\BlogPostController::class)->except(['show']);
+    Route::resource('blog-categories', \App\Http\Controllers\Admin\BlogCategoryController::class)->except(['show']);
+    Route::resource('blog-tags', \App\Http\Controllers\Admin\BlogTagController::class)->except(['show']);
+    Route::get('/blog-comments', [\App\Http\Controllers\Admin\BlogCommentController::class, 'index'])->name('blog-comments.index');
+    Route::put('/blog-comments/{blogComment}/toggle', [\App\Http\Controllers\Admin\BlogCommentController::class, 'toggle'])->name('blog-comments.toggle');
+    Route::delete('/blog-comments/{blogComment}', [\App\Http\Controllers\Admin\BlogCommentController::class, 'destroy'])->name('blog-comments.destroy');
+
     // Contact messages
     Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
 

@@ -90,6 +90,12 @@ Route::get('/shop', [\App\Http\Controllers\Public\ProductController::class, 'ind
 Route::get('/contact-us', [\App\Http\Controllers\Public\ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact-us', [\App\Http\Controllers\Public\ContactController::class, 'store'])->name('contact.submit');
 
+// Blog
+Route::get('/blog', [\App\Http\Controllers\Public\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [\App\Http\Controllers\Public\BlogController::class, 'show'])->name('blog.show');
+Route::post('/blog/{slug}/comments', [\App\Http\Controllers\Public\BlogController::class, 'storeComment'])
+    ->middleware('auth')->name('blog.comments.store');
+
 // Legacy terms URL now served by the CMS "terms" page (kept for existing links)
 Route::get('/terms-and-conditions', fn () => redirect()->route('pages.show', 'terms', 301))->name('terms.index');
 

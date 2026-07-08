@@ -240,7 +240,8 @@
                         @endforeach
 
 
-                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                        <li><a href="{{ route('contact.index') }}">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -261,7 +262,8 @@
                                 </ul>
                             </li>
                         @endforeach
-                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                        <li><a href="{{ route('contact.index') }}">Contact Us</a></li>
                     </ul>
                 </div>
             </div>

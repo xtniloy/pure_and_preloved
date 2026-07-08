@@ -6,6 +6,7 @@ class NotificationType
 {
     public const CONTACT = 'contact';
     public const ORDER = 'order';
+    public const BLOG_COMMENT = 'blog_comment';
 
     /**
      * All notification types keyed by value, with a human label.
@@ -17,6 +18,7 @@ class NotificationType
         return [
             self::CONTACT => 'Contact messages',
             self::ORDER => 'New orders',
+            self::BLOG_COMMENT => 'Blog comments',
         ];
     }
 

@@ -91,6 +91,38 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.blog-posts.index'))
+            <li class="nav-group">
+                <a class="nav-link nav-group-toggle" href="#">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-newspaper') }}"></use>
+                    </svg><span>Blog</span>
+                </a>
+                <ul class="nav-group-items compact">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.blog-posts.index')}}">
+                            <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Posts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.blog-categories.index')}}">
+                            <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Categories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.blog-tags.index')}}">
+                            <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Tags
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.blog-comments.index')}}">
+                            <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Comments
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+
         @if(Route::has('admin.contact-messages.index'))
             @php $contactUnread = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
             <li class="nav-item">
