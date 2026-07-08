@@ -149,41 +149,37 @@ $(function() {
 
     /*------------------------------
             Feature Slider
+            (slider on lg+ screens, plain stacked list below —
+             992px matches Bootstrap's lg breakpoint)
     -----------------------------------*/
 
-    $('.feature-slider-wrapper').slick({
-        infinite: true,
-        slidesToShow: 3,
-        arrows: true,
-        slidesToScroll: 1,
-        prevArrow: '<span class="prev"><i class="ion-ios-arrow-left"></i></span>',
-        nextArrow: '<span class="next"><i class="ion-ios-arrow-right"></i></span>',
-        speed: 800,
-        cssEase: 'linear',
-        dots: false,
-        responsive: [{
-                breakpoint: 992,
-                Settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1
-                }
-            },
-            {
-                breakpoint: 767,
-                Settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1
-                }
-            },
-            {
-                breakpoint: 479,
-                Settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
+    var $featureSlider = $('.feature-slider-wrapper');
+    var featureSliderMql = window.matchMedia('(min-width: 992px)');
+
+    function toggleFeatureSlider() {
+        if (featureSliderMql.matches) {
+            if (!$featureSlider.hasClass('slick-initialized')) {
+                $featureSlider.slick({
+                    infinite: true,
+                    slidesToShow: 3,
+                    arrows: true,
+                    slidesToScroll: 1,
+                    prevArrow: '<span class="prev"><i class="ion-ios-arrow-left"></i></span>',
+                    nextArrow: '<span class="next"><i class="ion-ios-arrow-right"></i></span>',
+                    speed: 800,
+                    cssEase: 'linear',
+                    dots: false
+                });
             }
-        ]
-    });
+        } else if ($featureSlider.hasClass('slick-initialized')) {
+            $featureSlider.slick('unslick');
+        }
+    }
+
+    if ($featureSlider.length) {
+        toggleFeatureSlider();
+        featureSliderMql.addListener(toggleFeatureSlider);
+    }
 
 
     /*------------------------------

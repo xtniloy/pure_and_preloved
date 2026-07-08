@@ -7945,17 +7945,22 @@ offcanvas-menu > ul > li .menu-expand {
   text-transform: uppercase;
   color: #9d9c9c;
 }
-.product-show-mobile .list-product:before {
-  display: none;
-}
-.product-show-mobile .list-product .product-decs h2 a {
-  margin-bottom: 4px;
-}
-.product-show-mobile .list-product .product-decs .pricing-meta {
+/* Feature slider below lg: slick is not initialized there, items render
+   as a plain stacked list with the compact mobile card styles */
+@media only screen and (max-width: 991px) {
+  .feature-slider-wrapper .list-product:before {
+    display: none;
+  }
+  .feature-slider-wrapper .list-product .product-decs h2 a {
+    margin-bottom: 4px;
+  }
+  .feature-slider-wrapper .list-product .product-decs .pricing-meta {
     margin-bottom: 0px;
-}
-.product-show-mobile .list-product.text-center.mb-30px {
+  }
+  .feature-slider-wrapper .list-product.text-center.mb-30px {
     margin-bottom: 10px;
+    padding: 0px;
+  }
 }
 .full-product-banner {
   background-repeat: no-repeat !important;
@@ -8114,9 +8119,6 @@ offcanvas-menu > ul > li .menu-expand {
   }
   .greed-Jewellery-area p {
     font-size: 16px;
-  }
-  .product-show-mobile .list-product.text-center.mb-30px {
-    padding: 0px;
   }
    .feature-product-wrap.container.d-flex {
       padding: 0px 16px;
