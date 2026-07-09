@@ -59,39 +59,10 @@
                                     <th style="width: 160px;" class="text-end pe-3">Actions</th>
                                 </tr>
                             </thead>
-                            {{-- Fixed sections (hero) stay pinned on top --}}
-                            <tbody>
-                                @foreach($sections->filter->isFixed() as $section)
-                                    <tr class="table-light">
-                                        <td class="text-center text-body-secondary" title="Fixed position">
-                                            <svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use></svg>
-                                        </td>
-                                        <td>
-                                            <span class="fw-semibold">{{ $section->title }}</span>
-                                            <div class="small text-body-secondary">Position fixed at the top of the page</div>
-                                        </td>
-                                        <td><span class="badge bg-dark">{{ $section->typeLabel() }}</span></td>
-                                        <td>
-                                            <form method="POST" action="{{ route('admin.homepage.sections.toggle', $section) }}">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="form-check form-switch mb-0">
-                                                    <input class="form-check-input" type="checkbox" onchange="this.form.submit()"
-                                                           {{ $section->is_active ? 'checked' : '' }}>
-                                                </div>
-                                            </form>
-                                        </td>
-                                        <td class="text-end pe-3">
-                                            @if($section->isEditable())
-                                                <a href="{{ route('admin.homepage.sections.edit', $section) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            {{-- Reorderable body sections --}}
+                            {{-- Reorderable body sections. The hero slider is fixed on
+                                 top of the page and edited via its own sidebar menu. --}}
                             <tbody id="sections-sortable">
-                                @foreach($sections->reject->isFixed() as $section)
+                                @foreach($sections as $section)
                                     <tr draggable="true" data-id="{{ $section->id }}">
                                         <td class="text-center text-body-secondary drag-handle" style="cursor: grab;" title="Drag to reorder">
                                             <svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-menu') }}"></use></svg>

@@ -82,12 +82,39 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.homepage.hero'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.homepage.hero')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-image') }}"></use>
+                    </svg><span>Hero Slider</span>
+                </a>
+            </li>
+        @endif
         @if(Route::has('admin.homepage.index'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.homepage.index')}}">
                     <svg class="nav-icon">
                         <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-home') }}"></use>
                     </svg><span>Homepage</span>
+                </a>
+            </li>
+        @endif
+        @if(Route::has('admin.footer.edit'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.footer.edit')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-border-bottom') }}"></use>
+                    </svg><span>Footer</span>
+                </a>
+            </li>
+        @endif
+        @if(Route::has('admin.social-links.edit'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.social-links.edit')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-share-alt') }}"></use>
+                    </svg><span>Social Links</span>
                 </a>
             </li>
         @endif

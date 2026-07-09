@@ -26,6 +26,19 @@ class Setting extends Model
             ->all();
     }
 
+    public static function getJson(string $key, $default = null)
+    {
+        $value = static::get($key);
+
+        if ($value === null) {
+            return $default;
+        }
+
+        $decoded = json_decode($value, true);
+
+        return $decoded === null ? $default : $decoded;
+    }
+
     public static function set(string $key, $value): void
     {
         static::query()->updateOrCreate(['key' => $key], ['value' => $value]);

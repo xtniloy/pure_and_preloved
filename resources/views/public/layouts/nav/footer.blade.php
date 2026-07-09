@@ -1,3 +1,11 @@
+@php
+    $footerContent = \App\Models\Setting::getJson('footer_content', []);
+    $footerSocialLinks = \App\Support\Socials::links();
+    $footerLinkHref = function ($url) {
+        $url = (string) $url;
+        return \Illuminate\Support\Str::startsWith($url, ['http://', 'https://', '#', 'mailto:', 'tel:']) ? $url : url($url);
+    };
+@endphp
 <div class="footer-area">
     <div class="footer-container">
         <div class="footer-top">
@@ -8,11 +16,19 @@
                             <div class="footer-logo">
                                 <a href="{{route('home')}}"><img class="img-responsive-footer" src="{{asset('assets/images/logo/logo.jpg.png')}}" alt="Pure & Preloved" /></a>
                             </div>
-                            <p class="text-infor">Preloved Jewellery | Gold Diamond Silver | Rings Pendants Bracelets Earrings | Free Nationwide Delivery | Evri & Royal Mail 📮🇬🇧</p>
+                            @if(!empty($footerContent['about_text']))
+                                <p class="text-infor">{{ $footerContent['about_text'] }}</p>
+                            @endif
                             <div class="need_help">
-                                <p class="add"><span class="address">Address:</span> Dixon Street, Lincoln, United Kingdom</p>
-                                <p class="mail"><span class="email">Email:</span> <a href="mailto:support@pureandpreloved.co.uk">support@pureandpreloved.co.uk</a></p>
-                                <p class="phone"><span class="call us">Call Us:</span> <a href="tel:+44 7396 823194"> +44 7396 823194</a></p>
+                                @if(!empty($footerContent['address']))
+                                    <p class="add"><span class="address">Address:</span> {{ $footerContent['address'] }}</p>
+                                @endif
+                                @if(!empty($footerContent['email']))
+                                    <p class="mail"><span class="email">Email:</span> <a href="mailto:{{ $footerContent['email'] }}">{{ $footerContent['email'] }}</a></p>
+                                @endif
+                                @if(!empty($footerContent['phone']))
+                                    <p class="phone"><span class="call us">Call Us:</span> <a href="tel:{{ $footerContent['phone'] }}"> {{ $footerContent['phone'] }}</a></p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -33,21 +49,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-2 col-sm-6 mb-sm-30px mb-lm-30px">
-                        <div class="single-wedge">
-                            <h4 class="footer-herading">CUSTOM LINKS</h4>
-                            <div class="footer-links">
-                                <ul>
-                                    <li><a href="#">Legal Notice</a></li>
-                                    <li><a href="#">Prices Drop</a></li>
-                                    <li><a href="#">New Products</a></li>
-                                    <li><a href="#">Best Sales</a></li>
-                                    <li><a href="{{route('login')}}">Login</a></li>
-                                    <li><a href="{{route('user.dashboard')}}">My Account</a></li>
-                                </ul>
+                    @if(!empty($footerContent['custom_links']))
+                        <div class="col-md-6 col-lg-2 col-sm-6 mb-sm-30px mb-lm-30px">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">CUSTOM LINKS</h4>
+                                <div class="footer-links">
+                                    <ul>
+                                        @foreach($footerContent['custom_links'] as $footerLink)
+                                            <li><a href="{{ $footerLinkHref($footerLink['url'] ?? '#') }}">{{ $footerLink['label'] ?? '' }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     @php
                         $footerBlogPosts = \App\Models\BlogPost::published()
                             ->with(['featuredImage', 'author'])
@@ -104,28 +119,20 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="footer-social-icon d-flex">
-                            <div class="heading-info">Follow Us:</div>
-                            <div class="social-icon">
-                                <ul>
-                                    <li class="facebook">
-                                        <a href="https://facebook.com/PureAndPreloved"><i class="ion-social-facebook"></i></a>
-                                    </li>
-                                    <li class="twitter">
-                                        <a href="https://x.com/pureandpreloved"><i class="ion-social-twitter"></i></a>
-                                    </li>
-                                    <li class="google">
-                                        <a href="https://threads.com/pureandpreloved"><i class="ion-social-google"></i></a>
-                                    </li>
-                                    <li class="youtube">
-                                        <a href="https://pinterest.com/pureandpreloved"><i class="ion-social-pinterest"></i></a>
-                                    </li>
-                                    <li class="instagram">
-                                        <a href="https://instagram.com/pureandpreloved"><i class="ion-social-instagram"></i></a>
-                                    </li>
-                                </ul>
+                        @if(count($footerSocialLinks))
+                            <div class="footer-social-icon d-flex">
+                                <div class="heading-info">Follow Us:</div>
+                                <div class="social-icon">
+                                    <ul>
+                                        @foreach($footerSocialLinks as $social)
+                                            <li class="{{ $social['platform'] }}">
+                                                <a href="{{ $social['url'] }}" target="_blank" rel="noopener"><i class="{{ $social['icon'] }}"></i></a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -158,7 +165,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 text-center">
-                        <p class="copy-text">Copyright © <a href="https://pureandpreloved.co.uk/"> Pure and Preloved</a>. All Rights Reserved</p>
+                        <p class="copy-text">{!! $footerContent['copyright'] ?? '' !!}</p>
                     </div>
                 </div>
             </div>

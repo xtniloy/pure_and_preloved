@@ -51,6 +51,7 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
 
     // Homepage builder
     Route::get('/homepage', [\App\Http\Controllers\Admin\HomePageController::class, 'index'])->name('homepage.index');
+    Route::get('/homepage/hero', [\App\Http\Controllers\Admin\HomePageController::class, 'hero'])->name('homepage.hero');
     Route::post('/homepage/seo', [\App\Http\Controllers\Admin\HomePageController::class, 'updateSeo'])->name('homepage.seo.update');
     Route::post('/homepage/sections/reorder', [\App\Http\Controllers\Admin\HomePageController::class, 'reorder'])->name('homepage.sections.reorder');
     Route::get('/homepage/sections/create/{type}', [\App\Http\Controllers\Admin\HomePageController::class, 'create'])->name('homepage.sections.create');
@@ -59,6 +60,14 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::put('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'update'])->name('homepage.sections.update');
     Route::put('/homepage/sections/{section}/toggle', [\App\Http\Controllers\Admin\HomePageController::class, 'toggle'])->name('homepage.sections.toggle');
     Route::delete('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'destroy'])->name('homepage.sections.destroy');
+
+    // Footer content
+    Route::get('/footer', [\App\Http\Controllers\Admin\FooterController::class, 'edit'])->name('footer.edit');
+    Route::put('/footer', [\App\Http\Controllers\Admin\FooterController::class, 'update'])->name('footer.update');
+
+    // Social links (used site-wide: footer, mobile menu, homepage strip)
+    Route::get('/social-links', [\App\Http\Controllers\Admin\SocialLinkController::class, 'edit'])->name('social-links.edit');
+    Route::put('/social-links', [\App\Http\Controllers\Admin\SocialLinkController::class, 'update'])->name('social-links.update');
 
     // Blog
     Route::resource('blog-posts', \App\Http\Controllers\Admin\BlogPostController::class)->except(['show']);

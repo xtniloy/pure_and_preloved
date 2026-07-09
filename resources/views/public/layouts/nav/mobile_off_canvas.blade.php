@@ -271,21 +271,11 @@
         <!-- OffCanvas Menu End -->
         <div class="offcanvas-social mt-30px">
             <ul>
-                <li>
-                    <a href="https://facebook.com/PureAndPreloved"><i class="ion-social-facebook"></i></a>
-                </li>
-                <li>
-                    <a href="https://x.com/pureandpreloved"><i class="ion-social-twitter"></i></a>
-                </li>
-                <li>
-                    <a href="https://threads.com/pureandpreloved"><i class="ion-social-google"></i></a>
-                </li>
-                <li>
-                    <a href="https://pinterest.com/pureandpreloved"><i class="ion-social-pinterest"></i></a>
-                </li>
-                <li>
-                    <a href="https://instagram.com/pureandpreloved"><i class="ion-social-instagram"></i></a>
-                </li>
+                @foreach(\App\Support\Socials::links() as $social)
+                    <li>
+                        <a href="{{ $social['url'] }}" target="_blank" rel="noopener"><i class="{{ $social['icon'] }}"></i></a>
+                    </li>
+                @endforeach
             </ul>
         </div>
     </div>

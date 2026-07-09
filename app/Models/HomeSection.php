@@ -66,7 +66,7 @@ class HomeSection extends Model
             'addable' => true,
         ],
         'social_follow' => [
-            'label' => 'Social Follow (static)',
+            'label' => 'Social Follow Strip',
             'editable' => false,
             'deletable' => true,
             'fixed' => false,

@@ -2,6 +2,7 @@
 
 @php
     $isEdit = isset($section);
+    $standalone = $standalone ?? false;
     $typeConfig = \App\Models\HomeSection::TYPES[$type] ?? ['label' => $type];
     $data = $isEdit ? ($section->data ?? []) : [];
 
@@ -15,7 +16,7 @@
 @endphp
 
 @section('page-title')
-    {{ $isEdit ? 'Edit' : 'Add' }} {{ $typeConfig['label'] }}
+    {{ $standalone ? $typeConfig['label'] : ($isEdit ? 'Edit ' : 'Add ') . $typeConfig['label'] }}
 @endsection
 
 @section('content')
@@ -25,18 +26,22 @@
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
             <div>
                 <div class="fs-2 fw-semibold">
-                    {{ $isEdit ? 'Edit Section' : 'Add Section' }}
+                    {{ $standalone ? $typeConfig['label'] : ($isEdit ? 'Edit Section' : 'Add Section') }}
                 </div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.homepage.index') }}">Homepage</a></li>
+                        @unless($standalone)
+                            <li class="breadcrumb-item"><a href="{{ route('admin.homepage.index') }}">Homepage</a></li>
+                        @endunless
                         <li class="breadcrumb-item active" aria-current="page">{{ $typeConfig['label'] }}</li>
                     </ol>
                 </nav>
             </div>
             <div class="d-flex gap-2">
-                <a href="{{ route('admin.homepage.index') }}" class="btn btn-secondary">Cancel</a>
+                @unless($standalone)
+                    <a href="{{ route('admin.homepage.index') }}" class="btn btn-secondary">Cancel</a>
+                @endunless
                 <button type="submit" form="section-form" class="btn btn-primary text-white px-4">
                     Save Section
                 </button>
@@ -98,7 +103,9 @@
                                 </div>
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-primary text-white">Save Section</button>
-                                    <a href="{{ route('admin.homepage.index') }}" class="btn btn-secondary">Cancel</a>
+                                    @unless($standalone)
+                                        <a href="{{ route('admin.homepage.index') }}" class="btn btn-secondary">Cancel</a>
+                                    @endunless
                                 </div>
                             </div>
                         </div>
@@ -139,45 +146,9 @@
 @endsection
 
 @push('js')
+    @include('admin.partials.repeater_js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ------- Repeaters (add / remove / renumber rows) -------
-            function renumberRows(repeater) {
-                repeater.querySelectorAll('.js-rows .js-row-number').forEach(function (el, index) {
-                    el.textContent = index + 1;
-                });
-            }
-
-            document.querySelectorAll('.js-add-row').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const repeater = document.getElementById(button.dataset.repeater);
-                    const rows = repeater.querySelector('.js-rows');
-                    const template = repeater.querySelector('.js-row-template');
-                    const index = parseInt(repeater.dataset.nextIndex || '0', 10);
-
-                    const wrapper = document.createElement('div');
-                    wrapper.innerHTML = template.innerHTML.replace(/__IDX__/g, index);
-                    repeater.dataset.nextIndex = index + 1;
-
-                    while (wrapper.firstElementChild) {
-                        rows.appendChild(wrapper.firstElementChild);
-                    }
-
-                    renumberRows(repeater);
-                });
-            });
-
-            document.addEventListener('click', function (event) {
-                const removeBtn = event.target.closest('.js-remove-row');
-                if (removeBtn) {
-                    const repeater = removeBtn.closest('.js-repeater');
-                    removeBtn.closest('.js-row').remove();
-                    if (repeater) renumberRows(repeater);
-                }
-            });
-
-            document.querySelectorAll('.js-repeater').forEach(renumberRows);
-
             // ------- Image picking (delegated so it works in new rows too) -------
             const fileManagerModal = new coreui.Modal(document.getElementById('fileManagerModal'));
             const fileManagerIframe = document.getElementById('fileManagerIframe');

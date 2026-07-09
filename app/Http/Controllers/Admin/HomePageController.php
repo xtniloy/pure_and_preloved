@@ -17,10 +17,13 @@ class HomePageController extends Controller
 
     public function index()
     {
+        // Fixed sections (hero) are managed on their own page, not in this list.
         $sections = HomeSection::query()
             ->orderBy('position')
             ->orderBy('id')
-            ->get();
+            ->get()
+            ->reject->isFixed()
+            ->values();
 
         $seo = [
             'meta_title' => Setting::get('home_meta_title'),
@@ -32,6 +35,20 @@ class HomePageController extends Controller
         $addableTypes = HomeSection::addableTypes();
 
         return view('admin.sections.homepage.index', compact('sections', 'seo', 'addableTypes'));
+    }
+
+    /**
+     * Standalone editor for the fixed hero slider (own sidebar menu item).
+     */
+    public function hero()
+    {
+        $section = HomeSection::query()->where('type', 'hero_slider')->firstOrFail();
+
+        return view('admin.sections.homepage.form', [
+            'type' => $section->type,
+            'section' => $section,
+            'standalone' => true,
+        ]);
     }
 
     public function create(string $type)
@@ -63,6 +80,10 @@ class HomePageController extends Controller
     {
         abort_unless($section->isEditable(), 404);
 
+        if ($section->isFixed()) {
+            return redirect()->route('admin.homepage.hero');
+        }
+
         return view('admin.sections.homepage.form', ['type' => $section->type, 'section' => $section]);
     }
 
@@ -77,6 +98,10 @@ class HomePageController extends Controller
             'data' => $this->buildData($section->type, $request),
             'is_active' => $request->boolean('is_active'),
         ]);
+
+        if ($section->isFixed()) {
+            return redirect()->route('admin.homepage.hero')->with('success', 'Hero slider updated.');
+        }
 
         return redirect()->route('admin.homepage.index')->with('success', 'Section updated.');
     }
