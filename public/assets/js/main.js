@@ -153,30 +153,33 @@ $(function() {
              992px matches Bootstrap's lg breakpoint)
     -----------------------------------*/
 
-    var $featureSlider = $('.feature-slider-wrapper');
+    var $featureSliders = $('.feature-slider-wrapper');
     var featureSliderMql = window.matchMedia('(min-width: 992px)');
 
     function toggleFeatureSlider() {
-        if (featureSliderMql.matches) {
-            if (!$featureSlider.hasClass('slick-initialized')) {
-                $featureSlider.slick({
-                    infinite: true,
-                    slidesToShow: 3,
-                    arrows: true,
-                    slidesToScroll: 1,
-                    prevArrow: '<span class="prev"><i class="ion-ios-arrow-left"></i></span>',
-                    nextArrow: '<span class="next"><i class="ion-ios-arrow-right"></i></span>',
-                    speed: 800,
-                    cssEase: 'linear',
-                    dots: false
-                });
+        $featureSliders.each(function () {
+            var $slider = $(this);
+            if (featureSliderMql.matches) {
+                if (!$slider.hasClass('slick-initialized')) {
+                    $slider.slick({
+                        infinite: true,
+                        slidesToShow: 3,
+                        arrows: true,
+                        slidesToScroll: 1,
+                        prevArrow: '<span class="prev"><i class="ion-ios-arrow-left"></i></span>',
+                        nextArrow: '<span class="next"><i class="ion-ios-arrow-right"></i></span>',
+                        speed: 800,
+                        cssEase: 'linear',
+                        dots: false
+                    });
+                }
+            } else if ($slider.hasClass('slick-initialized')) {
+                $slider.slick('unslick');
             }
-        } else if ($featureSlider.hasClass('slick-initialized')) {
-            $featureSlider.slick('unslick');
-        }
+        });
     }
 
-    if ($featureSlider.length) {
+    if ($featureSliders.length) {
         toggleFeatureSlider();
         featureSliderMql.addListener(toggleFeatureSlider);
     }

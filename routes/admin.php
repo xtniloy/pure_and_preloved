@@ -49,6 +49,17 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::resource('shipping_methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->except(['show']);
 
+    // Homepage builder
+    Route::get('/homepage', [\App\Http\Controllers\Admin\HomePageController::class, 'index'])->name('homepage.index');
+    Route::post('/homepage/seo', [\App\Http\Controllers\Admin\HomePageController::class, 'updateSeo'])->name('homepage.seo.update');
+    Route::post('/homepage/sections/reorder', [\App\Http\Controllers\Admin\HomePageController::class, 'reorder'])->name('homepage.sections.reorder');
+    Route::get('/homepage/sections/create/{type}', [\App\Http\Controllers\Admin\HomePageController::class, 'create'])->name('homepage.sections.create');
+    Route::post('/homepage/sections', [\App\Http\Controllers\Admin\HomePageController::class, 'store'])->name('homepage.sections.store');
+    Route::get('/homepage/sections/{section}/edit', [\App\Http\Controllers\Admin\HomePageController::class, 'edit'])->name('homepage.sections.edit');
+    Route::put('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'update'])->name('homepage.sections.update');
+    Route::put('/homepage/sections/{section}/toggle', [\App\Http\Controllers\Admin\HomePageController::class, 'toggle'])->name('homepage.sections.toggle');
+    Route::delete('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'destroy'])->name('homepage.sections.destroy');
+
     // Blog
     Route::resource('blog-posts', \App\Http\Controllers\Admin\BlogPostController::class)->except(['show']);
     Route::resource('blog-categories', \App\Http\Controllers\Admin\BlogCategoryController::class)->except(['show']);

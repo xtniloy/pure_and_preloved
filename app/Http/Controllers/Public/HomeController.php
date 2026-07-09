@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Public;
 use App\Exceptions\InsufficientStockException;
 use App\Http\Controllers\Controller;
 use App\Jobs\OrderConfirmationEmailJob;
+use App\Models\HomeSection;
 use App\Models\Product;
+use App\Models\Setting;
+use Modules\Files\Models\Asset;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Notifications\NewOrderPlaced;
@@ -19,14 +22,45 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index(){
-        $featuredProducts = Product::with(['categories', 'thumbnailImage'])
-            ->where('status', true)
-            ->where('is_featured', true)
-            ->orderBy('created_at', 'desc')
-            ->take(10)
+        $sections = HomeSection::query()
+            ->where('is_active', true)
+            ->orderBy('position')
+            ->orderBy('id')
             ->get();
 
-        return view('public.home.index', compact('featuredProducts'));
+        HomeSection::resolveImages($sections);
+
+        // Products are only queried when a featured-products section is on the page.
+        $featuredProducts = collect();
+        if ($sections->contains(fn ($section) => $section->type === 'featured_products')) {
+            $featuredProducts = Product::with(['categories', 'thumbnailImage'])
+                ->where('status', true)
+                ->where('is_featured', true)
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
+        }
+
+        $settings = Setting::getMany([
+            'home_meta_title',
+            'home_meta_description',
+            'home_meta_keywords',
+            'home_meta_image_id',
+        ]);
+
+        $metaImageUrl = null;
+        if (!empty($settings['home_meta_image_id'])) {
+            $metaImageUrl = Asset::find($settings['home_meta_image_id'])?->public_url;
+        }
+
+        $seo = [
+            'meta_title' => $settings['home_meta_title'] ?? null,
+            'meta_description' => $settings['home_meta_description'] ?? null,
+            'meta_keywords' => $settings['home_meta_keywords'] ?? null,
+            'meta_image_url' => $metaImageUrl,
+        ];
+
+        return view('public.home.index', compact('sections', 'featuredProducts', 'seo'));
     }
 
     public function cart(Request $request){

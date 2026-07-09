@@ -82,6 +82,15 @@
                 </a>
             </li>
         @endif
+        @if(Route::has('admin.homepage.index'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.homepage.index')}}">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-home') }}"></use>
+                    </svg><span>Homepage</span>
+                </a>
+            </li>
+        @endif
         @if(Route::has('admin.pages.index'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.pages.index')}}">
