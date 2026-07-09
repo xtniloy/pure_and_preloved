@@ -7,6 +7,7 @@
 @php
     $infoLinks = array_values(old('info_links', $footer['info_links'] ?? [['label' => '', 'url' => '']]));
     $customLinks = array_values(old('custom_links', $footer['custom_links'] ?? [['label' => '', 'url' => '']]));
+    $tagLinks = array_values(old('tag_links', $footer['tag_links'] ?? [['label' => '', 'url' => '']]));
 @endphp
 
 @section('content')
@@ -188,6 +189,53 @@
                                     </div>
                                 </div>
                             </template>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-semibold">Bottom Tag Links (above the copyright line)</h6>
+                            <button type="button" class="btn btn-sm btn-primary text-white js-add-row" data-repeater="tag-links-repeater">+ Add Link</button>
+                        </div>
+                        <div class="card-body js-repeater" id="tag-links-repeater" data-next-index="{{ count($tagLinks) }}">
+                            <div class="js-rows">
+                                @foreach($tagLinks as $i => $link)
+                                    <div class="js-row border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="fw-semibold">Link <span class="js-row-number"></span></span>
+                                            <button type="button" class="btn btn-sm btn-outline-danger js-remove-row">Remove</button>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-5">
+                                                <label class="form-label">Label</label>
+                                                <input type="text" class="form-control" name="tag_links[{{ $i }}][label]" value="{{ $link['label'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-7">
+                                                <label class="form-label">Link</label>
+                                                <input type="text" class="form-control" name="tag_links[{{ $i }}][url]" value="{{ $link['url'] ?? '' }}" placeholder="e.g. /shop or a full URL">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <template class="js-row-template">
+                                <div class="js-row border rounded p-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-semibold">Link <span class="js-row-number"></span></span>
+                                        <button type="button" class="btn btn-sm btn-outline-danger js-remove-row">Remove</button>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-5">
+                                            <label class="form-label">Label</label>
+                                            <input type="text" class="form-control" name="tag_links[__IDX__][label]" value="">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <label class="form-label">Link</label>
+                                            <input type="text" class="form-control" name="tag_links[__IDX__][url]" value="" placeholder="e.g. /shop or a full URL">
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="form-text">The row of small links at the very bottom of the footer.</div>
                         </div>
                     </div>
                 </div>

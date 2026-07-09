@@ -34,10 +34,14 @@ class FooterController extends Controller
             'custom_links' => 'nullable|array',
             'custom_links.*.label' => 'nullable|string|max:100',
             'custom_links.*.url' => 'nullable|string|max:2048',
+            'tag_links' => 'nullable|array',
+            'tag_links.*.label' => 'nullable|string|max:100',
+            'tag_links.*.url' => 'nullable|string|max:2048',
         ]);
 
         $infoLinks = $this->cleanLinks($validated['info_links'] ?? []);
         $customLinks = $this->cleanLinks($validated['custom_links'] ?? []);
+        $tagLinks = $this->cleanLinks($validated['tag_links'] ?? []);
 
         $footer = [
             'about_text' => trim(strip_tags((string) ($validated['about_text'] ?? ''))) ?: null,
@@ -46,6 +50,7 @@ class FooterController extends Controller
             'phone' => trim((string) ($validated['phone'] ?? '')) ?: null,
             'info_links' => $infoLinks,
             'custom_links' => $customLinks,
+            'tag_links' => $tagLinks,
             'copyright' => trim(strip_tags((string) ($validated['copyright'] ?? ''), self::ALLOWED_TAGS)) ?: null,
         ];
 

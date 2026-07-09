@@ -137,30 +137,17 @@
         <div class="footer-tags">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="tag-content">
-                            <ul>
-                                <li><a href="#">Online Shopping</a></li>
-                                <li><a href="#">Promotions</a></li>
-                                <li><a href="#">My Orders</a></li>
-                                <li><a href="#">Help</a></li>
-                                <li><a href="#">Customer Service</a></li>
-                                <li><a href="#">Support</a></li>
-                                <li><a href="#">Most Populars</a></li>
-                                <li><a href="#">New Arrivals</a></li>
-                                <li><a href="#">Special Products</a></li>
-{{--                                <li><a href="#">Manufacturers</a></li>--}}
-                                <li><a href="#">Our Stores</a></li>
-                                <li><a href="#">Shipping</a></li>
-                                <li><a href="#">Payments</a></li>
-{{--                                <li><a href="#">Warantee</a></li>--}}
-                                <li><a href="#">Refunds</a></li>
-                                <li><a href="#">Checkout</a></li>
-                                <li><a href="#">Discount</a></li>
-                                <li><a href="{{ route('pages.show', 'terms') }}">Terms & Conditions</a></li>
-                            </ul>
+                    @if(!empty($footerContent['tag_links']))
+                        <div class="col-md-12">
+                            <div class="tag-content">
+                                <ul>
+                                    @foreach($footerContent['tag_links'] as $footerLink)
+                                        <li><a href="{{ $footerLinkHref($footerLink['url'] ?? '#') }}">{{ $footerLink['label'] ?? '' }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="col-md-12 text-center">
                         <p class="copy-text">{!! $footerContent['copyright'] ?? '' !!}</p>
                     </div>
