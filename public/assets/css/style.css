@@ -3179,6 +3179,31 @@ p {
 .footer-area .footer-center .footer-social-icon li.instagram a {
   background: #a0369c;
 }
+.footer-area .footer-center .footer-social-icon li.pinterest a {
+  background: #bd081c;
+}
+.footer-area .footer-center .footer-social-icon li.linkedin a {
+  background: #0a66c2;
+}
+.footer-area .footer-center .footer-social-icon li.whatsapp a {
+  background: #25d366;
+}
+.footer-area .footer-center .footer-social-icon li.snapchat a {
+  background: #fffc00;
+  color: #262626 !important;
+}
+.footer-area .footer-center .footer-social-icon li.tumblr a {
+  background: #35465c;
+}
+.footer-area .footer-center .footer-social-icon li.vimeo a {
+  background: #1ab7ea;
+}
+.footer-area .footer-center .footer-social-icon li.skype a {
+  background: #00aff0;
+}
+.footer-area .footer-center .footer-social-icon li.reddit a {
+  background: #ff4500;
+}
 
 .footer-tags {
   padding-top: 48px;
