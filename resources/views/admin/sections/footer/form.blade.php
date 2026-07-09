@@ -4,7 +4,10 @@
     Footer
 @endsection
 
-@php $customLinks = array_values(old('custom_links', $footer['custom_links'] ?? [['label' => '', 'url' => '']])); @endphp
+@php
+    $infoLinks = array_values(old('info_links', $footer['info_links'] ?? [['label' => '', 'url' => '']]));
+    $customLinks = array_values(old('custom_links', $footer['custom_links'] ?? [['label' => '', 'url' => '']]));
+@endphp
 
 @section('content')
     <div class="container-lg px-4">
@@ -95,6 +98,54 @@
 
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-semibold">Information Column</h6>
+                            <button type="button" class="btn btn-sm btn-primary text-white js-add-row" data-repeater="info-links-repeater">+ Add Link</button>
+                        </div>
+                        <div class="card-body js-repeater" id="info-links-repeater" data-next-index="{{ count($infoLinks) }}">
+                            <div class="js-rows">
+                                @foreach($infoLinks as $i => $link)
+                                    <div class="js-row border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="fw-semibold">Link <span class="js-row-number"></span></span>
+                                            <button type="button" class="btn btn-sm btn-outline-danger js-remove-row">Remove</button>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-5">
+                                                <label class="form-label">Label</label>
+                                                <input type="text" class="form-control" name="info_links[{{ $i }}][label]" value="{{ $link['label'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-7">
+                                                <label class="form-label">Link</label>
+                                                <input type="text" class="form-control" name="info_links[{{ $i }}][url]" value="{{ $link['url'] ?? '' }}" placeholder="e.g. /about-us or a full URL">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <template class="js-row-template">
+                                <div class="js-row border rounded p-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-semibold">Link <span class="js-row-number"></span></span>
+                                        <button type="button" class="btn btn-sm btn-outline-danger js-remove-row">Remove</button>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-5">
+                                            <label class="form-label">Label</label>
+                                            <input type="text" class="form-control" name="info_links[__IDX__][label]" value="">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <label class="form-label">Link</label>
+                                            <input type="text" class="form-control" name="info_links[__IDX__][url]" value="" placeholder="e.g. /about-us or a full URL">
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="form-text">Your pages live at /&lt;slug&gt;, e.g. /about-us, /terms, /care-guide.</div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h6 class="mb-0 fw-semibold">Custom Links Column</h6>
                             <button type="button" class="btn btn-sm btn-primary text-white js-add-row" data-repeater="links-repeater">+ Add Link</button>
                         </div>
@@ -152,8 +203,8 @@
                                     <button type="submit" class="btn btn-primary text-white">Save Footer</button>
                                 </div>
                                 <div class="form-text mt-3">
-                                    The Information column (pages) and the blog posts in the footer update
-                                    automatically. Social icons are managed under <strong>Social Links</strong>.
+                                    The blog posts in the footer update automatically.
+                                    Social icons are managed under <strong>Social Links</strong>.
                                 </div>
                             </div>
                         </div>

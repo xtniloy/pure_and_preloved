@@ -32,23 +32,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-2 col-sm-6 mb-md-30px mb-lm-30px">
-                        <div class="single-wedge">
-                            <h4 class="footer-herading">Information</h4>
-                            <div class="footer-links">
-                                <ul>
-                                    @php
-                                        $footerPages = \App\Models\Page::where('status', true)->orderBy('title')->get(['title', 'slug']);
-                                    @endphp
-                                    @forelse($footerPages as $footerPage)
-                                        <li><a href="{{ route('pages.show', $footerPage->slug) }}">{{ $footerPage->title }}</a></li>
-                                    @empty
-                                        <li><a href="#">About Us</a></li>
-                                    @endforelse
-                                </ul>
+                    @if(!empty($footerContent['info_links']))
+                        <div class="col-md-6 col-lg-2 col-sm-6 mb-md-30px mb-lm-30px">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">Information</h4>
+                                <div class="footer-links">
+                                    <ul>
+                                        @foreach($footerContent['info_links'] as $footerLink)
+                                            <li><a href="{{ $footerLinkHref($footerLink['url'] ?? '#') }}">{{ $footerLink['label'] ?? '' }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     @if(!empty($footerContent['custom_links']))
                         <div class="col-md-6 col-lg-2 col-sm-6 mb-sm-30px mb-lm-30px">
                             <div class="single-wedge">
