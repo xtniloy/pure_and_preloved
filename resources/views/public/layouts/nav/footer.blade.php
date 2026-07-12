@@ -1,5 +1,8 @@
 @php
-    $footerContent = \App\Models\Setting::getJson('footer_content', []);
+    // Footer content + blog posts come from one cached payload (FooterCache);
+    // social links are cached inside Socials::links().
+    $footerData = \App\Support\FooterCache::data();
+    $footerContent = $footerData['content'];
     $footerSocialLinks = \App\Support\Socials::links();
     $footerLinkHref = function ($url) {
         $url = (string) $url;
@@ -60,13 +63,7 @@
                             </div>
                         </div>
                     @endif
-                    @php
-                        $footerBlogPosts = \App\Models\BlogPost::published()
-                            ->with(['featuredImage', 'author'])
-                            ->orderByDesc('published_at')
-                            ->take(4)
-                            ->get();
-                    @endphp
+                    @php $footerBlogPosts = $footerData['blog_posts']; @endphp
                     @if($footerBlogPosts->count())
                         <div class="col-md-6 col-lg-4 ">
                             <div class="single-wedge">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Support\FooterCache;
 use Illuminate\Http\Request;
 
 class FooterController extends Controller
@@ -55,6 +56,8 @@ class FooterController extends Controller
         ];
 
         Setting::set('footer_content', json_encode($footer, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+        FooterCache::clear();
 
         return back()->with('success', 'Footer content saved.');
     }

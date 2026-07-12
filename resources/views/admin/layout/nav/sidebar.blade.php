@@ -186,6 +186,15 @@
                             <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Notification Settings
                         </a>
                     </li>
+                    @if(Route::has('admin.settings.cache.clear'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"
+                               onclick="event.preventDefault(); if (confirm('Clear all cached data (homepage, menus, footer, social links)?')) document.getElementById('clear-cache-form').submit();">
+                                <span class="nav-icon"><span class="nav-icon-bullet"></span></span> Clear Cache
+                            </a>
+                            <form id="clear-cache-form" action="{{ route('admin.settings.cache.clear') }}" method="POST" class="d-none">@csrf</form>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif

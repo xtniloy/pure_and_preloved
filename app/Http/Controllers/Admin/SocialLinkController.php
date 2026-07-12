@@ -40,6 +40,8 @@ class SocialLinkController extends Controller
 
         Setting::set('social_links', json_encode($links, JSON_UNESCAPED_SLASHES));
 
+        Socials::clearCache();
+
         return back()->with('success', 'Social links saved. They apply everywhere social icons are shown.');
     }
 }

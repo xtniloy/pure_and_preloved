@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 
 class Socials
 {
@@ -27,10 +28,13 @@ class Socials
         'google' => ['label' => 'Google / Threads', 'icon' => 'ion-social-google'],
     ];
 
+    public const CACHE_KEY = 'socials:links';
+
     /**
      * The configured social links, in display order, with the icon class
-     * attached. Cached for the duration of the request (the footer,
-     * off-canvas and homepage strip all call this on the same page).
+     * attached. Memoized per request AND cached persistently (the footer,
+     * off-canvas and homepage strip all call this on every page); the admin
+     * Social Links editor busts the cache via clearCache().
      */
     public static function links(): array
     {
@@ -40,24 +44,31 @@ class Socials
             return $links;
         }
 
-        $links = [];
+        return $links = Cache::remember(self::CACHE_KEY, now()->addHours(6), function () {
+            $links = [];
 
-        foreach (Setting::getJson('social_links', []) as $row) {
-            $platform = $row['platform'] ?? null;
-            $url = trim((string) ($row['url'] ?? ''));
+            foreach (Setting::getJson('social_links', []) as $row) {
+                $platform = $row['platform'] ?? null;
+                $url = trim((string) ($row['url'] ?? ''));
 
-            if ($url === '' || !isset(self::PLATFORMS[$platform])) {
-                continue;
+                if ($url === '' || !isset(self::PLATFORMS[$platform])) {
+                    continue;
+                }
+
+                $links[] = [
+                    'platform' => $platform,
+                    'url' => $url,
+                    'icon' => self::PLATFORMS[$platform]['icon'],
+                    'label' => self::PLATFORMS[$platform]['label'],
+                ];
             }
 
-            $links[] = [
-                'platform' => $platform,
-                'url' => $url,
-                'icon' => self::PLATFORMS[$platform]['icon'],
-                'label' => self::PLATFORMS[$platform]['label'],
-            ];
-        }
+            return $links;
+        });
+    }
 
-        return $links;
+    public static function clearCache(): void
+    {
+        Cache::forget(self::CACHE_KEY);
     }
 }

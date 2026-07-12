@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Models\BlogTag;
+use App\Support\FooterCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -53,6 +54,8 @@ class BlogPostController extends Controller
         $post->categories()->sync($request->input('categories', []));
         $post->tags()->sync($this->resolveTagIds($request));
 
+        FooterCache::clear();
+
         return redirect()->route('admin.blog-posts.index')->with('success', 'Blog post created successfully.');
     }
 
@@ -81,12 +84,16 @@ class BlogPostController extends Controller
         $blogPost->categories()->sync($request->input('categories', []));
         $blogPost->tags()->sync($this->resolveTagIds($request));
 
+        FooterCache::clear();
+
         return redirect()->route('admin.blog-posts.index')->with('success', 'Blog post updated successfully.');
     }
 
     public function destroy(BlogPost $blogPost)
     {
         $blogPost->delete();
+
+        FooterCache::clear();
 
         return redirect()->route('admin.blog-posts.index')->with('success', 'Blog post deleted successfully.');
     }

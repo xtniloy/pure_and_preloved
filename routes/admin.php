@@ -88,6 +88,7 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     // Settings
     Route::get('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'index'])->name('settings.notifications');
     Route::post('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'update'])->name('settings.notifications.update');
+    Route::post('/settings/clear-cache', [\App\Http\Controllers\Admin\CacheController::class, 'clear'])->name('settings.cache.clear');
     Route::get('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'index'])->name('featured-products.index');
     Route::put('featured-products/{product}', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'toggle'])->name('featured-products.toggle');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update']);
