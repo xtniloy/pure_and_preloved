@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Support\MenuCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -79,6 +80,8 @@ class CategoryController extends Controller
         foreach ($request->categories as $categoryData) {
             Category::where('id', $categoryData['id'])->update(['sort_order' => $categoryData['sort_order']]);
         }
+
+        MenuCache::clear();
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Order updated successfully.']);
@@ -170,6 +173,8 @@ class CategoryController extends Controller
             'sort_order' => $sortOrder,
         ]);
 
+        MenuCache::clear();
+
         return redirect($this->listUrlFor($request->parent_id, $gender))
             ->with('success', 'Category created successfully.');
     }
@@ -216,6 +221,8 @@ class CategoryController extends Controller
         $category->status = $request->has('status') ? 1 : 0;
         $category->save();
 
+        MenuCache::clear();
+
         return redirect($this->listUrlFor($category->parent_id, $category->gender))
             ->with('success', 'Category updated successfully.');
     }
@@ -224,6 +231,9 @@ class CategoryController extends Controller
     {
         $redirect = $this->listUrlFor($category->parent_id, $category->gender);
         $category->delete();
+
+        MenuCache::clear();
+
         return redirect($redirect)->with('success', 'Category deleted successfully.');
     }
 

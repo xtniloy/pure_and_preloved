@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Category;
+use App\Support\MenuCache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
@@ -25,57 +25,20 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        View::composer('public.layouts.nav.header', function ($view) {
-            $manCategories = Category::where('gender', 'man')
-                ->whereNull('parent_id')
-                ->where('status', true)
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('id', 'asc')
-                ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
-                }, 'children.asset', 'asset'])
-                ->get();
+        // Both nav views share one cached category payload (MenuCache) instead of
+        // querying the tree twice per request; only $activeGender stays per-request.
+        View::composer(
+            ['public.layouts.nav.header', 'public.layouts.nav.mobile_off_canvas'],
+            function ($view) {
+                $categories = MenuCache::categories();
 
-            $womenCategories = Category::where('gender', 'women')
-                ->whereNull('parent_id')
-                ->where('status', true)
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('id', 'asc')
-                ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
-                }, 'children.asset', 'asset'])
-                ->get();
-
-            $activeGender = request('gender', 'women');
-
-            $view->with(compact('manCategories', 'womenCategories', 'activeGender'));
-        });
-
-        View::composer('public.layouts.nav.mobile_off_canvas', function ($view) {
-            $manCategories = Category::where('gender', 'man')
-                ->whereNull('parent_id')
-                ->where('status', true)
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('id', 'asc')
-                ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
-                }])
-                ->get();
-
-            $womenCategories = Category::where('gender', 'women')
-                ->whereNull('parent_id')
-                ->where('status', true)
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('id', 'asc')
-                ->with(['children' => function($query) {
-                    $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
-                }])
-                ->get();
-
-            $activeGender = request('gender', 'women');
-
-            $view->with(compact('manCategories', 'womenCategories', 'activeGender'));
-        });
+                $view->with([
+                    'manCategories' => $categories['man'],
+                    'womenCategories' => $categories['women'],
+                    'activeGender' => request('gender', 'women'),
+                ]);
+            }
+        );
 
         Paginator::useBootstrap();
     }

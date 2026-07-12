@@ -7,8 +7,11 @@
         </div>
         <div class="body customScroll">
             @php
+                // Skip the query entirely for the common case of an empty wishlist.
                 $wishlistIds = array_keys(session('wishlist', []));
-                $wishlistProducts = \App\Models\Product::with(['categories', 'thumbnailImage'])->whereIn('id', $wishlistIds)->get();
+                $wishlistProducts = empty($wishlistIds)
+                    ? collect()
+                    : \App\Models\Product::with(['categories', 'thumbnailImage'])->whereIn('id', $wishlistIds)->get();
             @endphp
             <ul class="minicart-product-list">
                 @forelse($wishlistProducts as $product)
@@ -52,9 +55,12 @@
         </div>
         <div class="body customScroll">
             @php
+                // Skip the query entirely for the common case of an empty cart.
                 $cart = session('cart', []);
                 $cartIds = array_keys($cart);
-                $cartProducts = \App\Models\Product::with(['categories', 'thumbnailImage'])->whereIn('id', $cartIds)->get();
+                $cartProducts = empty($cartIds)
+                    ? collect()
+                    : \App\Models\Product::with(['categories', 'thumbnailImage'])->whereIn('id', $cartIds)->get();
                 $cartSubtotal = 0;
             @endphp
             <ul class="minicart-product-list">
