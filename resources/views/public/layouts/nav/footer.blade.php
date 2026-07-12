@@ -81,7 +81,7 @@
                                                         <div class="footer-blog-post-top">
                                                             <div class="post-thumbnail">
                                                                 <a href="{{ route('blog.show', $footerPost->slug) }}">
-                                                                    <img src="{{ $footerPost->featuredImage->public_url ?? asset('assets/images/blog-image/blog-1.jpg') }}" alt="{{ $footerPost->title }}">
+                                                                    <img src="{{ $footerPost->featuredImage->public_url ?? asset('assets/images/blog-image/blog-1.jpg') }}" alt="{{ $footerPost->title }}" loading="lazy" decoding="async">
                                                                 </a>
                                                             </div>
                                                         </div>
@@ -111,7 +111,7 @@
                     <div class="col-md-6">
                         <div class="footer-paymet-warp d-flex">
                             <div class="heading-info">Payment:</div>
-                            <div class="payment-way"><img class="payment-img img-responsive" src="{{ asset('assets/images/icons/payment.png') }}" alt="" />
+                            <div class="payment-way"><img class="payment-img img-responsive" src="{{ asset('assets/images/icons/payment.png') }}" alt="" loading="lazy" decoding="async" />
                             </div>
                         </div>
                     </div>

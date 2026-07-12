@@ -12,7 +12,7 @@
         @foreach(($data['items'] ?? []) as $item)
             <a href="{{ $item['url'] ?? '#' }}" class="feature-product-item d-block">
                 <div class="feature-product-photo">
-                    <img src="{{ $item['image_src'] ?? '' }}" alt="{{ strip_tags($item['title'] ?? '') }}">
+                    <img src="{{ $item['image_src'] ?? '' }}" alt="{{ strip_tags($item['title'] ?? '') }}" loading="lazy" decoding="async">
                 </div>
                 @if(!empty($item['title']) || !empty($item['subtitle']))
                     <div class="feature-product-info">

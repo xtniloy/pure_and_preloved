@@ -600,7 +600,10 @@ $(function() {
         asNavFor: ".zoompro-wrap",
         focusOnSelect: true
     });
-    $(".zoompro-wrap .slick-current img").elevateZoom(zoomOptions);
+    // elevateZoom is only loaded on the product page; skip when absent.
+    if ($.fn.elevateZoom) {
+        $(".zoompro-wrap .slick-current img").elevateZoom(zoomOptions);
+    }
     $(".zoompro-wrap").on("beforeChange", function(
         event,
         slick,
@@ -611,7 +614,9 @@ $(function() {
         $(".zoomContainer").remove();
     });
     $(".zoompro-wrap").on("afterChange", function() {
-        $(".zoompro-wrap .slick-current img").elevateZoom(zoomOptions);
+        if ($.fn.elevateZoom) {
+            $(".zoompro-wrap .slick-current img").elevateZoom(zoomOptions);
+        }
     });
 
     /*--------------------------
@@ -647,7 +652,9 @@ $(function() {
         asNavFor: ".zoompro-wrap-2",
         focusOnSelect: true
     });
-    $(".zoompro-wrap-2 .slick-current img").elevateZoom(zoomOptions);
+    if ($.fn.elevateZoom) {
+        $(".zoompro-wrap-2 .slick-current img").elevateZoom(zoomOptions);
+    }
     $(".zoompro-wrap-2").on("beforeChange", function(
         event,
         slick,
@@ -658,7 +665,9 @@ $(function() {
         $(".zoomContainer").remove();
     });
     $(".zoompro-wrap-2").on("afterChange", function() {
-        $(".zoompro-wrap-2 .slick-current img").elevateZoom(zoomOptions);
+        if ($.fn.elevateZoom) {
+            $(".zoompro-wrap-2 .slick-current img").elevateZoom(zoomOptions);
+        }
     });
 
     /*------------------------------

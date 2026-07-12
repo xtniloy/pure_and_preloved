@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Support\HomeCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -61,6 +62,8 @@ class ProductController extends Controller
 
         $product = Product::create($data);
         $product->categories()->sync($request->categories);
+
+        HomeCache::clear();
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -123,12 +126,17 @@ class ProductController extends Controller
         $product->update($data);
         $product->categories()->sync($request->categories);
 
+        HomeCache::clear();
+
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
+
+        HomeCache::clear();
+
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
     }
 }

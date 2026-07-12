@@ -14,6 +14,13 @@
     @if(!empty($seo['meta_image_url']))
         <meta property="og:image" content="{{ $seo['meta_image_url'] }}">
     @endif
+    {{-- The first hero slide is the mobile LCP element: preload it at top priority. --}}
+    @php
+        $heroFirstImage = optional($sections->firstWhere('type', 'hero_slider'))->data['slides'][0]['image_src'] ?? null;
+    @endphp
+    @if($heroFirstImage)
+        <link rel="preload" as="image" href="{{ $heroFirstImage }}" fetchpriority="high">
+    @endif
 @endsection
 @section('content')
     {{-- Sections are managed in Admin > Homepage. Hero stays first; body sections

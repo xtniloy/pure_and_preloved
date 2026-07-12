@@ -2,7 +2,10 @@
 <div class="slider-area">
     <div class="hero-slider-wrapper">
         @foreach(($data['slides'] ?? []) as $slide)
-            <div class="single-slide slider-height-1 bg-img d-flex" data-bg-image="{{ $slide['image_src'] ?? '' }}">
+            {{-- The background is server-rendered inline so the browser can start the
+                 download immediately; data-bg-image stays for main.js compatibility. --}}
+            <div class="single-slide slider-height-1 bg-img d-flex" data-bg-image="{{ $slide['image_src'] ?? '' }}"
+                 @if(!empty($slide['image_src'])) style="background-image:url('{{ $slide['image_src'] }}')" @endif>
                 <div class="container align-self-center">
                     <div class="slider-content-1 slider-animated-{{ ($loop->index % 3) + 1 }} text-left pl-60px">
                         <h1 class="animated color-black">{!! nl2br(e($slide['heading'] ?? '')) !!}</h1>

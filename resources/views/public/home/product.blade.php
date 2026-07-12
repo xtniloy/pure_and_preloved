@@ -286,6 +286,8 @@
 @endsection
 
 @push('scripts')
+{{-- elevateZoom is only needed here (product image zoom); main.js guards its init. --}}
+<script src="{{ asset('assets/js/plugins/elevateZoom.js') }}"></script>
 <script>
     function submitAddToCart() {
         var qty = $('#product_quantity_display').val();

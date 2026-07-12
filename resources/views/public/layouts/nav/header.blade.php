@@ -79,14 +79,16 @@
                                                 <!-- RIGHT COLUMN -->
                                                 <div class="mega-menu-right">
                                                     @php
+                                                        // public_url serves the file statically via the storage symlink
+                                                        // instead of booting Laravel for every menu image.
                                                         $megaMenuImages = [];
-                                                        if($category->asset && $category->asset->url){
-                                                            $megaMenuImages[] = ['url' => $category->asset->url, 'slug' => $category->slug];
+                                                        if($category->asset && $category->asset->stored_name){
+                                                            $megaMenuImages[] = ['url' => $category->asset->public_url, 'slug' => $category->slug];
                                                         }
                                                         foreach($category->children as $child){
                                                             if(count($megaMenuImages) >= 3) break;
-                                                            if($child->asset && $child->asset->url){
-                                                                $megaMenuImages[] = ['url' => $child->asset->url, 'slug' => $child->slug];
+                                                            if($child->asset && $child->asset->stored_name){
+                                                                $megaMenuImages[] = ['url' => $child->asset->public_url, 'slug' => $child->slug];
                                                             }
                                                         }
                                                     @endphp
@@ -94,7 +96,7 @@
                                                     @foreach($megaMenuImages as $imgData)
                                                         <div class="mega-img">
                                                             <a href="{{ route('shop.index', ['category' => $imgData['slug'], 'gender' => $activeGender]) }}">
-                                                                <img src="{{ $imgData['url'] }}">
+                                                                <img src="{{ $imgData['url'] }}" alt="{{ $imgData['slug'] }}" loading="lazy" decoding="async">
                                                             </a>
                                                         </div>
                                                     @endforeach

@@ -2,6 +2,9 @@
 @section('title')
     Cart
 @endsection
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/font-awesome.min.css') }}">
+@endpush
 @section('meta')
 {{--    <meta name="description" content="{{ $product->meta_description }}">--}}
 {{--    <meta name="keywords" content="{{ $product->meta_keywords }}">--}}

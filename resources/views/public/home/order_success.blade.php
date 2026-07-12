@@ -4,6 +4,10 @@
     Order Success
 @endsection
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/font-awesome.min.css') }}">
+@endpush
+
 @section('content')
     <!-- Breadcrumb Area Start -->
     <div class="breadcrumb-area">

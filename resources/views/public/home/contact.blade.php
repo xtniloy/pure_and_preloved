@@ -2,6 +2,9 @@
 @section('title')
     Contact Us
 @endsection
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/font-awesome.min.css') }}">
+@endpush
 @section('content')
     <div class="breadcrumb-area">
         <div class="container">

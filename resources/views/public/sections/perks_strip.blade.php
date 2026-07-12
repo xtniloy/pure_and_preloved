@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6 mb-md-30px mb-lm-30px">
                     <div class="single-static">
-                        <img src="{{ asset('assets/images/icons/static-icons-1.png') }}" alt="" class="img-responsive" />
+                        <img src="{{ asset('assets/images/icons/static-icons-1.png') }}" alt="" class="img-responsive" loading="lazy" decoding="async" />
                         <div class="single-static-meta">
                             <h4>Free Shipping</h4>
                             <p>On all orders over $75.00</p>
@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6 mb-md-30px mb-lm-30px">
                     <div class="single-static">
-                        <img src="{{ asset('assets/images/icons/static-icons-2.png') }}" alt="" class="img-responsive" />
+                        <img src="{{ asset('assets/images/icons/static-icons-2.png') }}" alt="" class="img-responsive" loading="lazy" decoding="async" />
                         <div class="single-static-meta">
                             <h4>Free Returns</h4>
                             <p>Returns are free within 9 days</p>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6 mb-sm-30px">
                     <div class="single-static">
-                        <img src="{{ asset('assets/images/icons/static-icons-3.png') }}" alt="" class="img-responsive" />
+                        <img src="{{ asset('assets/images/icons/static-icons-3.png') }}" alt="" class="img-responsive" loading="lazy" decoding="async" />
                         <div class="single-static-meta">
                             <h4>100% Payment Secure</h4>
                             <p>Your payment are safe with us.</p>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6 ">
                     <div class="single-static">
-                        <img src="{{ asset('assets/images/icons/static-icons-4.png') }}" alt="" class="img-responsive" />
+                        <img src="{{ asset('assets/images/icons/static-icons-4.png') }}" alt="" class="img-responsive" loading="lazy" decoding="async" />
                         <div class="single-static-meta">
                             <h4>Support 24/7</h4>
                             <p>Contact us 24 hours a day</p>

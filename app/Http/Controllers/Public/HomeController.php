@@ -13,7 +13,9 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Notifications\NewOrderPlaced;
 use App\Services\AdminNotificationService;
+use App\Support\HomeCache;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -22,43 +24,53 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index(){
-        $sections = HomeSection::query()
-            ->where('is_active', true)
-            ->orderBy('position')
-            ->orderBy('id')
-            ->get();
+        // The homepage payload is cached; admin edits clear it via HomeCache::clear().
+        $sections = Cache::remember(HomeCache::SECTIONS_KEY, now()->addHours(6), function () {
+            $sections = HomeSection::query()
+                ->where('is_active', true)
+                ->orderBy('position')
+                ->orderBy('id')
+                ->get();
 
-        HomeSection::resolveImages($sections);
+            HomeSection::resolveImages($sections);
+
+            return $sections;
+        });
 
         // Products are only queried when a featured-products section is on the page.
+        // Short TTL: product edits also bust this explicitly, the TTL is a safety net.
         $featuredProducts = collect();
         if ($sections->contains(fn ($section) => $section->type === 'featured_products')) {
-            $featuredProducts = Product::with(['categories', 'thumbnailImage'])
-                ->where('status', true)
-                ->where('is_featured', true)
-                ->orderBy('created_at', 'desc')
-                ->take(10)
-                ->get();
+            $featuredProducts = Cache::remember(HomeCache::FEATURED_KEY, now()->addMinutes(10), function () {
+                return Product::with(['categories', 'thumbnailImage'])
+                    ->where('status', true)
+                    ->where('is_featured', true)
+                    ->orderBy('created_at', 'desc')
+                    ->take(10)
+                    ->get();
+            });
         }
 
-        $settings = Setting::getMany([
-            'home_meta_title',
-            'home_meta_description',
-            'home_meta_keywords',
-            'home_meta_image_id',
-        ]);
+        $seo = Cache::remember(HomeCache::SEO_KEY, now()->addHours(6), function () {
+            $settings = Setting::getMany([
+                'home_meta_title',
+                'home_meta_description',
+                'home_meta_keywords',
+                'home_meta_image_id',
+            ]);
 
-        $metaImageUrl = null;
-        if (!empty($settings['home_meta_image_id'])) {
-            $metaImageUrl = Asset::find($settings['home_meta_image_id'])?->public_url;
-        }
+            $metaImageUrl = null;
+            if (!empty($settings['home_meta_image_id'])) {
+                $metaImageUrl = Asset::find($settings['home_meta_image_id'])?->public_url;
+            }
 
-        $seo = [
-            'meta_title' => $settings['home_meta_title'] ?? null,
-            'meta_description' => $settings['home_meta_description'] ?? null,
-            'meta_keywords' => $settings['home_meta_keywords'] ?? null,
-            'meta_image_url' => $metaImageUrl,
-        ];
+            return [
+                'meta_title' => $settings['home_meta_title'] ?? null,
+                'meta_description' => $settings['home_meta_description'] ?? null,
+                'meta_keywords' => $settings['home_meta_keywords'] ?? null,
+                'meta_image_url' => $metaImageUrl,
+            ];
+        });
 
         return view('public.home.index', compact('sections', 'featuredProducts', 'seo'));
     }

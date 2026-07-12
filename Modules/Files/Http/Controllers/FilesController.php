@@ -339,8 +339,10 @@ class FilesController extends Controller
 
         $mimeType = $file->mime_type;
 
+        // Stored names are content-unique, so browsers may cache these forever.
         return response()->file($filePath, [
             'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=31536000, immutable',
         ]);
 
     }
@@ -357,6 +359,7 @@ class FilesController extends Controller
         }
         return response()->file($thumbPath, [
             'Content-Type' => File::mimeType($thumbPath) ?: 'image/jpeg',
+            'Cache-Control' => 'public, max-age=31536000, immutable',
         ]);
     }
 

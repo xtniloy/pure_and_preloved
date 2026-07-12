@@ -18,8 +18,8 @@
     <div class="product-inner">
         <div class="img-block">
             <a href="{{ $productUrl }}" class="thumbnail">
-                <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
-                <img class="second-img" src="{{ $hoverImageUrl }}" alt="{{ $product->name }}" />
+                <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" loading="lazy" decoding="async" />
+                <img class="second-img" src="{{ $hoverImageUrl }}" alt="{{ $product->name }}" loading="lazy" decoding="async" />
             </a>
             <div class="add-to-link">
                 <ul>

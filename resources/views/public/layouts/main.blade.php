@@ -13,25 +13,32 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon/favicon.png') }}">
 
-    <!-- Google Fonts (CDN is correct) -->
+    <!-- Google Fonts: preconnect + one combined request (unused weights are never downloaded) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Muli:wght@200;300;400;500;600;700;800;900&display=swap">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap">
+          href="https://fonts.googleapis.com/css2?family=Muli:wght@200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400..900&display=swap">
 
-    <!-- Vendor CSS -->
+    {{-- Vendor CSS (render-blocking: only what the first paint needs.
+         font-awesome is pushed onto the styles stack by the few pages that use it) --}}
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/ionicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/linearicon.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/vendor/font-awesome.min.css') }}">
 
-    <!-- Plugin CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/jquery-ui.min.css') }}">
+    {{-- Plugin CSS (jquery-ui.min.css is pushed by the shop page that uses it) --}}
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/slick.css') }}">
+    {{-- animate.css only powers post-load animations, so it must not block first paint --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.css') }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.css') }}"></noscript>
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <style>
+        /* Until slick initializes, show only the hero's first slide: no stacked-slides
+           layout jump, and slides 2+ don't download their backgrounds up front. */
+        .hero-slider-wrapper:not(.slick-initialized) .single-slide:not(:first-child) { display: none; }
+    </style>
 
     @stack('styles')
 </head>
@@ -63,12 +70,10 @@
 <script src="{{ asset('assets/js/vendor/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/js/vendor/modernizr-3.11.2.min.js') }}"></script>
 
-<!-- Plugin JS -->
-<script src="{{ asset('assets/js/plugins/jquery-ui.min.js') }}"></script>
+{{-- Plugin JS (page-specific plugins — jquery-ui, elevateZoom — are pushed
+     onto the scripts stack only by the pages that actually use them) --}}
 <script src="{{ asset('assets/js/plugins/slick.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/scrollup.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/elevateZoom.js') }}"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('assets/js/main.js') }}"></script>

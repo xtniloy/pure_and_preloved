@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Support\HomeCache;
 use Illuminate\Http\Request;
 
 class FeaturedProductController extends Controller
@@ -36,6 +37,8 @@ class FeaturedProductController extends Controller
         $product->update([
             'is_featured' => $request->boolean('is_featured'),
         ]);
+
+        HomeCache::clear();
 
         return redirect()->route('admin.featured-products.index')->with('success', 'Featured status updated.');
     }

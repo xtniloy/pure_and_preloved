@@ -314,7 +314,15 @@
 
 @endsection
 
+@push('styles')
+    {{-- Page-specific CSS kept out of the global layout: jquery-ui powers the
+         price range slider, font-awesome the grid/list toggle icons. --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/jquery-ui.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/font-awesome.min.css') }}">
+@endpush
+
 @push('scripts')
+<script src="{{ asset('assets/js/plugins/jquery-ui.min.js') }}"></script>
 <script>
     function filterProducts() {
         var condition = $('.condition-filter:checked').val() || '';

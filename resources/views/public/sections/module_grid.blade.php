@@ -23,7 +23,7 @@
                 @php $light = ($item['text_style'] ?? 'dark') === 'light'; @endphp
                 <div class="{{ $colClass }} {{ !$loop->last ? 'mb-3 mb-lg-0' : '' }}">
                     <a href="{{ $item['url'] ?? '#' }}" class="module-featured-item">
-                        <img @if($rounded) class="rounded-1" @endif src="{{ $item['image_src'] ?? '' }}" alt="{{ strip_tags($item['title'] ?? '') }}">
+                        <img @if($rounded) class="rounded-1" @endif src="{{ $item['image_src'] ?? '' }}" alt="{{ strip_tags($item['title'] ?? '') }}" loading="lazy" decoding="async">
                         @if(!empty($item['title']) || !empty($item['subtitle']) || !empty($item['button_text']))
                             <div class="module-feature-info">
                                 @if(!empty($item['title']))

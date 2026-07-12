@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HomeSection;
 use App\Models\Setting;
+use App\Support\HomeCache;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -73,6 +74,8 @@ class HomePageController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
+        HomeCache::clear();
+
         return redirect()->route('admin.homepage.index')->with('success', 'Section added to the homepage.');
     }
 
@@ -99,6 +102,8 @@ class HomePageController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
+        HomeCache::clear();
+
         if ($section->isFixed()) {
             return redirect()->route('admin.homepage.hero')->with('success', 'Hero slider updated.');
         }
@@ -110,6 +115,8 @@ class HomePageController extends Controller
     {
         $section->update(['is_active' => !$section->is_active]);
 
+        HomeCache::clear();
+
         return back()->with('success', $section->is_active ? 'Section is now visible.' : 'Section hidden from the homepage.');
     }
 
@@ -118,6 +125,8 @@ class HomePageController extends Controller
         abort_unless($section->isDeletable(), 403);
 
         $section->delete();
+
+        HomeCache::clear();
 
         return back()->with('success', 'Section removed from the homepage.');
     }
@@ -145,6 +154,8 @@ class HomePageController extends Controller
             $section->update(['position' => $position++]);
         }
 
+        HomeCache::clear();
+
         return response()->json(['status' => 'ok']);
     }
 
@@ -161,6 +172,8 @@ class HomePageController extends Controller
         Setting::set('home_meta_description', $validated['meta_description'] ?? null);
         Setting::set('home_meta_keywords', $validated['meta_keywords'] ?? null);
         Setting::set('home_meta_image_id', $validated['meta_image_id'] ?? null);
+
+        HomeCache::clear();
 
         return back()->with('success', 'Homepage SEO settings saved.');
     }
