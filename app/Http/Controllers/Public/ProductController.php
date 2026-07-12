@@ -72,7 +72,10 @@ class ProductController extends Controller
                 break;
         }
 
-        $products = $query->paginate(12)->withQueryString();
+        // Eager-load what the product cards render and batch-resolve their
+        // hover images: without this the cards run 3 queries per product.
+        $products = $query->with(['categories', 'thumbnailImage'])->paginate(12)->withQueryString();
+        Product::preloadAssets($products->getCollection());
         
         // Data for filters
         $categories = Category::where('status', true)
@@ -125,6 +128,9 @@ class ProductController extends Controller
             ->where('status', true)
             ->take(12)
             ->get();
+
+        // The related slider renders main_image per product; one query for all.
+        Product::preloadAssets($relatedProducts);
 
         return view('public.home.product', compact('product', 'category', 'relatedProducts', 'gender'));
     }

@@ -63,23 +63,58 @@ class Product extends Model
         return $this->categories->first();
     }
     
-    // Helper to get asset objects for the stored image IDs
+    // Helper to get asset objects for the stored image IDs.
+    // Memoized in the relations bucket: an accessor would otherwise run a
+    // fresh query on EVERY access (product lists should batch this away
+    // entirely with preloadAssets()).
     public function getAssetsAttribute()
     {
-        if (empty($this->images)) {
-            return collect([]);
+        if (!$this->relationLoaded('assets')) {
+            $lookup = empty($this->images)
+                ? collect()
+                : Asset::whereIn('id', $this->images)->get()->keyBy('id');
+
+            $this->setRelation('assets', $this->orderedAssets($lookup));
         }
-        // Assuming images stored as array of asset IDs
-        return Asset::whereIn('id', $this->images)->get();
+
+        return $this->getRelation('assets');
     }
-    
+
     public function getMainImageAttribute()
     {
         if (empty($this->images)) {
             return null;
         }
-        $firstId = $this->images[0];
-        return Asset::find($firstId);
+
+        // Served from the memoized assets collection: no query per access.
+        return $this->assets->firstWhere('id', (int) $this->images[0]);
+    }
+
+    /**
+     * Resolve the assets accessor for a whole product list with a single
+     * query instead of one query per product. Pass a collection or array of
+     * products (for paginators, pass ->getCollection()).
+     */
+    public static function preloadAssets($products): void
+    {
+        $ids = collect($products)->flatMap(fn ($product) => $product->images ?? [])->unique()->values();
+
+        $lookup = $ids->isEmpty()
+            ? collect()
+            : Asset::whereIn('id', $ids)->get()->keyBy('id');
+
+        foreach ($products as $product) {
+            $product->setRelation('assets', $product->orderedAssets($lookup));
+        }
+    }
+
+    /** The product's assets in the order of its images id array. */
+    protected function orderedAssets($lookup)
+    {
+        return collect($this->images ?? [])
+            ->map(fn ($id) => $lookup[(int) $id] ?? null)
+            ->filter()
+            ->values();
     }
 
     public function thumbnailImage()

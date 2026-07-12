@@ -42,12 +42,18 @@ class HomeController extends Controller
         $featuredProducts = collect();
         if ($sections->contains(fn ($section) => $section->type === 'featured_products')) {
             $featuredProducts = Cache::remember(HomeCache::FEATURED_KEY, now()->addMinutes(10), function () {
-                return Product::with(['categories', 'thumbnailImage'])
+                $products = Product::with(['categories', 'thumbnailImage'])
                     ->where('status', true)
                     ->where('is_featured', true)
                     ->orderBy('created_at', 'desc')
                     ->take(10)
                     ->get();
+
+                // Resolve the hover images here so they're part of the cached
+                // payload; the cards would otherwise query once per product.
+                Product::preloadAssets($products);
+
+                return $products;
             });
         }
 
