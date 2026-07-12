@@ -2,6 +2,18 @@
 @section('title')
     Shop
 @endsection
+@section('meta')
+    {{-- The first product card is the mobile LCP element: preload its image. --}}
+    @php
+        $firstShopProduct = $products->first();
+        $firstShopImage = ($firstShopProduct && $firstShopProduct->thumbnail_image_id)
+            ? $firstShopProduct->thumbnailImage->public_url
+            : null;
+    @endphp
+    @if($firstShopImage)
+        <link rel="preload" as="image" href="{{ $firstShopImage }}" fetchpriority="high">
+    @endif
+@endsection
 @section('content')
 
     <!-- Breadcrumb Area Start -->
@@ -78,8 +90,9 @@
                                                     <div class="product-inner">
                                                         <div class="img-block">
                                                             <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="thumbnail">
-                                                                <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
-                                                                <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                                                {{-- First card loads at top priority (mobile LCP); the rest lazy-load. --}}
+                                                                <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" @if($loop->first) fetchpriority="high" @else loading="lazy" decoding="async" @endif />
+                                                                <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" @unless($loop->first) loading="lazy" decoding="async" @endunless />
                                                             </a>
                                                             <div class="add-to-link">
                                                                 <ul>
@@ -144,8 +157,9 @@
                                                             <div class="left-img">
                                                                 <div class="img-block">
                                                                     <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="thumbnail">
-                                                                        <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
-                                                                        <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" />
+                                                                        {{-- Hidden list tab: lazy images stay unfetched until the tab opens. --}}
+                                                                        <img class="first-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" loading="lazy" decoding="async" />
+                                                                        <img class="second-img" src="{{ $imageUrl }}" alt="{{ $product->name }}" loading="lazy" decoding="async" />
                                                                     </a>
                                                                 </div>
                                                             </div>

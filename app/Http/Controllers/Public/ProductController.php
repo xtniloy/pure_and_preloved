@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Support\ShopCache;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -19,11 +20,15 @@ class ProductController extends Controller
             $q->where('gender', $activeGender);
         });
 
-        // Filter by Search
+        // Filter by Search (grouped so the OR terms can't escape the
+        // status/gender constraints above)
         if ($request->has('q') && !empty($request->q)) {
-            $query->where('name', 'like', '%' . $request->q . '%')
-                  ->orWhere('sku', 'like', '%' . $request->q . '%')
-                  ->orWhere('description', 'like', '%' . $request->q . '%');
+            $q = $request->q;
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', '%' . $q . '%')
+                    ->orWhere('sku', 'like', '%' . $q . '%')
+                    ->orWhere('description', 'like', '%' . $q . '%');
+            });
         }
 
         // Filter by Category
@@ -72,32 +77,18 @@ class ProductController extends Controller
                 break;
         }
 
-        // Eager-load what the product cards render and batch-resolve their
-        // hover images: without this the cards run 3 queries per product.
+        // Eager-load what the product cards render (categories for the URL,
+        // thumbnails for the images).
         $products = $query->with(['categories', 'thumbnailImage'])->paginate(12)->withQueryString();
-        Product::preloadAssets($products->getCollection());
-        
-        // Data for filters
-        $categories = Category::where('status', true)
-            ->where('gender', $activeGender)
-            ->whereNull('parent_id')
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('id', 'asc')
-            ->with(['children' => function ($query) {
-                $query->orderBy('sort_order', 'asc')->orderBy('id', 'asc');
-            }])
-            ->get();
-        
-        $conditions = Product::where('status', true)->whereNotNull('condition')->distinct()->pluck('condition');
-        
-        // Tags (Material & Carat)
-        $materials = Product::where('status', true)->whereNotNull('material')->distinct()->pluck('material');
-        $carats = Product::where('status', true)->whereNotNull('carat')->distinct()->pluck('carat');
-        $tags = $materials->merge($carats)->unique()->values();
-        
-        // Min/Max Price for range slider
-        $minPrice = Product::where('status', true)->min('price') ?? 0;
-        $maxPrice = Product::where('status', true)->max('price') ?? 10000;
+
+        // Sidebar filter data comes from one cached payload (six queries of
+        // rarely-changing facets otherwise); admin edits bust ShopCache.
+        $filters = ShopCache::filters($activeGender);
+        $categories = $filters['categories'];
+        $conditions = $filters['conditions'];
+        $tags = $filters['tags'];
+        $minPrice = $filters['min_price'];
+        $maxPrice = $filters['max_price'];
 
         return view('public.home.shop_list', compact('products', 'categories', 'conditions', 'tags', 'minPrice', 'maxPrice', 'sort', 'activeGender'));
     }

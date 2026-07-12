@@ -5,6 +5,11 @@
 @section('meta')
     <meta name="description" content="{{ $product->meta_description }}">
     <meta name="keywords" content="{{ $product->meta_keywords }}">
+    {{-- The first gallery image is the LCP element: preload it at top priority. --}}
+    @php $firstGalleryImage = $product->assets->first()?->public_url; @endphp
+    @if($firstGalleryImage)
+        <link rel="preload" as="image" href="{{ $firstGalleryImage }}" fetchpriority="high">
+    @endif
 @endsection
 @section('content')
     <!-- Breadcrumb Area Start -->
@@ -35,7 +40,8 @@
                             @if($product->assets && $product->assets->count() > 0)
                                 @foreach($product->assets as $key => $asset)
                                     <div class="zoompro-border zoompro-span">
-                                        <img class="zoompro" src="{{ $asset->public_url }}" data-zoom-image="{{ $asset->public_url }}" alt="{{ $product->name }}" />
+                                        {{-- First slide is the LCP; later slides stay hidden and lazy until slick runs. --}}
+                                        <img class="zoompro" src="{{ $asset->public_url }}" data-zoom-image="{{ $asset->public_url }}" alt="{{ $product->name }}" @if($key === 0) fetchpriority="high" @else loading="lazy" decoding="async" @endif />
                                     </div>
                                 @endforeach
                             @else
@@ -48,7 +54,7 @@
                             @if($product->assets && $product->assets->count() > 0)
                                 @foreach($product->assets as $asset)
                                     <div class="single-slide-item">
-                                        <img class="img-responsive" data-image="{{ $asset->public_url }}" data-zoom-image="{{ $asset->public_url }}" src="{{ $asset->public_url}}" alt="{{ $product->name }}" />
+                                        <img class="img-responsive" data-image="{{ $asset->public_url }}" data-zoom-image="{{ $asset->public_url }}" src="{{ $asset->public_url}}" alt="{{ $product->name }}" loading="lazy" decoding="async" />
                                     </div>
                                 @endforeach
                             @endif
@@ -199,10 +205,10 @@
                             <div class="img-block">
                                 <a href="{{ route('product.show', ['gender' => $gender, 'category' => $category->slug, 'product' => $related->slug]) }}" class="thumbnail">
                                     @if($related->main_image)
-                                        <img class="first-img" src="{{ $related->main_image->public_url }}" alt="{{ $related->name }}" />
-                                        <img class="second-img" src="{{ $related->main_image->public_url }}" alt="{{ $related->name }}" />
+                                        <img class="first-img" src="{{ $related->main_image->public_url }}" alt="{{ $related->name }}" loading="lazy" decoding="async" />
+                                        <img class="second-img" src="{{ $related->main_image->public_url }}" alt="{{ $related->name }}" loading="lazy" decoding="async" />
                                     @else
-                                        <img class="first-img" src="{{ asset('assets/images/product-image/4.jpg') }}" alt="Placeholder" />
+                                        <img class="first-img" src="{{ asset('assets/images/product-image/4.jpg') }}" alt="Placeholder" loading="lazy" decoding="async" />
                                     @endif
                                 </a>
                                 <div class="add-to-link">

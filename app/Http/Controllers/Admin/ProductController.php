@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Support\HomeCache;
+use App\Support\ShopCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -64,6 +65,7 @@ class ProductController extends Controller
         $product->categories()->sync($request->categories);
 
         HomeCache::clear();
+        ShopCache::clear();
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -127,6 +129,7 @@ class ProductController extends Controller
         $product->categories()->sync($request->categories);
 
         HomeCache::clear();
+        ShopCache::clear();
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
@@ -136,6 +139,7 @@ class ProductController extends Controller
         $product->delete();
 
         HomeCache::clear();
+        ShopCache::clear();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
     }

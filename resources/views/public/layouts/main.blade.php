@@ -35,9 +35,18 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
     <style>
-        /* Until slick initializes, show only the hero's first slide: no stacked-slides
-           layout jump, and slides 2+ don't download their backgrounds up front. */
-        .hero-slider-wrapper:not(.slick-initialized) .single-slide:not(:first-child) { display: none; }
+        /* Until slick initializes, show only a slider's first slide: no stacked-slides
+           layout jump, and hidden slides' lazy images don't download up front.
+           Covers the hero, the product-page gallery/thumbs and the related slider. */
+        .hero-slider-wrapper:not(.slick-initialized) .single-slide:not(:first-child),
+        .zoompro-wrap:not(.slick-initialized) .zoompro-span:not(:first-child),
+        .product-dec-slider-2:not(.slick-initialized) .single-slide-item,
+        .arrival-slider-wrapper:not(.slick-initialized) .slider-single-item:not(:first-child) { display: none; }
+        /* Featured slider only becomes a slider on lg+ screens (mobile keeps the
+           stacked list), so pre-init trimming applies to desktop only. */
+        @media (min-width: 992px) {
+            .feature-slider-wrapper:not(.slick-initialized) .slider-single-item:nth-child(n+4) { display: none; }
+        }
     </style>
 
     @stack('styles')

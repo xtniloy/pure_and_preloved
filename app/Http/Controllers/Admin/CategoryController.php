@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Support\MenuCache;
+use App\Support\ShopCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -82,6 +83,7 @@ class CategoryController extends Controller
         }
 
         MenuCache::clear();
+        ShopCache::clear();
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json(['success' => true, 'message' => 'Order updated successfully.']);
@@ -174,6 +176,7 @@ class CategoryController extends Controller
         ]);
 
         MenuCache::clear();
+        ShopCache::clear();
 
         return redirect($this->listUrlFor($request->parent_id, $gender))
             ->with('success', 'Category created successfully.');
@@ -222,6 +225,7 @@ class CategoryController extends Controller
         $category->save();
 
         MenuCache::clear();
+        ShopCache::clear();
 
         return redirect($this->listUrlFor($category->parent_id, $category->gender))
             ->with('success', 'Category updated successfully.');
@@ -233,6 +237,7 @@ class CategoryController extends Controller
         $category->delete();
 
         MenuCache::clear();
+        ShopCache::clear();
 
         return redirect($redirect)->with('success', 'Category deleted successfully.');
     }
