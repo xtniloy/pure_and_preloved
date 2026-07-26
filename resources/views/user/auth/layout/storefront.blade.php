@@ -55,7 +55,8 @@
             padding: 48px 44px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
+            gap: 34px;
             position: relative;
         }
 
@@ -95,7 +96,7 @@
         .auth-points {
             list-style: none;
             padding: 0;
-            margin: 0;
+            margin: auto 0 0;
             display: grid;
             gap: 12px;
             position: relative;
