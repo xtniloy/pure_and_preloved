@@ -1,39 +1,67 @@
-@extends('user.auth.layout.main')
-@section('page-title')
-    Set New Password
-@endsection
+@extends('user.auth.layout.storefront')
+
+@section('title', 'Set Password')
+
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            @include('partials.notification')
-            <div class="card mb-4 mx-4">
-                <div class="card-body p-4">
-                    <h1>Set password</h1>
-                    <p class="text-body-secondary">Set a password to get access your account</p>
+    <div class="auth-shell">
 
-                    <form method="post">
-                        @csrf
-                        <div class="input-group mb-3">
-                        <span class="input-group-text">
-                            <svg class="icon">
-                              <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked')}}"></use>
-                            </svg>
-                        </span>
-                            <input aria-label="Password" name="password" class="form-control" type="password" placeholder="Password">
-                        </div>
-                        <div class="input-group mb-4">
-                        <span class="input-group-text">
-                            <svg class="icon">
-                              <use xlink:href="{{asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked')}}"></use>
-                            </svg>
-                        </span>
-                            <input aria-label="Repeat password" name="confirm_password" class="form-control" type="password" placeholder="Repeat password">
-                        </div>
-                        <button type="submit" class="btn btn-block btn-success">Save</button>
-                    </form>
+        @include('user.auth.partials.aside', [
+            'headline' => 'Set a new<br>password.',
+            'sub' => 'Choose a strong password to secure your account and get back to shopping.',
+        ])
 
-                </div>
+        <main class="auth-main">
+            <div class="auth-topbar">
+                <a href="{{ route('home') }}" class="auth-logo">
+                    <img src="{{ asset('assets/images/logo/logo.jpg.png') }}" alt="Pure &amp; Preloved">
+                </a>
+                <a href="{{ route('login') }}" class="auth-back">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Back to sign in
+                </a>
             </div>
-        </div>
+
+            <div class="auth-head">
+                <h1>Set password</h1>
+                <p>Enter and confirm your new password below.</p>
+            </div>
+
+            @include('user.auth.partials.alerts')
+
+            <form method="post" novalidate>
+                @csrf
+
+                <div>
+                    <label for="password" class="auth-label">New password</label>
+                    <div class="auth-field">
+                        <span class="field-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </span>
+                        <input id="password" class="auth-input" type="password" name="password"
+                               placeholder="Enter a new password" autocomplete="new-password" required autofocus>
+                        <button type="button" class="auth-toggle" data-toggle-password="password" aria-label="Show password">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="confirm_password" class="auth-label">Confirm password</label>
+                    <div class="auth-field">
+                        <span class="field-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </span>
+                        <input id="confirm_password" class="auth-input" type="password" name="confirm_password"
+                               placeholder="Repeat your new password" autocomplete="new-password" required>
+                        <button type="button" class="auth-toggle" data-toggle-password="confirm_password" aria-label="Show password">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="auth-btn" type="submit">Save password</button>
+            </form>
+        </main>
+
     </div>
 @endsection

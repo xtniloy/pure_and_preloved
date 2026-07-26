@@ -1,66 +1,79 @@
-@extends('user.auth.layout.main')
-@section('page-title')
-    User Login
-@endsection
+@extends('user.auth.layout.storefront')
+
+@section('title', 'Login')
+
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card-group d-block d-md-flex row">
-                @include('partials.notification')
-                <div class="card col-md-7 p-4 mb-0">
-                    <div class="card-body">
-                        <h1>Login</h1>
-                        <p class="text-body-secondary">Sign In to your account</p>
-                        <form action="{{ route('auth') }}" method="post">
-                            @csrf
-                            <div class="input-group mb-3">
-                                <span class="input-group-text">
-                                  <svg class="icon">
-                                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
-                                  </svg>
-                                </span>
-                                <input aria-label="Email" class="form-control" type="email" name="email" placeholder="Email" required>
-                            </div>
-                            <div class="input-group mb-4">
-                                <span class="input-group-text">
-                                  <svg class="icon"><use
-                                        xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
-                                  </svg>
-                                </span>
-                                <input aria-label="Password" class="form-control" type="password" name="password" placeholder="Password" required>
-                            </div>
+    <div class="auth-shell">
 
-                            <div class="input-group mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="remember_me" name="remember_me" id="remember_me">
-                                    <label class="form-check-label" for="remember_me">
-                                        Remember me
-                                    </label>
-                                </div>
-                            </div>
+        {{-- Brand side --}}
+        @include('user.auth.partials.aside', [
+            'headline' => 'Welcome back to<br>timeless finds.',
+            'sub' => 'Sign in to track orders, manage your wishlist and check out faster.',
+        ])
 
-                            <div class="row">
-                                <div class="col-6">
-                                    <button class="btn btn-primary px-4" type="submit">Login</button>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <a href="{{route('forget_password')}}" class="btn btn-link px-0" type="button">Forgot password?</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="card col-md-5 text-white bg-primary py-5">
-                    <div class="card-body text-center">
-                        <div>
-                            <h2>Sign up</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua.</p>
-                            <a href="{{route('registration')}}" class="btn btn-lg btn-outline-light mt-3" type="button">Register Now!</a>
-                        </div>
-                    </div>
-                </div>
+        {{-- Form side --}}
+        <main class="auth-main">
+            <div class="auth-topbar">
+                <a href="{{ route('home') }}" class="auth-logo">
+                    <img src="{{ asset('assets/images/logo/logo.jpg.png') }}" alt="Pure &amp; Preloved">
+                </a>
+                <a href="{{ route('home') }}" class="auth-back">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Back to store
+                </a>
             </div>
-        </div>
+
+            <div class="auth-head">
+                <h1>Sign in</h1>
+                <p>Enter your details to access your account.</p>
+            </div>
+
+            @include('user.auth.partials.alerts')
+
+            <form action="{{ route('auth') }}" method="post" novalidate>
+                @csrf
+
+                <div>
+                    <label for="email" class="auth-label">Email address</label>
+                    <div class="auth-field">
+                        <span class="field-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        </span>
+                        <input id="email" class="auth-input" type="email" name="email"
+                               value="{{ old('email') }}" placeholder="you@example.com"
+                               autocomplete="email" required autofocus>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="auth-label">Password</label>
+                    <div class="auth-field">
+                        <span class="field-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </span>
+                        <input id="password" class="auth-input" type="password" name="password"
+                               placeholder="Enter your password" autocomplete="current-password" required>
+                        <button type="button" class="auth-toggle" data-toggle-password="password" aria-label="Show password">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-row">
+                    <label class="auth-check">
+                        <input type="checkbox" value="remember_me" name="remember_me">
+                        Remember me
+                    </label>
+                    <a href="{{ route('forget_password') }}" class="auth-link">Forgot password?</a>
+                </div>
+
+                <button class="auth-btn" type="submit">Sign in</button>
+            </form>
+
+            <p class="auth-foot">
+                New customer? <a href="{{ route('registration') }}">Create an account</a>
+            </p>
+        </main>
+
     </div>
 @endsection
