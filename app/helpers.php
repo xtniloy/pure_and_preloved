@@ -8,9 +8,16 @@ if (! function_exists('currency_symbol')) {
      */
     function currency_symbol(): string
     {
-        $code = config('currency.code', 'GBP');
+        // Resolved once per request — the currency can't change mid-request,
+        // so we avoid repeating config() lookups for every price on the page.
+        static $symbol = null;
 
-        return config("currency.symbols.$code", $code . ' ');
+        if ($symbol === null) {
+            $code = config('currency.code', 'GBP');
+            $symbol = config("currency.symbols.$code", $code . ' ');
+        }
+
+        return $symbol;
     }
 }
 
