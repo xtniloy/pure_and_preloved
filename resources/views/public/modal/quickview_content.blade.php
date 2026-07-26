@@ -46,10 +46,10 @@
             <div class="pricing-meta">
                 <ul>
                     @if($product->sale_price)
-                        <li class="old-price">${{ number_format($product->price, 2) }}</li>
-                        <li class="current-price">${{ number_format($product->sale_price, 2) }}</li>
+                        <li class="old-price">{{ currency($product->price) }}</li>
+                        <li class="current-price">{{ currency($product->sale_price) }}</li>
                     @else
-                        <li class="current-price">${{ number_format($product->price, 2) }}</li>
+                        <li class="current-price">{{ currency($product->price) }}</li>
                     @endif
                 </ul>
             </div>

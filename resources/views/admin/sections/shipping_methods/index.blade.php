@@ -54,7 +54,7 @@
                                         <tr class="align-middle">
                                             <th scope="row">{{$shippingMethods->firstItem() + $k}}</th>
                                             <td>{{$method->name}}</td>
-                                            <td>${{number_format($method->charge, 2)}}</td>
+                                            <td>{{ currency($method->charge) }}</td>
                                             <td>
                                                 @if($method->status)
                                                     <span class="badge bg-success">Active</span>

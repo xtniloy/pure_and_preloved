@@ -114,10 +114,10 @@
                                                             <div class="pricing-meta">
                                                                 <ul>
                                                                     @if($product->sale_price)
-                                                                        <li class="old-price">${{ number_format($product->price, 2) }}</li>
-                                                                        <li class="current-price">${{ number_format($product->sale_price, 2) }}</li>
+                                                                        <li class="old-price">{{ currency($product->price) }}</li>
+                                                                        <li class="current-price">{{ currency($product->sale_price) }}</li>
                                                                     @else
-                                                                        <li class="current-price">${{ number_format($product->price, 2) }}</li>
+                                                                        <li class="current-price">{{ currency($product->price) }}</li>
                                                                     @endif
                                                                 </ul>
                                                             </div>
@@ -178,10 +178,10 @@
                                                                         <div class="pricing-meta">
                                                                             <ul>
                                                                                 @if($product->sale_price)
-                                                                                    <li class="old-price">${{ number_format($product->price, 2) }}</li>
-                                                                                    <li class="current-price">${{ number_format($product->sale_price, 2) }}</li>
+                                                                                    <li class="old-price">{{ currency($product->price) }}</li>
+                                                                                    <li class="current-price">{{ currency($product->sale_price) }}</li>
                                                                                 @else
-                                                                                    <li class="current-price">${{ number_format($product->price, 2) }}</li>
+                                                                                    <li class="current-price">{{ currency($product->price) }}</li>
                                                                                 @endif
                                                                             </ul>
                                                                         </div>
@@ -362,7 +362,7 @@
             max: absMax,
             values: [minVal, maxVal],
             slide: function(event, ui) {
-                $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                $("#amount").val("{{ currency_symbol() }}" + ui.values[0] + " - {{ currency_symbol() }}" + ui.values[1]);
                 $('#filter-min-price').val(ui.values[0]);
                 $('#filter-max-price').val(ui.values[1]);
             },
@@ -370,7 +370,7 @@
                 filterProducts();
             }
         });
-        $("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+        $("#amount").val("{{ currency_symbol() }}" + $("#slider-range").slider("values", 0) + " - {{ currency_symbol() }}" + $("#slider-range").slider("values", 1));
     });
 </script>
 @endpush

@@ -88,7 +88,7 @@ if (revenueEl) {
         x: { grid: { display: false } },
         y: {
           beginAtZero: true,
-          ticks: { callback: (v) => '$' + (v / 1000) + 'k' }
+          ticks: { callback: (v) => (window.CURRENCY_SYMBOL || '£') + (v / 1000) + 'k' }
         },
         y1: {
           beginAtZero: true,

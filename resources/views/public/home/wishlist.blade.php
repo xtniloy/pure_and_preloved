@@ -68,9 +68,9 @@
                                         <td class="product-price-cart">
                                             <span class="amount">
                                                 @if($item['product']->sale_price)
-                                                    ${{ number_format($item['product']->sale_price, 2) }}
+                                                    {{ currency($item['product']->sale_price) }}
                                                 @else
-                                                    ${{ number_format($item['product']->price, 2) }}
+                                                    {{ currency($item['product']->price) }}
                                                 @endif
                                             </span>
                                         </td>

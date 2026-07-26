@@ -54,7 +54,7 @@
                                         <td>{{ $product->id }}</td>
                                         <td>{{ $product->name }}</td>
                                         <td>{{ $product->sku }}</td>
-                                        <td>${{ number_format($product->sale_price ?? $product->price, 2) }}</td>
+                                        <td>{{ currency($product->sale_price ?? $product->price) }}</td>
                                         <td>
                                             <form method="POST" action="{{ route('admin.featured-products.toggle', $product) }}">
                                                 @csrf

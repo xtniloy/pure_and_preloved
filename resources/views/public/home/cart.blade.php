@@ -71,13 +71,13 @@
                                                     {{ $item['product']->name }}
                                                 @endif
                                             </td>
-                                            <td class="product-price-cart"><span class="amount">${{ number_format($item['unit_price'], 2) }}</span></td>
+                                            <td class="product-price-cart"><span class="amount">{{ currency($item['unit_price']) }}</span></td>
                                             <td class="product-quantity">
                                                 <div class="cart-plus-minus">
                                                     <input class="cart-plus-minus-box" type="text" name="quantities[{{ $item['product']->id }}]" value="{{ $item['quantity'] }}" />
                                                 </div>
                                             </td>
-                                            <td class="product-subtotal">${{ number_format($item['subtotal'], 2) }}</td>
+                                            <td class="product-subtotal">{{ currency($item['subtotal']) }}</td>
                                             <td class="product-remove">
                                                 @php $pId = $item['product']->id; @endphp
                                                 <a href="#" onclick="event.preventDefault(); document.getElementById('remove-cart-{{ $pId }}').submit();">
@@ -89,7 +89,7 @@
                                     <tr>
                                         <td colspan="4" class="text-end border-0"></td>
                                         <td class="product-subtotal text-center"><strong>Total:</strong></td>
-                                        <td class="product-subtotal"><strong>${{ number_format($cartSubtotal, 2) }}</strong></td>
+                                        <td class="product-subtotal"><strong>{{ currency($cartSubtotal) }}</strong></td>
                                     </tr>
                                 @endif
                                 </tbody>

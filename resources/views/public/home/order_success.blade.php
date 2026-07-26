@@ -63,7 +63,7 @@
                                                     {{ $item->product_name }} x {{ $item->quantity }}
                                                 </span>
                                                 <span class="order-price">
-                                                    ${{ number_format($item->line_total, 2) }}
+                                                    {{ currency($item->line_total) }}
                                                 </span>
                                             </li>
                                         @endforeach
@@ -72,13 +72,13 @@
                                 <div class="your-order-bottom">
                                     <ul>
                                         <li class="your-order-shipping">Shipping ({{ ucfirst($order->shipping_method) }})</li>
-                                        <li>${{ number_format($order->shipping_charge, 2) }}</li>
+                                        <li>{{ currency($order->shipping_charge) }}</li>
                                     </ul>
                                 </div>
                                 <div class="your-order-total">
                                     <ul>
                                         <li class="order-total">Total</li>
-                                        <li>${{ number_format($order->total, 2) }}</li>
+                                        <li>{{ currency($order->total) }}</li>
                                     </ul>
                                 </div>
                             </div>

@@ -68,11 +68,11 @@
                         <div class="pricing-meta">
                             <ul>
                                 @if($product->sale_price)
-                                    <li class="old-price">${{ $product->price }}</li>
-                                    <li class="cuttent-price">${{ $product->sale_price }}</li>
+                                    <li class="old-price">{{ currency($product->price) }}</li>
+                                    <li class="cuttent-price">{{ currency($product->sale_price) }}</li>
                                     <li class="discount-flag">Sale</li>
                                 @else
-                                    <li class="cuttent-price">${{ $product->price }}</li>
+                                    <li class="cuttent-price">{{ currency($product->price) }}</li>
                                 @endif
                             </ul>
                         </div>
@@ -256,11 +256,11 @@
                                 <div class="pricing-meta">
                                     <ul>
                                         @if($related->sale_price)
-                                            <li class="old-price">${{ $related->price }}</li>
-                                            <li class="current-price">${{ $related->sale_price }}</li>
+                                            <li class="old-price">{{ currency($related->price) }}</li>
+                                            <li class="current-price">{{ currency($related->sale_price) }}</li>
                                             <li class="discount-flag">Sale</li>
                                         @else
-                                            <li class="current-price">${{ $related->price }}</li>
+                                            <li class="current-price">{{ currency($related->price) }}</li>
                                         @endif
                                     </ul>
                                 </div>

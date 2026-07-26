@@ -8,7 +8,7 @@
                         <img src="{{ asset('assets/images/icons/static-icons-1.png') }}" alt="" class="img-responsive" loading="lazy" decoding="async" />
                         <div class="single-static-meta">
                             <h4>Free Shipping</h4>
-                            <p>On all orders over $75.00</p>
+                            <p>On all orders over {{ currency_symbol() }}75.00</p>
                         </div>
                     </div>
                 </div>

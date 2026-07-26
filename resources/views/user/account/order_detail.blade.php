@@ -88,9 +88,9 @@
                                         </span>
                                     </span>
                                 </td>
-                                <td>${{ number_format($item->unit_price, 2) }}</td>
+                                <td>{{ currency($item->unit_price) }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td class="text-end fw-bold">${{ number_format($item->line_total, 2) }}</td>
+                                <td class="text-end fw-bold">{{ currency($item->line_total) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -99,15 +99,15 @@
                 <div class="order-totals">
                     <div class="order-totals-row">
                         <span>Subtotal</span>
-                        <span>${{ number_format($order->subtotal, 2) }}</span>
+                        <span>{{ currency($order->subtotal) }}</span>
                     </div>
                     <div class="order-totals-row">
                         <span>Shipping ({{ ucfirst($order->shipping_method) }})</span>
-                        <span>${{ number_format($order->shipping_charge, 2) }}</span>
+                        <span>{{ currency($order->shipping_charge) }}</span>
                     </div>
                     <div class="order-totals-row grand">
                         <span>Total</span>
-                        <span>${{ number_format($order->total, 2) }}</span>
+                        <span>{{ currency($order->total) }}</span>
                     </div>
                 </div>
             </div>

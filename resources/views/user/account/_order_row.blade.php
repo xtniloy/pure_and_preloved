@@ -10,6 +10,6 @@
         </span>
     </span>
     <span class="status-badge status-{{ $order->status }}">{{ $order->status }}</span>
-    <span class="order-row-total">${{ number_format($order->total, 2) }}</span>
+    <span class="order-row-total">{{ currency($order->total) }}</span>
     <span class="order-row-arrow"><i class="lnr lnr-chevron-right"></i></span>
 </a>

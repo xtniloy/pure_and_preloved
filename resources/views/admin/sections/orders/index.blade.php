@@ -74,7 +74,7 @@
                                                 Guest
                                             @endif
                                         </td>
-                                        <td>${{ number_format($order->total, 2) }}</td>
+                                        <td>{{ currency($order->total) }}</td>
                                         <td><span class="badge bg-secondary text-uppercase">{{ $order->status }}</span></td>
                                         <td>{{ $order->items_count }}</td>
                                         <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>

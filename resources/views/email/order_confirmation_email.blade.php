@@ -29,21 +29,21 @@
                             {{ $item->product_name }} <span style="color: #718096;">&times; {{ $item->quantity }}</span>
                         </td>
                         <td style="line-height: 22px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e2e8f0; white-space: nowrap;" align="right">
-                            ${{ number_format($item->line_total, 2) }}
+                            {{ currency($item->line_total) }}
                         </td>
                     </tr>
                 @endforeach
                 <tr>
                     <td style="line-height: 22px; font-size: 14px; padding: 8px 0;" align="left">Subtotal</td>
-                    <td style="line-height: 22px; font-size: 14px; padding: 8px 0;" align="right">${{ number_format($order->subtotal, 2) }}</td>
+                    <td style="line-height: 22px; font-size: 14px; padding: 8px 0;" align="right">{{ currency($order->subtotal) }}</td>
                 </tr>
                 <tr>
                     <td style="line-height: 22px; font-size: 14px; padding: 4px 0;" align="left">Shipping ({{ ucfirst($order->shipping_method) }})</td>
-                    <td style="line-height: 22px; font-size: 14px; padding: 4px 0;" align="right">${{ number_format($order->shipping_charge, 2) }}</td>
+                    <td style="line-height: 22px; font-size: 14px; padding: 4px 0;" align="right">{{ currency($order->shipping_charge) }}</td>
                 </tr>
                 <tr>
                     <td style="line-height: 24px; font-size: 16px; font-weight: 700; padding: 10px 0; border-top: 2px solid #e2e8f0;" align="left">Total</td>
-                    <td style="line-height: 24px; font-size: 16px; font-weight: 700; padding: 10px 0; border-top: 2px solid #e2e8f0;" align="right">${{ number_format($order->total, 2) }}</td>
+                    <td style="line-height: 24px; font-size: 16px; font-weight: 700; padding: 10px 0; border-top: 2px solid #e2e8f0;" align="right">{{ currency($order->total) }}</td>
                 </tr>
                 </tbody>
             </table>

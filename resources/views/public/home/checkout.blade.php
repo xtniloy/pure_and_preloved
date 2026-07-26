@@ -160,7 +160,7 @@
                                                         {{ $item['product']->name }} x {{ $item['quantity'] }}
                                                     </span>
                                                     <span class="order-price">
-                                                        ${{ number_format($item['line_total'], 2) }}
+                                                        {{ currency($item['line_total']) }}
                                                     </span>
                                                 </li>
                                             @endforeach
@@ -169,7 +169,7 @@
                                     <div class="your-order-bottom">
                                         <ul>
                                             <li class="your-order-shipping">Subtotal</li>
-                                            <li>${{ number_format($subtotal, 2) }}</li>
+                                            <li>{{ currency($subtotal) }}</li>
                                         </ul>
                                     </div>
 
@@ -177,7 +177,7 @@
                                     <div class="your-order-bottom">
                                         <ul>
                                             <li class="your-order-shipping">Discount</li>
-                                            <li id="discount-display">-$0.00</li>
+                                            <li id="discount-display">-{{ currency_symbol() }}0.00</li>
                                         </ul>
                                     </div>
 
@@ -195,7 +195,7 @@
                                                              class="@error('shipping_method_id') is-invalid @enderror">
                                                          {{ $method->name }}
                                                      </label>
-                                                     <span>{{ $method->charge > 0 ? '$' . number_format($method->charge, 2) : 'Free' }}</span>
+                                                     <span>{{ $method->charge > 0 ? currency($method->charge) : 'Free' }}</span>
                                                  </li>
                                              @endforeach
                                          </ul>
@@ -207,7 +207,7 @@
                                     <div class="your-order-total">
                                         <ul>
                                             <li class="order-total">Grand Total</li>
-                                            <li id="grand-total-display">${{ number_format($subtotal + ($shippingMethods->first()->charge ?? 0), 2) }}</li>
+                                            <li id="grand-total-display">{{ currency($subtotal + ($shippingMethods->first()->charge ?? 0)) }}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
      function updateGrandTotal(shippingCharge) {
          var subtotal = parseFloat("{{ $subtotal }}");
          var grandTotal = subtotal + shippingCharge;
-         $('#grand-total-display').text('$' + grandTotal.toFixed(2));
+         $('#grand-total-display').text('{{ currency_symbol() }}' + grandTotal.toFixed(2));
      }
  </script>
  @endpush

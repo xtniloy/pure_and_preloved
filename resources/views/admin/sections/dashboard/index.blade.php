@@ -87,7 +87,7 @@
                 <div class="card mb-4 text-white bg-brand-gradient">
                     <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="fs-4 fw-semibold">$284,540
+                            <div class="fs-4 fw-semibold">{{ currency_symbol() }}284,540
                                 <span class="fs-6 fw-normal">(12.4%
                                     <svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use></svg>)
                                 </span>
@@ -121,7 +121,7 @@
                 <div class="card mb-4 text-white bg-info-gradient">
                     <div class="card-body pb-0 d-flex justify-content-between align-items-start">
                         <div>
-                            <div class="fs-4 fw-semibold">$221.60
+                            <div class="fs-4 fw-semibold">{{ currency_symbol() }}221.60
                                 <span class="fs-6 fw-normal">(3.6%
                                     <svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-arrow-top') }}"></use></svg>)
                                 </span>
@@ -166,7 +166,7 @@
                             <span class="icon-tile bg-brand-soft"><svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-diamond') }}"></use></svg></span>
                             <div class="text-start">
                                 <div class="fw-semibold">Gold 24K <span class="text-success small">+0.8%</span></div>
-                                <div class="text-body-secondary small">$74.20</div>
+                                <div class="text-body-secondary small">{{ currency_symbol() }}74.20</div>
                             </div>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                             <span class="icon-tile bg-secondary bg-opacity-25 text-secondary"><svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-diamond') }}"></use></svg></span>
                             <div class="text-start">
                                 <div class="fw-semibold">Silver <span class="text-danger small">-0.3%</span></div>
-                                <div class="text-body-secondary small">$0.92</div>
+                                <div class="text-body-secondary small">{{ currency_symbol() }}0.92</div>
                             </div>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                             <span class="icon-tile bg-info bg-opacity-25 text-info"><svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-diamond') }}"></use></svg></span>
                             <div class="text-start">
                                 <div class="fw-semibold">Platinum <span class="text-success small">+1.1%</span></div>
-                                <div class="text-body-secondary small">$31.50</div>
+                                <div class="text-body-secondary small">{{ currency_symbol() }}31.50</div>
                             </div>
                         </div>
                     </div>
@@ -193,7 +193,7 @@
                             <span class="icon-tile bg-primary bg-opacity-25 text-primary"><svg class="icon"><use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-diamond') }}"></use></svg></span>
                             <div class="text-start">
                                 <div class="fw-semibold">Diamond ct. <span class="text-success small">+0.2%</span></div>
-                                <div class="text-body-secondary small">$5,400</div>
+                                <div class="text-body-secondary small">{{ currency_symbol() }}5,400</div>
                             </div>
                         </div>
                     </div>
@@ -212,7 +212,7 @@
                                 <div class="card-subtitle text-body-secondary">Performance over the last 12 months</div>
                             </div>
                             <div class="text-end">
-                                <div class="fs-5 fw-semibold text-brand">$862,000</div>
+                                <div class="fs-5 fw-semibold text-brand">{{ currency_symbol() }}862,000</div>
                                 <div class="small text-body-secondary">Year to date</div>
                             </div>
                         </div>
@@ -278,12 +278,12 @@
                                 <tbody>
                                 @php
                                     $sampleOrders = [
-                                        ['id' => '#JW-10287', 'cust' => 'Olivia Bennett', 'item' => 'Diamond Solitaire Ring', 'total' => '$2,450', 'status' => 'Paid', 'cls' => 'success'],
-                                        ['id' => '#JW-10286', 'cust' => 'Liam Carter', 'item' => 'Gold Cuban Chain', 'total' => '$1,180', 'status' => 'Processing', 'cls' => 'warning'],
-                                        ['id' => '#JW-10285', 'cust' => 'Sophia Reyes', 'item' => 'Pearl Drop Earrings', 'total' => '$640', 'status' => 'Shipped', 'cls' => 'info'],
-                                        ['id' => '#JW-10284', 'cust' => 'Noah Khan', 'item' => 'Sapphire Tennis Bracelet', 'total' => '$3,920', 'status' => 'Paid', 'cls' => 'success'],
-                                        ['id' => '#JW-10283', 'cust' => 'Emma Watson', 'item' => 'Rose Gold Wristwatch', 'total' => '$5,300', 'status' => 'Pending', 'cls' => 'secondary'],
-                                        ['id' => '#JW-10282', 'cust' => 'James Park', 'item' => 'Emerald Pendant', 'total' => '$1,760', 'status' => 'Refunded', 'cls' => 'danger'],
+                                        ['id' => '#JW-10287', 'cust' => 'Olivia Bennett', 'item' => 'Diamond Solitaire Ring', 'total' => currency_symbol() . '2,450', 'status' => 'Paid', 'cls' => 'success'],
+                                        ['id' => '#JW-10286', 'cust' => 'Liam Carter', 'item' => 'Gold Cuban Chain', 'total' => currency_symbol() . '1,180', 'status' => 'Processing', 'cls' => 'warning'],
+                                        ['id' => '#JW-10285', 'cust' => 'Sophia Reyes', 'item' => 'Pearl Drop Earrings', 'total' => currency_symbol() . '640', 'status' => 'Shipped', 'cls' => 'info'],
+                                        ['id' => '#JW-10284', 'cust' => 'Noah Khan', 'item' => 'Sapphire Tennis Bracelet', 'total' => currency_symbol() . '3,920', 'status' => 'Paid', 'cls' => 'success'],
+                                        ['id' => '#JW-10283', 'cust' => 'Emma Watson', 'item' => 'Rose Gold Wristwatch', 'total' => currency_symbol() . '5,300', 'status' => 'Pending', 'cls' => 'secondary'],
+                                        ['id' => '#JW-10282', 'cust' => 'James Park', 'item' => 'Emerald Pendant', 'total' => currency_symbol() . '1,760', 'status' => 'Refunded', 'cls' => 'danger'],
                                     ];
                                 @endphp
                                 @foreach($sampleOrders as $o)
@@ -401,11 +401,11 @@
                         </div>
                         @php
                             $topProducts = [
-                                ['name' => 'Diamond Solitaire Ring', 'sku' => 'RNG-2201', 'sold' => 142, 'revenue' => '$348k'],
-                                ['name' => '18K Gold Cuban Chain', 'sku' => 'NCK-1180', 'sold' => 118, 'revenue' => '$139k'],
-                                ['name' => 'Pearl Drop Earrings', 'sku' => 'EAR-0640', 'sold' => 96, 'revenue' => '$61k'],
-                                ['name' => 'Sapphire Tennis Bracelet', 'sku' => 'BRC-3920', 'sold' => 74, 'revenue' => '$290k'],
-                                ['name' => 'Rose Gold Wristwatch', 'sku' => 'WCH-5300', 'sold' => 52, 'revenue' => '$275k'],
+                                ['name' => 'Diamond Solitaire Ring', 'sku' => 'RNG-2201', 'sold' => 142, 'revenue' => currency_symbol() . '348k'],
+                                ['name' => '18K Gold Cuban Chain', 'sku' => 'NCK-1180', 'sold' => 118, 'revenue' => currency_symbol() . '139k'],
+                                ['name' => 'Pearl Drop Earrings', 'sku' => 'EAR-0640', 'sold' => 96, 'revenue' => currency_symbol() . '61k'],
+                                ['name' => 'Sapphire Tennis Bracelet', 'sku' => 'BRC-3920', 'sold' => 74, 'revenue' => currency_symbol() . '290k'],
+                                ['name' => 'Rose Gold Wristwatch', 'sku' => 'WCH-5300', 'sold' => 52, 'revenue' => currency_symbol() . '275k'],
                             ];
                         @endphp
                         <div class="table-responsive">
@@ -520,10 +520,10 @@
                         <div class="card-title fs-4 fw-semibold mb-3">Top Customers</div>
                         @php
                             $topCustomers = [
-                                ['name' => 'Olivia Bennett', 'orders' => 14, 'spent' => '$24,800', 'tier' => 'VIP', 'cls' => 'warning'],
-                                ['name' => 'Noah Khan', 'orders' => 11, 'spent' => '$19,300', 'tier' => 'Gold', 'cls' => 'success'],
-                                ['name' => 'Emma Watson', 'orders' => 9, 'spent' => '$15,600', 'tier' => 'Gold', 'cls' => 'success'],
-                                ['name' => 'James Park', 'orders' => 7, 'spent' => '$9,200', 'tier' => 'Silver', 'cls' => 'secondary'],
+                                ['name' => 'Olivia Bennett', 'orders' => 14, 'spent' => currency_symbol() . '24,800', 'tier' => 'VIP', 'cls' => 'warning'],
+                                ['name' => 'Noah Khan', 'orders' => 11, 'spent' => currency_symbol() . '19,300', 'tier' => 'Gold', 'cls' => 'success'],
+                                ['name' => 'Emma Watson', 'orders' => 9, 'spent' => currency_symbol() . '15,600', 'tier' => 'Gold', 'cls' => 'success'],
+                                ['name' => 'James Park', 'orders' => 7, 'spent' => currency_symbol() . '9,200', 'tier' => 'Silver', 'cls' => 'secondary'],
                             ];
                         @endphp
                         <div class="table-responsive">
@@ -564,5 +564,6 @@
 @endsection
 
 @push('js')
+    <script>window.CURRENCY_SYMBOL = '{{ currency_symbol() }}';</script>
     <script src="{{ asset('panel/assets/js/jewelry-dashboard-chart.js') }}"></script>
 @endpush

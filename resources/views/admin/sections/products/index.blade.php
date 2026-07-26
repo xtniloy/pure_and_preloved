@@ -79,10 +79,10 @@
                                             </td>
                                             <td>
                                                 @if($product->sale_price)
-                                                    <del class="text-muted">${{ $product->price }}</del> <br>
-                                                    <span class="text-danger">${{ $product->sale_price }}</span>
+                                                    <del class="text-muted">{{ currency($product->price) }}</del> <br>
+                                                    <span class="text-danger">{{ currency($product->sale_price) }}</span>
                                                 @else
-                                                    ${{ $product->price }}
+                                                    {{ currency($product->price) }}
                                                 @endif
                                             </td>
                                             <td>

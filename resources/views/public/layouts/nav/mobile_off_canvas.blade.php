@@ -25,7 +25,7 @@
                         <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="image"><img src="{{ $imageUrl }}" alt="{{ $product->name }}"></a>
                         <div class="content">
                             <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="title">{{ $product->name }}</a>
-                            <span class="quantity-price">1 x <span class="amount">${{ number_format($product->sale_price ?? $product->price, 2) }}</span></span>
+                            <span class="quantity-price">1 x <span class="amount">{{ currency($product->sale_price ?? $product->price) }}</span></span>
                             <a href="#" class="remove" onclick="event.preventDefault(); document.getElementById('remove-wishlist-{{ $product->id }}').submit();">×</a>
                             <form id="remove-wishlist-{{ $product->id }}" action="{{ route('wishlist.remove', $product->id) }}" method="POST" style="display: none;">
                                 @csrf
@@ -80,7 +80,7 @@
                         <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="image"><img src="{{ $imageUrl }}" alt="{{ $product->name }}"></a>
                         <div class="content">
                             <a href="{{ route('product.show', [$gender, $categorySlug, $product->slug]) }}" class="title">{{ $product->name }}</a>
-                            <span class="quantity-price">{{ $quantity }} x <span class="amount">${{ number_format($price, 2) }}</span></span>
+                            <span class="quantity-price">{{ $quantity }} x <span class="amount">{{ currency($price) }}</span></span>
                             <a href="#" class="remove" onclick="event.preventDefault(); document.getElementById('remove-cart-{{ $product->id }}').submit();">×</a>
                             <form id="remove-cart-{{ $product->id }}" action="{{ route('cart.remove', $product->id) }}" method="POST" style="display: none;">
                                 @csrf
@@ -95,13 +95,13 @@
         <div class="foot">
             <div class="sub-total">
                 <strong>Subtotal :</strong>
-                <span class="amount">${{ number_format($cartSubtotal, 2) }}</span>
+                <span class="amount">{{ currency($cartSubtotal) }}</span>
             </div>
             <div class="buttons">
                 <a href="{{ route('cart.index') }}" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
                 <a href="{{ route('checkout.index') }}" class="btn btn-outline-dark current-btn">checkout</a>
             </div>
-            <p class="minicart-message">Free Shipping on All Orders Over $100!</p>
+            <p class="minicart-message">Free Shipping on All Orders Over {{ currency_symbol() }}100!</p>
         </div>
     </div>
 </div>
