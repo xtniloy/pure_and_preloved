@@ -19,12 +19,23 @@ class BlogFeatureTest extends TestCase
 
     private function makeAdmin(): Admin
     {
-        return Admin::create([
+        $admin = Admin::create([
             'name' => 'Blog Test Admin',
             'email' => 'blog-test-admin-' . uniqid() . '@example.com',
             'password' => 'secret-password',
             'status' => 1,
         ]);
+
+        // Admin routes are now permission-gated; a Super Admin bypasses all checks.
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        $admin->assignRole(
+            \Spatie\Permission\Models\Role::findOrCreate(
+                \App\Support\AdminAccess::SUPER_ADMIN,
+                \App\Support\AdminAccess::GUARD
+            )
+        );
+
+        return $admin;
     }
 
     private function makeUser(): User

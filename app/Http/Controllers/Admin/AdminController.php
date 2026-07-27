@@ -45,13 +45,15 @@ class AdminController extends Controller
 
     public function create(): View
     {
-        return view('admin.sections.admins.form');
+        return view('admin.sections.admins.form', [
+            'roles' => $this->assignableRoles(),
+        ]);
     }
 
     public function store(AdminStoreRequest $request): RedirectResponse
     {
         try {
-            $admin = $this->adminService->storeAdmin($request->validated());
+            $admin = $this->adminService->storeAdmin($request->validated(), $request->input('roles', []));
 
             return redirect()
                 ->route('admin.admins.edit', $admin)
@@ -71,20 +73,28 @@ class AdminController extends Controller
 
     public function edit(Admin $admin): View
     {
-        return view('admin.sections.admins.form', compact('admin'));
+        return view('admin.sections.admins.form', [
+            'admin' => $admin,
+            'roles' => $this->assignableRoles(),
+        ]);
     }
 
     public function update(AdminUpdateRequest $request, Admin $admin): RedirectResponse
     {
         try {
+            $isSelf = $admin->id === Auth::guard('admin')->id();
+
             // Prevent deactivating yourself
-            if ($admin->id === Auth::guard('admin')->id() && (int) $request->status === 0) {
+            if ($isSelf && (int) $request->status === 0) {
                 return redirect()
                     ->route('admin.admins.edit', $admin)
                     ->with('error', 'You cannot deactivate your own account.');
             }
 
-            $admin = $this->adminService->updateAdmin($request->validated(), $admin);
+            // Admins cannot change their own roles (avoids self-lockout).
+            $roles = $isSelf ? null : $request->input('roles', []);
+
+            $admin = $this->adminService->updateAdmin($request->validated(), $admin, $roles);
 
             return redirect()
                 ->route('admin.admins.edit', $admin)
@@ -117,6 +127,16 @@ class AdminController extends Controller
                 ->route('admin.admins.index')
                 ->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Roles that can be assigned from the admin form, on the admin guard.
+     */
+    private function assignableRoles()
+    {
+        return \Spatie\Permission\Models\Role::where('guard_name', \App\Support\AdminAccess::GUARD)
+            ->orderBy('name')
+            ->get();
     }
 
     public function resend_email(Admin $admin): RedirectResponse

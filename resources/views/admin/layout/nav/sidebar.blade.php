@@ -18,6 +18,7 @@
                     <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}"></use>
                 </svg><span data-coreui-i18n="dashboard">Dashboard</span></a></li>
 
+        @if(admin_can('manage users'))
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.users.index')}}">
                 <svg class="nav-icon">
@@ -25,8 +26,9 @@
                 </svg><span>Users</span>
             </a>
         </li>
+        @endif
 
-        @if(Route::has('admin.admins.index'))
+        @if(admin_can('manage admins'))
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.admins.index')}}">
                 <svg class="nav-icon">
@@ -36,7 +38,17 @@
         </li>
         @endif
 
-        @if(Route::has('admin.orders.index'))
+        @if(admin_can('manage roles'))
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('admin.roles.index')}}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-lock-locked') }}"></use>
+                </svg><span>Roles &amp; Access</span>
+            </a>
+        </li>
+        @endif
+
+        @if(admin_can('manage orders'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.orders.index')}}">
                     <svg class="nav-icon">
@@ -46,7 +58,7 @@
             </li>
         @endif
 
-        @if(Route::has('admin.categories.index'))
+        @if(admin_can('manage categories'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.categories.index')}}">
                     <svg class="nav-icon">
@@ -55,7 +67,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.products.index'))
+        @if(admin_can('manage products'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.products.index')}}">
                     <svg class="nav-icon">
@@ -64,7 +76,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.featured-products.index'))
+        @if(admin_can('manage featured products'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.featured-products.index')}}">
                     <svg class="nav-icon">
@@ -73,7 +85,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.shipping_methods.index'))
+        @if(admin_can('manage shipping methods'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.shipping_methods.index')}}">
                     <svg class="nav-icon">
@@ -82,7 +94,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.homepage.hero'))
+        @if(admin_can('manage homepage'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.homepage.hero')}}">
                     <svg class="nav-icon">
@@ -91,7 +103,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.homepage.index'))
+        @if(admin_can('manage homepage'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.homepage.index')}}">
                     <svg class="nav-icon">
@@ -100,7 +112,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.footer.edit'))
+        @if(admin_can('manage footer'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.footer.edit')}}">
                     <svg class="nav-icon">
@@ -109,7 +121,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.social-links.edit'))
+        @if(admin_can('manage social links'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.social-links.edit')}}">
                     <svg class="nav-icon">
@@ -118,7 +130,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.pages.index'))
+        @if(admin_can('manage pages'))
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.pages.index')}}">
                     <svg class="nav-icon">
@@ -127,7 +139,7 @@
                 </a>
             </li>
         @endif
-        @if(Route::has('admin.blog-posts.index'))
+        @if(admin_can('manage blog'))
             <li class="nav-group">
                 <a class="nav-link nav-group-toggle" href="#">
                     <svg class="nav-icon">
@@ -159,7 +171,7 @@
             </li>
         @endif
 
-        @if(Route::has('admin.contact-messages.index'))
+        @if(admin_can('manage contacts'))
             @php $contactUnread = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
             <li class="nav-item">
                 <a class="nav-link" href="{{route('admin.contact-messages.index')}}">
@@ -173,7 +185,7 @@
             </li>
         @endif
 
-        @if(Route::has('admin.settings.notifications'))
+        @if(admin_can('manage settings'))
             <li class="nav-group">
                 <a class="nav-link nav-group-toggle" href="#">
                     <svg class="nav-icon">

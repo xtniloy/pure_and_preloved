@@ -8,25 +8,36 @@ use App\Models\AdminAccessToken;
 
 class AdminService
 {
-    public function storeAdmin(array $data): Admin
+    public function storeAdmin(array $data, array $roles = []): Admin
     {
         $admin = Admin::create([
             'name'  => $data['name'],
             'email' => $data['email'],
         ]);
 
+        $admin->syncRoles($roles);
+
         $this->sendSetPasswordEmail($admin, 'new_registration');
 
         return $admin;
     }
 
-    public function updateAdmin(array $data, Admin $admin): Admin
+    /**
+     * @param  array|null  $roles  Role names to sync. Pass null to leave the
+     *                             admin's current roles untouched (used when an
+     *                             admin edits their own account).
+     */
+    public function updateAdmin(array $data, Admin $admin, ?array $roles = null): Admin
     {
         $admin->update([
             'name'   => $data['name'],
             'email'  => $data['email'],
             'status' => $data['status'] ?? $admin->status,
         ]);
+
+        if ($roles !== null) {
+            $admin->syncRoles($roles);
+        }
 
         return $admin->fresh();
     }

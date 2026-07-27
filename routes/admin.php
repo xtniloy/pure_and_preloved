@@ -40,61 +40,106 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     Route::get('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'edit'])->name('profile.view');
     Route::post('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'update'])->name('profile');
 
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-    Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
-    Route::get('/admins/{admin}/resend-email', [\App\Http\Controllers\Admin\AdminController::class, 'resend_email'])->name('admins.email.resend');
-    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
-    Route::post('/categories/update-order', [\App\Http\Controllers\Admin\CategoryController::class, 'updateOrder'])->name('categories.update_order');
-    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
-    Route::resource('shipping_methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
-    Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->except(['show']);
+    // Customers (users)
+    Route::middleware('permission:manage users,admin')->group(function () {
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::get('/users/{user}/email_resend', [\App\Http\Controllers\Admin\UserController::class, 'resend_email'])->name('users.email.resend');
+        Route::get('/users/{user}/verify_toggle', [\App\Http\Controllers\Admin\UserController::class, 'verification_toggle'])->name('users.verification_toggle');
+    });
+
+    // Admins / staff
+    Route::middleware('permission:manage admins,admin')->group(function () {
+        Route::resource('admins', \App\Http\Controllers\Admin\AdminController::class);
+        Route::get('/admins/{admin}/resend-email', [\App\Http\Controllers\Admin\AdminController::class, 'resend_email'])->name('admins.email.resend');
+    });
+
+    // Roles & access control
+    Route::middleware('permission:manage roles,admin')->group(function () {
+        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->except(['show']);
+    });
+
+    // Categories
+    Route::middleware('permission:manage categories,admin')->group(function () {
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        Route::post('/categories/update-order', [\App\Http\Controllers\Admin\CategoryController::class, 'updateOrder'])->name('categories.update_order');
+    });
+
+    // Products
+    Route::middleware('permission:manage products,admin')->group(function () {
+        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    });
+
+    // Featured products
+    Route::middleware('permission:manage featured products,admin')->group(function () {
+        Route::get('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'index'])->name('featured-products.index');
+        Route::put('featured-products/{product}', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'toggle'])->name('featured-products.toggle');
+    });
+
+    // Shipping methods
+    Route::middleware('permission:manage shipping methods,admin')->group(function () {
+        Route::resource('shipping_methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
+    });
+
+    // Orders
+    Route::middleware('permission:manage orders,admin')->group(function () {
+        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update']);
+    });
+
+    // CMS pages
+    Route::middleware('permission:manage pages,admin')->group(function () {
+        Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->except(['show']);
+    });
 
     // Homepage builder
-    Route::get('/homepage', [\App\Http\Controllers\Admin\HomePageController::class, 'index'])->name('homepage.index');
-    Route::get('/homepage/hero', [\App\Http\Controllers\Admin\HomePageController::class, 'hero'])->name('homepage.hero');
-    Route::post('/homepage/seo', [\App\Http\Controllers\Admin\HomePageController::class, 'updateSeo'])->name('homepage.seo.update');
-    Route::post('/homepage/sections/reorder', [\App\Http\Controllers\Admin\HomePageController::class, 'reorder'])->name('homepage.sections.reorder');
-    Route::get('/homepage/sections/create/{type}', [\App\Http\Controllers\Admin\HomePageController::class, 'create'])->name('homepage.sections.create');
-    Route::post('/homepage/sections', [\App\Http\Controllers\Admin\HomePageController::class, 'store'])->name('homepage.sections.store');
-    Route::get('/homepage/sections/{section}/edit', [\App\Http\Controllers\Admin\HomePageController::class, 'edit'])->name('homepage.sections.edit');
-    Route::put('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'update'])->name('homepage.sections.update');
-    Route::put('/homepage/sections/{section}/toggle', [\App\Http\Controllers\Admin\HomePageController::class, 'toggle'])->name('homepage.sections.toggle');
-    Route::delete('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'destroy'])->name('homepage.sections.destroy');
+    Route::middleware('permission:manage homepage,admin')->group(function () {
+        Route::get('/homepage', [\App\Http\Controllers\Admin\HomePageController::class, 'index'])->name('homepage.index');
+        Route::get('/homepage/hero', [\App\Http\Controllers\Admin\HomePageController::class, 'hero'])->name('homepage.hero');
+        Route::post('/homepage/seo', [\App\Http\Controllers\Admin\HomePageController::class, 'updateSeo'])->name('homepage.seo.update');
+        Route::post('/homepage/sections/reorder', [\App\Http\Controllers\Admin\HomePageController::class, 'reorder'])->name('homepage.sections.reorder');
+        Route::get('/homepage/sections/create/{type}', [\App\Http\Controllers\Admin\HomePageController::class, 'create'])->name('homepage.sections.create');
+        Route::post('/homepage/sections', [\App\Http\Controllers\Admin\HomePageController::class, 'store'])->name('homepage.sections.store');
+        Route::get('/homepage/sections/{section}/edit', [\App\Http\Controllers\Admin\HomePageController::class, 'edit'])->name('homepage.sections.edit');
+        Route::put('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'update'])->name('homepage.sections.update');
+        Route::put('/homepage/sections/{section}/toggle', [\App\Http\Controllers\Admin\HomePageController::class, 'toggle'])->name('homepage.sections.toggle');
+        Route::delete('/homepage/sections/{section}', [\App\Http\Controllers\Admin\HomePageController::class, 'destroy'])->name('homepage.sections.destroy');
+    });
 
     // Footer content
-    Route::get('/footer', [\App\Http\Controllers\Admin\FooterController::class, 'edit'])->name('footer.edit');
-    Route::put('/footer', [\App\Http\Controllers\Admin\FooterController::class, 'update'])->name('footer.update');
+    Route::middleware('permission:manage footer,admin')->group(function () {
+        Route::get('/footer', [\App\Http\Controllers\Admin\FooterController::class, 'edit'])->name('footer.edit');
+        Route::put('/footer', [\App\Http\Controllers\Admin\FooterController::class, 'update'])->name('footer.update');
+    });
 
     // Social links (used site-wide: footer, mobile menu, homepage strip)
-    Route::get('/social-links', [\App\Http\Controllers\Admin\SocialLinkController::class, 'edit'])->name('social-links.edit');
-    Route::put('/social-links', [\App\Http\Controllers\Admin\SocialLinkController::class, 'update'])->name('social-links.update');
+    Route::middleware('permission:manage social links,admin')->group(function () {
+        Route::get('/social-links', [\App\Http\Controllers\Admin\SocialLinkController::class, 'edit'])->name('social-links.edit');
+        Route::put('/social-links', [\App\Http\Controllers\Admin\SocialLinkController::class, 'update'])->name('social-links.update');
+    });
 
     // Blog
-    Route::resource('blog-posts', \App\Http\Controllers\Admin\BlogPostController::class)->except(['show']);
-    Route::resource('blog-categories', \App\Http\Controllers\Admin\BlogCategoryController::class)->except(['show']);
-    Route::resource('blog-tags', \App\Http\Controllers\Admin\BlogTagController::class)->except(['show']);
-    Route::get('/blog-comments', [\App\Http\Controllers\Admin\BlogCommentController::class, 'index'])->name('blog-comments.index');
-    Route::put('/blog-comments/{blogComment}/toggle', [\App\Http\Controllers\Admin\BlogCommentController::class, 'toggle'])->name('blog-comments.toggle');
-    Route::delete('/blog-comments/{blogComment}', [\App\Http\Controllers\Admin\BlogCommentController::class, 'destroy'])->name('blog-comments.destroy');
+    Route::middleware('permission:manage blog,admin')->group(function () {
+        Route::resource('blog-posts', \App\Http\Controllers\Admin\BlogPostController::class)->except(['show']);
+        Route::resource('blog-categories', \App\Http\Controllers\Admin\BlogCategoryController::class)->except(['show']);
+        Route::resource('blog-tags', \App\Http\Controllers\Admin\BlogTagController::class)->except(['show']);
+        Route::get('/blog-comments', [\App\Http\Controllers\Admin\BlogCommentController::class, 'index'])->name('blog-comments.index');
+        Route::put('/blog-comments/{blogComment}/toggle', [\App\Http\Controllers\Admin\BlogCommentController::class, 'toggle'])->name('blog-comments.toggle');
+        Route::delete('/blog-comments/{blogComment}', [\App\Http\Controllers\Admin\BlogCommentController::class, 'destroy'])->name('blog-comments.destroy');
+    });
 
     // Contact messages
-    Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
+    Route::middleware('permission:manage contacts,admin')->group(function () {
+        Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
+    });
 
-    // Web (in-app) notifications
+    // Web (in-app) notifications — available to every logged-in admin
     Route::get('/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'readAll'])->name('notifications.read_all');
     Route::get('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'read'])->name('notifications.read');
 
     // Settings
-    Route::get('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'index'])->name('settings.notifications');
-    Route::post('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'update'])->name('settings.notifications.update');
-    Route::post('/settings/clear-cache', [\App\Http\Controllers\Admin\CacheController::class, 'clear'])->name('settings.cache.clear');
-    Route::get('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'index'])->name('featured-products.index');
-    Route::put('featured-products/{product}', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'toggle'])->name('featured-products.toggle');
-    Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update']);
-    Route::get('/users/{user}/email_resend', [\App\Http\Controllers\Admin\UserController::class,'resend_email'])->name('users.email.resend');
-    Route::get('/users/{user}/verify_toggle', [\App\Http\Controllers\Admin\UserController::class,'verification_toggle'])
-        ->name('users.verification_toggle');
-
-
+    Route::middleware('permission:manage settings,admin')->group(function () {
+        Route::get('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'index'])->name('settings.notifications');
+        Route::post('/settings/notifications', [\App\Http\Controllers\Admin\NotificationSettingController::class, 'update'])->name('settings.notifications.update');
+        Route::post('/settings/clear-cache', [\App\Http\Controllers\Admin\CacheController::class, 'clear'])->name('settings.cache.clear');
+    });
 });

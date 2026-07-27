@@ -24,12 +24,23 @@ class SitemapTest extends TestCase
 
     private function makeAdmin(): Admin
     {
-        return Admin::create([
+        $admin = Admin::create([
             'name' => 'Sitemap Admin',
             'email' => 'sitemap-admin-' . uniqid() . '@example.com',
             'password' => 'secret-password',
             'status' => 1,
         ]);
+
+        // Admin routes are permission-gated; a Super Admin bypasses all checks.
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        $admin->assignRole(
+            \Spatie\Permission\Models\Role::findOrCreate(
+                \App\Support\AdminAccess::SUPER_ADMIN,
+                \App\Support\AdminAccess::GUARD
+            )
+        );
+
+        return $admin;
     }
 
     private function makeCategory(): Category

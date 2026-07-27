@@ -31,6 +31,21 @@ if (! function_exists('currency')) {
     }
 }
 
+if (! function_exists('admin_can')) {
+    /**
+     * Whether the currently authenticated admin has the given permission.
+     * Admins authenticate on the "admin" guard, so the default-guard @can /
+     * Gate helpers don't see them — use this in admin views/controllers.
+     * Super Admins pass everything via the Gate::before rule.
+     */
+    function admin_can(string $permission): bool
+    {
+        $admin = auth('admin')->user();
+
+        return $admin !== null && $admin->can($permission);
+    }
+}
+
 if (! function_exists('seo_robots')) {
     /**
      * Robots meta content for the current request, driven by SEO_INDEXING

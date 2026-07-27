@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Admin;
+use App\Support\AdminAccess;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // A Super Admin bypasses every permission check.
+        Gate::before(function ($user, $ability) {
+            if ($user instanceof Admin && $user->hasRole(AdminAccess::SUPER_ADMIN)) {
+                return true;
+            }
+
+            return null; // fall through to normal checks
+        });
     }
 }

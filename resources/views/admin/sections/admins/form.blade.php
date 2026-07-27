@@ -103,6 +103,52 @@
                                 </div>
                             @endif
 
+                            @php
+                                $isSelf = isset($admin) && $admin->id === auth()->guard('admin')->id();
+                                $currentRoles = isset($admin) ? $admin->getRoleNames()->all() : [];
+                            @endphp
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="fw-semibold">Roles</label>
+                                    @if($isSelf)
+                                        <div class="text-muted small mb-2">You cannot change your own roles.</div>
+                                        <div>
+                                            @forelse($currentRoles as $roleName)
+                                                <span class="badge bg-secondary me-1">{{ $roleName }}</span>
+                                            @empty
+                                                <span class="text-muted">No roles assigned.</span>
+                                            @endforelse
+                                        </div>
+                                    @else
+                                        <div class="row">
+                                            @forelse($roles as $role)
+                                                <div class="col-md-4 col-sm-6 col-12 mb-2">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                               id="role-{{ $role->id }}"
+                                                               name="roles[]" value="{{ $role->name }}"
+                                                               {{ in_array($role->name, old('roles', $currentRoles)) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="role-{{ $role->id }}">
+                                                            {{ $role->name }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @empty
+                                                <div class="col-12">
+                                                    <span class="text-muted">No roles yet. </span>
+                                                    @if(Route::has('admin.roles.create'))
+                                                        <a href="{{ route('admin.roles.create') }}">Create one</a>.
+                                                    @endif
+                                                </div>
+                                            @endforelse
+                                        </div>
+                                        @error('roles') <span class="text-danger mx-1">{{ $message }}</span> @enderror
+                                        @error('roles.*') <span class="text-danger mx-1">{{ $message }}</span> @enderror
+                                    @endif
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary mt-2">Save changes</button>
                             <a href="{{ route('admin.admins.index') }}" class="btn btn-secondary mt-2 ms-2">Cancel</a>
                         </form>

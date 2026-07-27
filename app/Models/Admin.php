@@ -9,10 +9,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+    /**
+     * Roles & permissions live on the "admin" guard (admins authenticate via
+     * the admin guard, not the default web guard).
+     */
+    protected string $guard_name = 'admin';
 
     /**
      * The attributes that are mass assignable.
