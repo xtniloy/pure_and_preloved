@@ -6,7 +6,7 @@
     <title>@yield('title', 'Pure and Preloved')</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="{{ seo_robots() }}" />
     <meta name="description" content="@yield('meta_description', '')">
     @yield('meta')
 

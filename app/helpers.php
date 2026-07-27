@@ -30,3 +30,20 @@ if (! function_exists('currency')) {
         return currency_symbol() . number_format((float) $amount, $decimals);
     }
 }
+
+if (! function_exists('seo_robots')) {
+    /**
+     * Robots meta content for the current request, driven by SEO_INDEXING
+     * in .env (see config/seo.php). Resolved once per request.
+     */
+    function seo_robots(): string
+    {
+        static $robots = null;
+
+        if ($robots === null) {
+            $robots = config('seo.indexing', false) ? 'index, follow' : 'noindex, nofollow';
+        }
+
+        return $robots;
+    }
+}
