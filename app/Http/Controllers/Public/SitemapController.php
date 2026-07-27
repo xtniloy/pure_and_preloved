@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\Page;
 use App\Models\Product;
+use App\Support\SitemapCache;
 use Illuminate\Support\Facades\Cache;
 
 class SitemapController extends Controller
@@ -13,15 +14,13 @@ class SitemapController extends Controller
     /** How long the generated sitemap XML is cached. */
     private const CACHE_TTL = 3600; // 1 hour
 
-    public const CACHE_KEY = 'sitemap.xml';
-
     /**
      * Dynamic XML sitemap of all public URLs. The rendered XML is cached so
      * repeated crawler hits don't re-run the queries.
      */
     public function index()
     {
-        $xml = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, fn () => $this->render($this->urls()));
+        $xml = Cache::remember(SitemapCache::KEY, self::CACHE_TTL, fn () => $this->render($this->urls()));
 
         return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
     }

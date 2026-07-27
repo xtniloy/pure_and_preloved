@@ -7,6 +7,7 @@ use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Models\BlogTag;
 use App\Support\FooterCache;
+use App\Support\SitemapCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -55,6 +56,7 @@ class BlogPostController extends Controller
         $post->tags()->sync($this->resolveTagIds($request));
 
         FooterCache::clear();
+        SitemapCache::clear();
 
         return redirect()->route('admin.blog-posts.index')->with('success', 'Blog post created successfully.');
     }
@@ -85,6 +87,7 @@ class BlogPostController extends Controller
         $blogPost->tags()->sync($this->resolveTagIds($request));
 
         FooterCache::clear();
+        SitemapCache::clear();
 
         return redirect()->route('admin.blog-posts.index')->with('success', 'Blog post updated successfully.');
     }
@@ -94,6 +97,7 @@ class BlogPostController extends Controller
         $blogPost->delete();
 
         FooterCache::clear();
+        SitemapCache::clear();
 
         return redirect()->route('admin.blog-posts.index')->with('success', 'Blog post deleted successfully.');
     }

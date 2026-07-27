@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Rules\AvailableSlug;
+use App\Support\SitemapCache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -41,6 +42,7 @@ class PageController extends Controller
         $data['status'] = $request->has('status') ? 1 : 0;
 
         Page::create($data);
+        SitemapCache::clear();
 
         return redirect()->route('admin.pages.index')->with('success', 'Page created successfully.');
     }
@@ -68,6 +70,7 @@ class PageController extends Controller
         $data['status'] = $request->has('status') ? 1 : 0;
 
         $page->update($data);
+        SitemapCache::clear();
 
         return redirect()->route('admin.pages.index')->with('success', 'Page updated successfully.');
     }
@@ -75,6 +78,7 @@ class PageController extends Controller
     public function destroy(Page $page)
     {
         $page->delete();
+        SitemapCache::clear();
         return redirect()->route('admin.pages.index')->with('success', 'Page deleted successfully.');
     }
 }
