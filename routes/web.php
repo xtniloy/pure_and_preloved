@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
+// SEO: dynamic sitemap + robots (both contain a dot, so the /{slug} catch-all
+// never matches them, but they are declared up here for clarity).
+Route::get('/sitemap.xml', [\App\Http\Controllers\Public\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\Public\SitemapController::class, 'robots'])->name('robots');
+
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
 // Route::get('/product', [\App\Http\Controllers\Public\HomeController::class, 'product'])->name('product'); // Replaced by dynamic route
 
