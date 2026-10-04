@@ -179,6 +179,19 @@ Order matters in `web.php`:
 - Products carry jewelry attributes (material, carat, condition), `stock`, `is_featured`,
   thumbnail and meta image (assets from the Files module).
 
+### Featured products
+- Admin → **Featured Products** (`FeaturedProductController`) has two tabs:
+  **Featured list** (drag-and-drop / Top / Bottom ordering, autosaved; bulk remove; Live /
+  Inactive / Out-of-stock badges) and **Add products** (search by name/SKU, filter by
+  category incl. children, status, stock; 25/50/100 per page; bulk add).
+- Stored as `products.is_featured` + `products.featured_order` (1..n, no gaps). Always
+  query with `Product::featured()` to get the admin order.
+- Bulk add appends to the end; removal re-sequences the rest. `reorder` must receive the
+  full current featured id list, otherwise it returns 409 (stale page).
+- Each homepage **Featured Products Slider** section has a `limit` setting (1–24,
+  default 10, `Product::featuredLimit()`); inactive products are skipped on the storefront.
+- Every write calls `HomeCache::clear()`. Tests: `tests/Feature/FeaturedProductTest.php`.
+
 ### Cart, wishlist, checkout
 - Cart and wishlist are **session-based** (`Public\HomeController`).
 - `placeOrder` runs in a DB transaction and locks product rows (`lockForUpdate`) to
@@ -243,7 +256,8 @@ php artisan test --filter=AdminRbacTest  # one class / method
 
 - Feature tests use `DatabaseTransactions` against the **configured database** (sqlite
   in-memory is commented out in `phpunit.xml`), so a migrated local DB is required.
-- Existing coverage: RBAC, blog, sitemap/robots, currency helper, sitemap cache.
+- Existing coverage: RBAC, blog, featured products, sitemap/robots, currency helper, sitemap cache.
+- Known issue: 2 `CurrencyHelperTest` cases (config switching) currently fail; unrelated to recent features.
 - Add or update a test with every behavior change.
 
 ---
@@ -285,6 +299,7 @@ Record notable developer-facing changes here (newest first).
 
 | Date | Change |
 |---|---|
+| 2026-10-05 | Featured products redesign: explicit ordering, filterable picker, bulk add/remove, per-section limit |
 | 2026-10-05 | Installed Laravel Boost; created this document |
 | — | Admin RBAC via Spatie Permission (`AdminAccess`) |
 | — | Dynamic sitemap, SEO-aware robots.txt, `SEO_INDEXING` switch |

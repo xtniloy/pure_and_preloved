@@ -28,6 +28,7 @@ class Product extends Model
         'meta_image_id',
         'status',
         'is_featured',
+        'featured_order',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -40,7 +41,28 @@ class Product extends Model
         'stock' => 'integer',
         'status' => 'boolean',
         'is_featured' => 'boolean',
+        'featured_order' => 'integer',
     ];
+
+    /** Upper bound of featured products a homepage slider can show. */
+    public const FEATURED_MAX_SHOWN = 24;
+
+    /** Featured products in their admin-defined order. */
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true)
+            ->orderByRaw('featured_order IS NULL')
+            ->orderBy('featured_order')
+            ->orderBy('id', 'desc');
+    }
+
+    /** How many products a homepage slider section shows (its "limit" setting). */
+    public static function featuredLimit(?array $sectionData): int
+    {
+        $limit = (int) ($sectionData['limit'] ?? 10);
+
+        return max(1, min($limit, self::FEATURED_MAX_SHOWN));
+    }
 
     /**
      * Whether the product currently has stock available.
@@ -62,14 +84,14 @@ class Product extends Model
     {
         return $this->categories->first();
     }
-    
+
     // Helper to get asset objects for the stored image IDs.
     // Memoized in the relations bucket: an accessor would otherwise run a
     // fresh query on EVERY access (product lists should batch this away
     // entirely with preloadAssets()).
     public function getAssetsAttribute()
     {
-        if (!$this->relationLoaded('assets')) {
+        if (! $this->relationLoaded('assets')) {
             $lookup = empty($this->images)
                 ? collect()
                 : Asset::whereIn('id', $this->images)->get()->keyBy('id');

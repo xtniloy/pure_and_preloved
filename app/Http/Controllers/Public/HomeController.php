@@ -44,9 +44,8 @@ class HomeController extends Controller
             $featuredProducts = Cache::remember(HomeCache::FEATURED_KEY, now()->addMinutes(10), function () {
                 $products = Product::with(['categories', 'thumbnailImage'])
                     ->where('status', true)
-                    ->where('is_featured', true)
-                    ->orderBy('created_at', 'desc')
-                    ->take(10)
+                    ->featured()
+                    ->take(Product::FEATURED_MAX_SHOWN)
                     ->get();
 
                 // Resolve the hover images here so they're part of the cached

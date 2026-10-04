@@ -1,5 +1,6 @@
 {{-- Featured products slider (products flagged in Admin > Featured Products) --}}
-@if($featuredProducts->isNotEmpty())
+@php($sectionProducts = $featuredProducts->take(\App\Models\Product::featuredLimit($data ?? [])))
+@if($sectionProducts->isNotEmpty())
     <div class="feature-area">
         <div class="container">
             <div class="row">
@@ -12,7 +13,7 @@
                         </div>
                     </div>
                     <div class="feature-slider-wrapper slider-nav-style-1">
-                        @foreach($featuredProducts as $product)
+                        @foreach($sectionProducts as $product)
                             <div class="slider-single-item">
                                 @include('public.partials.product-card', ['product' => $product])
                             </div>

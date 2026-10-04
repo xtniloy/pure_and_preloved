@@ -243,6 +243,7 @@ class HomePageController extends Controller
             case 'featured_products':
                 return $rules + [
                     'heading' => 'required|string|max:500',
+                    'limit' => 'required|integer|min:1|max:' . \App\Models\Product::FEATURED_MAX_SHOWN,
                 ];
 
             case 'text_columns':
@@ -335,6 +336,7 @@ class HomePageController extends Controller
             case 'featured_products':
                 return [
                     'heading' => $this->cleanHtml($request->input('heading')),
+                    'limit' => (int) $request->input('limit'),
                 ];
 
             case 'text_columns':

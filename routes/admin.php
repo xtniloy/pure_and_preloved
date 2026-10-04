@@ -72,7 +72,9 @@ Route::middleware('auth:admin')->as('admin.')->group(function () {
     // Featured products
     Route::middleware('permission:manage featured products,admin')->group(function () {
         Route::get('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'index'])->name('featured-products.index');
-        Route::put('featured-products/{product}', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'toggle'])->name('featured-products.toggle');
+        Route::post('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'store'])->name('featured-products.store');
+        Route::delete('featured-products', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'destroy'])->name('featured-products.destroy');
+        Route::post('featured-products/reorder', [\App\Http\Controllers\Admin\FeaturedProductController::class, 'reorder'])->name('featured-products.reorder');
     });
 
     // Shipping methods

@@ -81,7 +81,7 @@
                 <a class="nav-link" href="{{route('admin.featured-products.index')}}">
                     <svg class="nav-icon">
                         <use xlink:href="{{ asset('panel/assets/vendors/@coreui/icons/svg/free.svg#cil-star') }}"></use>
-                    </svg><span data-coreui-i18n="file">Feature Products</span>
+                    </svg><span data-coreui-i18n="file">Featured Products</span>
                 </a>
             </li>
         @endif
