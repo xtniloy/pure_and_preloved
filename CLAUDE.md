@@ -1,3 +1,7 @@
+# Project Notes
+
+- Developer documentation lives in `DEVELOPER.md`. Read it before working on the project, and update it (including its Changelog) in the same change whenever you alter architecture, routes, permissions, caching, configuration, or deployment.
+
 <laravel-boost-guidelines>
 === foundation rules ===
 
