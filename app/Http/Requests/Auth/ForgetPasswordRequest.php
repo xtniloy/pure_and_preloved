@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 
 class ForgetPasswordRequest extends FormRequest
 {
@@ -33,5 +32,4 @@ class ForgetPasswordRequest extends FormRequest
             'email.exists' => 'User not exist ',
         ];
     }
-
 }

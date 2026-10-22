@@ -27,21 +27,21 @@ class AdminAccess
     public static function modules(): array
     {
         return [
-            'users'             => ['label' => 'Customers',         'permission' => 'manage users'],
-            'admins'            => ['label' => 'Admins / Staff',    'permission' => 'manage admins'],
-            'roles'             => ['label' => 'Roles & Access',    'permission' => 'manage roles'],
-            'orders'            => ['label' => 'Orders',            'permission' => 'manage orders'],
-            'categories'        => ['label' => 'Categories',        'permission' => 'manage categories'],
-            'products'          => ['label' => 'Products',          'permission' => 'manage products'],
+            'users' => ['label' => 'Customers',         'permission' => 'manage users'],
+            'admins' => ['label' => 'Admins / Staff',    'permission' => 'manage admins'],
+            'roles' => ['label' => 'Roles & Access',    'permission' => 'manage roles'],
+            'orders' => ['label' => 'Orders',            'permission' => 'manage orders'],
+            'categories' => ['label' => 'Categories',        'permission' => 'manage categories'],
+            'products' => ['label' => 'Products',          'permission' => 'manage products'],
             'featured_products' => ['label' => 'Featured Products', 'permission' => 'manage featured products'],
-            'shipping_methods'  => ['label' => 'Shipping Methods',  'permission' => 'manage shipping methods'],
-            'homepage'          => ['label' => 'Homepage & Hero',   'permission' => 'manage homepage'],
-            'footer'            => ['label' => 'Footer',            'permission' => 'manage footer'],
-            'social_links'      => ['label' => 'Social Links',      'permission' => 'manage social links'],
-            'pages'             => ['label' => 'CMS Pages',         'permission' => 'manage pages'],
-            'blog'              => ['label' => 'Blog',              'permission' => 'manage blog'],
-            'contacts'          => ['label' => 'Contact Messages',  'permission' => 'manage contacts'],
-            'settings'          => ['label' => 'Settings',          'permission' => 'manage settings'],
+            'shipping_methods' => ['label' => 'Shipping Methods',  'permission' => 'manage shipping methods'],
+            'homepage' => ['label' => 'Homepage & Hero',   'permission' => 'manage homepage'],
+            'footer' => ['label' => 'Footer',            'permission' => 'manage footer'],
+            'social_links' => ['label' => 'Social Links',      'permission' => 'manage social links'],
+            'pages' => ['label' => 'CMS Pages',         'permission' => 'manage pages'],
+            'blog' => ['label' => 'Blog',              'permission' => 'manage blog'],
+            'contacts' => ['label' => 'Contact Messages',  'permission' => 'manage contacts'],
+            'settings' => ['label' => 'Settings',          'permission' => 'manage settings'],
         ];
     }
 

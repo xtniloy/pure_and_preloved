@@ -62,7 +62,7 @@ class BlogTagController extends Controller
 
         return $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:blog_tags,slug' . ($tag ? ',' . $tag->id : ''),
+            'slug' => 'required|string|max:255|unique:blog_tags,slug'.($tag ? ','.$tag->id : ''),
         ]);
     }
 }

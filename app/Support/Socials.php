@@ -51,7 +51,7 @@ class Socials
                 $platform = $row['platform'] ?? null;
                 $url = trim((string) ($row['url'] ?? ''));
 
-                if ($url === '' || !isset(self::PLATFORMS[$platform])) {
+                if ($url === '' || ! isset(self::PLATFORMS[$platform])) {
                     continue;
                 }
 

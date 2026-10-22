@@ -21,7 +21,7 @@ class BlogFeatureTest extends TestCase
     {
         $admin = Admin::create([
             'name' => 'Blog Test Admin',
-            'email' => 'blog-test-admin-' . uniqid() . '@example.com',
+            'email' => 'blog-test-admin-'.uniqid().'@example.com',
             'password' => 'secret-password',
             'status' => 1,
         ]);
@@ -42,7 +42,7 @@ class BlogFeatureTest extends TestCase
     {
         $user = User::create([
             'name' => 'Blog Test User',
-            'email' => 'blog-test-user-' . uniqid() . '@example.com',
+            'email' => 'blog-test-user-'.uniqid().'@example.com',
             'password' => 'secret-password',
             'status' => 1,
         ]);
@@ -54,8 +54,8 @@ class BlogFeatureTest extends TestCase
     private function makePost(array $overrides = []): BlogPost
     {
         return BlogPost::create(array_merge([
-            'title' => 'Test Post ' . uniqid(),
-            'slug' => 'test-post-' . uniqid(),
+            'title' => 'Test Post '.uniqid(),
+            'slug' => 'test-post-'.uniqid(),
             'body' => '<p>Test body</p>',
             'status' => BlogPost::STATUS_PUBLISHED,
             'published_at' => now()->subHour(),
@@ -89,8 +89,8 @@ class BlogFeatureTest extends TestCase
 
     public function test_blog_index_filters_by_category_and_tag(): void
     {
-        $category = BlogCategory::create(['name' => 'Filter Cat', 'slug' => 'filter-cat-' . uniqid(), 'status' => true]);
-        $tag = BlogTag::create(['name' => 'Filter Tag', 'slug' => 'filter-tag-' . uniqid()]);
+        $category = BlogCategory::create(['name' => 'Filter Cat', 'slug' => 'filter-cat-'.uniqid(), 'status' => true]);
+        $tag = BlogTag::create(['name' => 'Filter Tag', 'slug' => 'filter-tag-'.uniqid()]);
 
         // Excerpts only render in the main list — titles also appear in the
         // sidebar "Recent Posts" widget, which ignores the active filter.
@@ -145,7 +145,7 @@ class BlogFeatureTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('blog.comments.store', $post->slug), ['body' => 'My first comment'])
-            ->assertRedirect(route('blog.show', $post->slug) . '#comments');
+            ->assertRedirect(route('blog.show', $post->slug).'#comments');
 
         $this->assertDatabaseHas('blog_comments', [
             'blog_post_id' => $post->id,
@@ -201,9 +201,9 @@ class BlogFeatureTest extends TestCase
     public function test_admin_can_create_a_post_with_new_tags(): void
     {
         $admin = $this->makeAdmin();
-        $category = BlogCategory::create(['name' => 'Store Cat', 'slug' => 'store-cat-' . uniqid(), 'status' => true]);
+        $category = BlogCategory::create(['name' => 'Store Cat', 'slug' => 'store-cat-'.uniqid(), 'status' => true]);
 
-        $title = 'Created Via Admin ' . uniqid();
+        $title = 'Created Via Admin '.uniqid();
 
         $response = $this->actingAs($admin, 'admin')->post(route('admin.blog-posts.store'), [
             'title' => $title,

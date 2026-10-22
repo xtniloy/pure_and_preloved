@@ -26,11 +26,11 @@ class OrderStatusUpdateEmail extends Mailable
         $ref = $this->order->reference;
 
         $subject = match ($this->order->status) {
-            'shipped'   => 'Your order ' . $ref . ' has shipped 【' . $app . '】',
-            'completed' => 'Your order ' . $ref . ' is complete 【' . $app . '】',
-            'cancelled' => 'Your order ' . $ref . ' has been cancelled 【' . $app . '】',
-            'paid'      => 'Payment received for order ' . $ref . ' 【' . $app . '】',
-            default     => 'Update on your order ' . $ref . ' 【' . $app . '】',
+            'shipped' => 'Your order '.$ref.' has shipped 【'.$app.'】',
+            'completed' => 'Your order '.$ref.' is complete 【'.$app.'】',
+            'cancelled' => 'Your order '.$ref.' has been cancelled 【'.$app.'】',
+            'paid' => 'Payment received for order '.$ref.' 【'.$app.'】',
+            default => 'Update on your order '.$ref.' 【'.$app.'】',
         };
 
         return new Envelope(subject: $subject);

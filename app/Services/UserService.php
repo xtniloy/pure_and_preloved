@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class UserService
 {
     protected UserRepository $userRepository;
+
     protected UserAuthService $userAuthService;
 
     public function __construct(UserRepository $userRepository, UserAuthService $userAuthService)
@@ -38,7 +39,7 @@ class UserService
 
         $userAuth = $this->userAuthService;
         $userAuth->setPassword($user, $data['password']);
-//        $userAuth->sendEmailVerification($user);
+        //        $userAuth->sendEmailVerification($user);
         $this->sendEmailVerificationEmail($user);
 
         return $user;
@@ -50,7 +51,7 @@ class UserService
         $userAuth->sendEmailVerification($user);
     }
 
-    public function sendSetPasswordEmail(User $user, string $use_for = "new_registration"): void
+    public function sendSetPasswordEmail(User $user, string $use_for = 'new_registration'): void
     {
         $userAuth = $this->userAuthService;
         $userAuth->sendConfirmRegistrationEmail($user, $use_for);
@@ -59,6 +60,7 @@ class UserService
     public function updateUser(UserUpdateRequest $request, User $user): User
     {
         $data = $request->validated();
+
         return $this->userRepository->updateUser($data, $user);
     }
 
@@ -77,6 +79,6 @@ class UserService
     {
         $result = $this->userRepository->verification_toggle($user);
 
-        return $result ? 'User verification success':'User verification revoke';
+        return $result ? 'User verification success' : 'User verification revoke';
     }
 }

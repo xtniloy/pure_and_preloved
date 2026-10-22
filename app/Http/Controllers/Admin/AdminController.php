@@ -15,9 +15,7 @@ use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    public function __construct(protected AdminService $adminService)
-    {
-    }
+    public function __construct(protected AdminService $adminService) {}
 
     public function index(Request $request): View
     {
@@ -26,8 +24,8 @@ class AdminController extends Controller
         if ($request->filled('q')) {
             $q = strtolower($request->q);
             $admins->where(function ($query) use ($q) {
-                $query->whereRaw('LOWER(name) LIKE ?', ['%' . $q . '%'])
-                      ->orWhereRaw('LOWER(email) LIKE ?', ['%' . $q . '%']);
+                $query->whereRaw('LOWER(name) LIKE ?', ['%'.$q.'%'])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ['%'.$q.'%']);
             });
         }
 
@@ -36,7 +34,7 @@ class AdminController extends Controller
         }
 
         $admins = $admins->paginate(10)->appends([
-            'q'      => $request->q ?? '',
+            'q' => $request->q ?? '',
             'status' => $request->status,
         ]);
 
@@ -60,6 +58,7 @@ class AdminController extends Controller
                 ->with('success', 'Admin created successfully. An activation email has been sent.');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+
             return redirect()
                 ->route('admin.admins.create')
                 ->with('error', $e->getMessage());
@@ -101,6 +100,7 @@ class AdminController extends Controller
                 ->with('success', 'Admin updated successfully.');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+
             return redirect()
                 ->route('admin.admins.edit', $admin)
                 ->with('error', $e->getMessage());
@@ -123,6 +123,7 @@ class AdminController extends Controller
                 ->with('success', 'Admin deleted successfully.');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+
             return redirect()
                 ->route('admin.admins.index')
                 ->with('error', $e->getMessage());
@@ -155,6 +156,7 @@ class AdminController extends Controller
                 ->with('success', 'Activation email resent successfully.');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+
             return redirect()
                 ->route('admin.admins.edit', $admin)
                 ->with('error', $e->getMessage());

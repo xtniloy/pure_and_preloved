@@ -23,8 +23,8 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' =>['required','email:rfc,dns,filter', 'unique:users,email,'. $this->user->id],
-            'phone' => ['required','numeric', 'digits_between:9,20'],
+            'email' => ['required', 'email:rfc,dns,filter', 'unique:users,email,'.$this->user->id],
+            'phone' => ['required', 'numeric', 'digits_between:9,20'],
             'status' => 'required|numeric',
         ];
     }

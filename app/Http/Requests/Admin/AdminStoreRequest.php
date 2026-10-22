@@ -14,9 +14,9 @@ class AdminStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'    => ['required', 'string', 'max:255'],
-            'email'   => ['required', 'email:rfc,dns,filter', 'unique:admins,email'],
-            'roles'   => ['array'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email:rfc,dns,filter', 'unique:admins,email'],
+            'roles' => ['array'],
             'roles.*' => ['string', 'exists:roles,name'],
         ];
     }

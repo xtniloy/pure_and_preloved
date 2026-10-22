@@ -6,23 +6,23 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-//class User extends Authenticatable implements MustVerifyEmail
+// class User extends Authenticatable implements MustVerifyEmail
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    use HasApiTokens, HasFactory, HasUuids, Notifiable;
 
     public function uniqueIds(): array
     {
         return ['uuid'];
     }
 
-    public function getRouteKeyName():string
+    public function getRouteKeyName(): string
     {
         return 'uuid';
     }
@@ -65,17 +65,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-
-    public function verifiedBy():BelongsTo
+    public function verifiedBy(): BelongsTo
     {
-        return $this->belongsTo(Admin::class,'verified_by','id');
+        return $this->belongsTo(Admin::class, 'verified_by', 'id');
     }
-
 
     // Define an accessor for the 'is_verified' attribute
     public function getIsVerifiedAttribute(): bool
     {
-        return !empty($this->verified_by);
+        return ! empty($this->verified_by);
     }
 
     /**
@@ -92,7 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
         ]);
     }
 
-    public function userAccessToken():HasOne
+    public function userAccessToken(): HasOne
     {
         return $this->hasOne(UserAccessToken::class);
     }
@@ -101,5 +99,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Order::class);
     }
-
 }

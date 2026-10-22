@@ -6,24 +6,25 @@ use App\Exceptions\InsufficientStockException;
 use App\Http\Controllers\Controller;
 use App\Jobs\OrderConfirmationEmailJob;
 use App\Models\HomeSection;
-use App\Models\Product;
-use App\Models\Setting;
-use Modules\Files\Models\Asset;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\Setting;
 use App\Notifications\NewOrderPlaced;
 use App\Services\AdminNotificationService;
 use App\Support\HomeCache;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use Modules\Files\Models\Asset;
 
 class HomeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         // The homepage payload is cached; admin edits clear it via HomeCache::clear().
         $sections = Cache::remember(HomeCache::SECTIONS_KEY, now()->addHours(6), function () {
             $sections = HomeSection::query()
@@ -65,7 +66,7 @@ class HomeController extends Controller
             ]);
 
             $metaImageUrl = null;
-            if (!empty($settings['home_meta_image_id'])) {
+            if (! empty($settings['home_meta_image_id'])) {
                 $metaImageUrl = Asset::find($settings['home_meta_image_id'])?->public_url;
             }
 
@@ -80,7 +81,8 @@ class HomeController extends Controller
         return view('public.home.index', compact('sections', 'featuredProducts', 'seo'));
     }
 
-    public function cart(Request $request){
+    public function cart(Request $request)
+    {
         $cart = $request->session()->get('cart', []);
 
         if (empty($cart)) {
@@ -206,7 +208,7 @@ class HomeController extends Controller
         } else {
             $cart = $request->session()->get('cart', []);
 
-            if (!empty($cart)) {
+            if (! empty($cart)) {
                 $productIds = array_keys($cart);
                 $products = Product::whereIn('id', $productIds)->get();
 
@@ -254,12 +256,12 @@ class HomeController extends Controller
 
         $product = Product::where('id', $data['product_id'])->where('status', true)->first();
 
-        if (!$product) {
+        if (! $product) {
             return back()->with('error', 'This product is not available.');
         }
 
-        if (!$product->in_stock) {
-            return back()->with('error', '"' . $product->name . '" is out of stock.');
+        if (! $product->in_stock) {
+            return back()->with('error', '"'.$product->name.'" is out of stock.');
         }
 
         $quantity = isset($data['quantity']) ? (int) $data['quantity'] : 1;
@@ -274,7 +276,7 @@ class HomeController extends Controller
             $request->session()->put('cart', $cart);
 
             return redirect()->route('cart.index')
-                ->with('error', 'Only ' . $product->stock . ' of "' . $product->name . '" are available; your cart was set to the maximum.');
+                ->with('error', 'Only '.$product->stock.' of "'.$product->name.'" are available; your cart was set to the maximum.');
         }
 
         $cart[$product->id]['quantity'] = $desired;
@@ -320,7 +322,7 @@ class HomeController extends Controller
         $cart = $request->session()->get('cart', []);
         $messages = [];
 
-        if (!empty($data['quantities'])) {
+        if (! empty($data['quantities'])) {
             $productIds = array_map('intval', array_keys($data['quantities']));
             $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
 
@@ -330,15 +332,16 @@ class HomeController extends Controller
                 $product = $products[$productId] ?? null;
 
                 // Drop unknown products and zero/empty quantities from the cart.
-                if (!$product || $quantity <= 0) {
+                if (! $product || $quantity <= 0) {
                     unset($cart[$productId]);
+
                     continue;
                 }
 
                 // Clamp to available stock.
                 if ($quantity > $product->stock) {
                     $quantity = $product->stock;
-                    $messages[] = 'Only ' . $product->stock . ' of "' . $product->name . '" available.';
+                    $messages[] = 'Only '.$product->stock.' of "'.$product->name.'" available.';
                 }
 
                 if ($quantity <= 0) {
@@ -353,7 +356,7 @@ class HomeController extends Controller
 
         $redirect = redirect()->route('cart.index');
 
-        if (!empty($messages)) {
+        if (! empty($messages)) {
             $redirect->with('error', implode(' ', array_unique($messages)));
         }
 
@@ -401,7 +404,7 @@ class HomeController extends Controller
         $desired = [];
         $itemsInput = $request->input('items', []);
 
-        if (!empty($itemsInput) && is_array($itemsInput)) {
+        if (! empty($itemsInput) && is_array($itemsInput)) {
             foreach ($itemsInput as $productId => $quantity) {
                 $productId = (int) $productId;
                 $quantity = (int) $quantity;
@@ -444,15 +447,17 @@ class HomeController extends Controller
                 foreach ($desired as $productId => $quantity) {
                     $product = $products[$productId] ?? null;
 
-                    if (!$product) {
+                    if (! $product) {
                         $errors[] = 'A product in your cart is no longer available.';
+
                         continue;
                     }
 
                     if ($product->stock < $quantity) {
                         $errors[] = $product->stock > 0
-                            ? 'Only ' . $product->stock . ' left in stock for "' . $product->name . '".'
-                            : '"' . $product->name . '" is out of stock.';
+                            ? 'Only '.$product->stock.' left in stock for "'.$product->name.'".'
+                            : '"'.$product->name.'" is out of stock.';
+
                         continue;
                     }
 
@@ -469,7 +474,7 @@ class HomeController extends Controller
                     ];
                 }
 
-                if (!empty($errors)) {
+                if (! empty($errors)) {
                     // Rolls back the transaction.
                     throw new InsufficientStockException(implode(' ', array_unique($errors)));
                 }
@@ -479,7 +484,7 @@ class HomeController extends Controller
 
                 $order = Order::create([
                     'user_id' => $user ? $user->id : null,
-                    'reference' => 'ORD-' . strtoupper(Str::random(10)),
+                    'reference' => 'ORD-'.strtoupper(Str::random(10)),
                     'subtotal' => $subtotal,
                     'shipping_method' => $shippingMethod->name,
                     'shipping_charge' => $shippingCharge,
@@ -524,14 +529,14 @@ class HomeController extends Controller
         try {
             OrderConfirmationEmailJob::dispatch($order);
         } catch (\Throwable $e) {
-            Log::error('Order confirmation email dispatch failed: ' . $e->getMessage());
+            Log::error('Order confirmation email dispatch failed: '.$e->getMessage());
         }
 
         // Notify admins of the new order (email + web, per their preferences).
         try {
             app(AdminNotificationService::class)->notifyAdmins(new NewOrderPlaced($order));
         } catch (\Throwable $e) {
-            Log::error('New order admin notification failed: ' . $e->getMessage());
+            Log::error('New order admin notification failed: '.$e->getMessage());
         }
 
         return redirect()->route('order.success', $order->reference);

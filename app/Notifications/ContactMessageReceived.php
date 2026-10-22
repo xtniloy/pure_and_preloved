@@ -8,9 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class ContactMessageReceived extends AdminNotification
 {
-    public function __construct(public ContactMessage $contactMessage)
-    {
-    }
+    public function __construct(public ContactMessage $contactMessage) {}
 
     public function notificationType(): string
     {
@@ -20,16 +18,16 @@ class ContactMessageReceived extends AdminNotification
     public function toMail(object $notifiable): MailMessage
     {
         $mail = (new MailMessage)
-            ->subject('New contact message from ' . $this->contactMessage->name . ' 【' . config('app.name') . '】')
-            ->greeting('Hello ' . ($notifiable->name ?? 'Admin'))
+            ->subject('New contact message from '.$this->contactMessage->name.' 【'.config('app.name').'】')
+            ->greeting('Hello '.($notifiable->name ?? 'Admin'))
             ->line('You have received a new contact message via the website.')
-            ->line('From: ' . $this->contactMessage->name . ' <' . $this->contactMessage->email . '>');
+            ->line('From: '.$this->contactMessage->name.' <'.$this->contactMessage->email.'>');
 
         if ($this->contactMessage->phone) {
-            $mail->line('Phone: ' . $this->contactMessage->phone);
+            $mail->line('Phone: '.$this->contactMessage->phone);
         }
 
-        $mail->line('Subject: ' . ($this->contactMessage->subject ?: '—'))
+        $mail->line('Subject: '.($this->contactMessage->subject ?: '—'))
             ->line('Message:')
             ->line($this->contactMessage->message)
             ->action('View in admin panel', route('admin.contact-messages.show', $this->contactMessage->id));
@@ -49,7 +47,7 @@ class ContactMessageReceived extends AdminNotification
             'icon' => 'cil-envelope-letter',
             'color' => 'info',
             'title' => 'New contact message',
-            'message' => $this->contactMessage->name . ' sent a message',
+            'message' => $this->contactMessage->name.' sent a message',
             // Relative path: queue workers don't know the request root, so an
             // absolute URL here would be built from APP_URL and can be wrong.
             'url' => route('admin.contact-messages.show', $this->contactMessage->id, false),

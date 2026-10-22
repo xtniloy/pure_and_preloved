@@ -15,4 +15,3 @@ return new class extends Migration
         DB::statement('ALTER TABLE orders MODIFY user_id BIGINT UNSIGNED NOT NULL;');
     }
 };
-

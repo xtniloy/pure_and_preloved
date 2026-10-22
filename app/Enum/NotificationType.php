@@ -5,7 +5,9 @@ namespace App\Enum;
 class NotificationType
 {
     public const CONTACT = 'contact';
+
     public const ORDER = 'order';
+
     public const BLOG_COMMENT = 'blog_comment';
 
     /**

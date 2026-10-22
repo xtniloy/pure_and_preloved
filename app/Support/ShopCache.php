@@ -14,13 +14,14 @@ use Illuminate\Support\Facades\Cache;
 class ShopCache
 {
     public const KEY_PREFIX = 'shop:filters:';
+
     public const GENDERS = ['women', 'man', 'unisex'];
 
     public static function filters(string $gender): array
     {
         $gender = in_array($gender, self::GENDERS, true) ? $gender : 'women';
 
-        return Cache::remember(self::KEY_PREFIX . $gender, now()->addHours(6), function () use ($gender) {
+        return Cache::remember(self::KEY_PREFIX.$gender, now()->addHours(6), function () use ($gender) {
             $materials = Product::where('status', true)->whereNotNull('material')->distinct()->pluck('material');
             $carats = Product::where('status', true)->whereNotNull('carat')->distinct()->pluck('carat');
 
@@ -45,7 +46,7 @@ class ShopCache
     public static function clear(): void
     {
         foreach (self::GENDERS as $gender) {
-            Cache::forget(self::KEY_PREFIX . $gender);
+            Cache::forget(self::KEY_PREFIX.$gender);
         }
     }
 }

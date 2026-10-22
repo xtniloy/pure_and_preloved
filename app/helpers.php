@@ -14,7 +14,7 @@ if (! function_exists('currency_symbol')) {
 
         if ($symbol === null) {
             $code = config('currency.code', 'GBP');
-            $symbol = config("currency.symbols.$code", $code . ' ');
+            $symbol = config("currency.symbols.$code", $code.' ');
         }
 
         return $symbol;
@@ -27,7 +27,7 @@ if (! function_exists('currency')) {
      */
     function currency($amount, int $decimals = 2): string
     {
-        return currency_symbol() . number_format((float) $amount, $decimals);
+        return currency_symbol().number_format((float) $amount, $decimals);
     }
 }
 

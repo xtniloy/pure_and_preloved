@@ -16,30 +16,30 @@ class ProductController extends Controller
 
         // Filter by Gender
         $activeGender = $request->get('gender', 'women');
-        $query->whereHas('categories', function($q) use ($activeGender) {
+        $query->whereHas('categories', function ($q) use ($activeGender) {
             $q->where('gender', $activeGender);
         });
 
         // Filter by Search (grouped so the OR terms can't escape the
         // status/gender constraints above)
-        if ($request->has('q') && !empty($request->q)) {
+        if ($request->has('q') && ! empty($request->q)) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
-                $sub->where('name', 'like', '%' . $q . '%')
-                    ->orWhere('sku', 'like', '%' . $q . '%')
-                    ->orWhere('description', 'like', '%' . $q . '%');
+                $sub->where('name', 'like', '%'.$q.'%')
+                    ->orWhere('sku', 'like', '%'.$q.'%')
+                    ->orWhere('description', 'like', '%'.$q.'%');
             });
         }
 
         // Filter by Category
-        if ($request->has('category') && !empty($request->category)) {
-            $query->whereHas('categories', function($q) use ($request) {
+        if ($request->has('category') && ! empty($request->category)) {
+            $query->whereHas('categories', function ($q) use ($request) {
                 $q->where('slug', $request->category);
             });
         }
 
         // Filter by Condition
-        if ($request->has('condition') && !empty($request->condition)) {
+        if ($request->has('condition') && ! empty($request->condition)) {
             $query->where('condition', $request->condition);
         }
 
@@ -49,11 +49,11 @@ class ProductController extends Controller
         }
 
         // Filter by Tags (Material, Carat)
-        if ($request->has('tag') && !empty($request->tag)) {
+        if ($request->has('tag') && ! empty($request->tag)) {
             $tag = $request->tag;
-            $query->where(function($q) use ($tag) {
+            $query->where(function ($q) use ($tag) {
                 $q->where('material', $tag)
-                  ->orWhere('carat', $tag);
+                    ->orWhere('carat', $tag);
             });
         }
 
@@ -105,16 +105,16 @@ class ProductController extends Controller
 
         // Updated query to use relationship
         $product = Product::where('slug', $productSlug)
-            ->whereHas('categories', function($q) use ($category) {
+            ->whereHas('categories', function ($q) use ($category) {
                 $q->where('categories.id', $category->id);
             })
             ->where('status', true)
             ->firstOrFail();
 
         // Get related products (share at least one category with the current product, ideally the current context category)
-        $relatedProducts = Product::whereHas('categories', function($q) use ($category) {
-                $q->where('categories.id', $category->id);
-            })
+        $relatedProducts = Product::whereHas('categories', function ($q) use ($category) {
+            $q->where('categories.id', $category->id);
+        })
             ->where('id', '!=', $product->id)
             ->where('status', true)
             ->take(12)

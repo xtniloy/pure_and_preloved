@@ -28,7 +28,7 @@ class UserRegistrationRequest extends FormRequest
                 'required',
                 'email:rfc,dns,filter',
                 'regex:/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/',
-//                'unique:users,email'
+                //                'unique:users,email'
                 Rule::unique('users', 'email')->where(function ($query) {
                     return $query->whereNotNull('email_verified_at');
                 }),
@@ -52,7 +52,7 @@ class UserRegistrationRequest extends FormRequest
     {
         return [
             'password.regex' => 'Password length should at lest 6 character. It should contain at least one uppercase, one lowercase and one number',
-            'confirm_password' => "The passwords provided do not match each other",
+            'confirm_password' => 'The passwords provided do not match each other',
             'phone.regex' => 'The phone number must be a valid Bangladeshi number (e.g. +8801XXXXXXXXX or 01XXXXXXXXX)',
         ];
     }

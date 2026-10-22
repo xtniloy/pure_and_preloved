@@ -32,8 +32,8 @@ class RoleController extends Controller
     public function create(): View
     {
         return view('admin.sections.roles.form', [
-            'role'     => null,
-            'modules'  => AdminAccess::modules(),
+            'role' => null,
+            'modules' => AdminAccess::modules(),
             'assigned' => [],
         ]);
     }
@@ -56,8 +56,8 @@ class RoleController extends Controller
         }
 
         return view('admin.sections.roles.form', [
-            'role'     => $role,
-            'modules'  => AdminAccess::modules(),
+            'role' => $role,
+            'modules' => AdminAccess::modules(),
             'assigned' => $role->permissions->pluck('name')->all(),
         ]);
     }
@@ -103,7 +103,7 @@ class RoleController extends Controller
                     ->where(fn ($q) => $q->where('guard_name', AdminAccess::GUARD))
                     ->ignore($role?->id),
             ],
-            'permissions'   => ['array'],
+            'permissions' => ['array'],
             'permissions.*' => ['string'],
         ]);
     }

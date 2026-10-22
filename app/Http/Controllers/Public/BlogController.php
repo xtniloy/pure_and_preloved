@@ -36,9 +36,9 @@ class BlogController extends Controller
 
         if ($search = trim((string) $request->input('q'))) {
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('excerpt', 'like', '%' . $search . '%')
-                    ->orWhere('body', 'like', '%' . $search . '%');
+                $q->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('excerpt', 'like', '%'.$search.'%')
+                    ->orWhere('body', 'like', '%'.$search.'%');
             });
         }
 
@@ -87,7 +87,7 @@ class BlogController extends Controller
     {
         $post = BlogPost::published()->where('slug', $slug)->firstOrFail();
 
-        if (!$post->allow_comments) {
+        if (! $post->allow_comments) {
             return redirect()->route('blog.show', $post->slug)
                 ->with('comment_error', 'Comments are closed for this post.');
         }
@@ -100,13 +100,13 @@ class BlogController extends Controller
         // Replies stay one level deep: replying to a reply attaches to its
         // top-level parent.
         $parentId = null;
-        if (!empty($data['parent_id'])) {
+        if (! empty($data['parent_id'])) {
             $target = BlogComment::visible()
                 ->where('blog_post_id', $post->id)
                 ->find($data['parent_id']);
 
-            if (!$target) {
-                return redirect()->to(route('blog.show', $post->slug) . '#comments')
+            if (! $target) {
+                return redirect()->to(route('blog.show', $post->slug).'#comments')
                     ->with('comment_error', 'The comment you are replying to no longer exists.');
             }
 
@@ -125,10 +125,10 @@ class BlogController extends Controller
         try {
             $notifier->notifyAdmins(new BlogCommentReceived($comment));
         } catch (\Throwable $e) {
-            Log::error('Blog comment notification failed: ' . $e->getMessage());
+            Log::error('Blog comment notification failed: '.$e->getMessage());
         }
 
-        return redirect()->to(route('blog.show', $post->slug) . '#comments')
+        return redirect()->to(route('blog.show', $post->slug).'#comments')
             ->with('comment_success', 'Your comment has been posted.');
     }
 

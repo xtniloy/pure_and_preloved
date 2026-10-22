@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Cache;
 class HomeCache
 {
     public const SECTIONS_KEY = 'home:sections';
+
     public const FEATURED_KEY = 'home:featured_products';
+
     public const SEO_KEY = 'home:seo';
 
     public static function clear(): void

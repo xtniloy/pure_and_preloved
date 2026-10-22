@@ -22,38 +22,42 @@ class Asset extends Model
         'group',
         'status',
         'size',
-        'thumbnail_path'
+        'thumbnail_path',
     ];
 
     public function getUrlAttribute(): ?string
     {
-        if (!$this->stored_name) {
+        if (! $this->stored_name) {
             return null;
         }
+
         return route('admin.file.uploaded_asset', ['stored_name' => $this->stored_name]);
     }
 
     public function getThumbnailUrlAttribute(): ?string
     {
-        if (!$this->thumbnail_path) {
+        if (! $this->thumbnail_path) {
             return null;
         }
+
         return route('admin.file.thumbnail', ['fileId' => $this->id]);
     }
 
     public function getPublicUrlAttribute(): ?string
     {
-        if (!$this->stored_name) {
-            return "#";
+        if (! $this->stored_name) {
+            return '#';
         }
+
         return asset('storage'.$this->path);
     }
 
     public function getPublicThumbnailUrlAttribute(): ?string
     {
-        if (!$this->thumbnail_path) {
-            return "#";
+        if (! $this->thumbnail_path) {
+            return '#';
         }
+
         return route('admin.file.thumbnail', ['fileId' => $this->id]);
     }
 }

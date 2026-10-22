@@ -17,7 +17,7 @@ class ContactMessageController extends Controller
 
     public function show(ContactMessage $contactMessage)
     {
-        if (!$contactMessage->is_read) {
+        if (! $contactMessage->is_read) {
             $contactMessage->update(['is_read' => true]);
         }
 

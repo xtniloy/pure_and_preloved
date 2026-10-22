@@ -23,7 +23,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $status = $request->query('status');
-        if (!in_array($status, self::STATUS_FILTERS, true)) {
+        if (! in_array($status, self::STATUS_FILTERS, true)) {
             $status = null;
         }
 

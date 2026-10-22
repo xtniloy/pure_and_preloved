@@ -31,7 +31,7 @@ class AdminRbacTest extends TestCase
     {
         $admin = Admin::create([
             'name' => 'RBAC Admin',
-            'email' => 'rbac-' . uniqid() . '@example.com',
+            'email' => 'rbac-'.uniqid().'@example.com',
             'password' => 'secret-password',
             'status' => 1,
         ]);
@@ -52,7 +52,7 @@ class AdminRbacTest extends TestCase
     private function adminWithPermissions(array $permissions): Admin
     {
         $admin = $this->makeAdmin();
-        $role = Role::create(['name' => 'role-' . uniqid(), 'guard_name' => AdminAccess::GUARD]);
+        $role = Role::create(['name' => 'role-'.uniqid(), 'guard_name' => AdminAccess::GUARD]);
         $role->syncPermissions($permissions);
         $admin->assignRole($role);
         app(PermissionRegistrar::class)->forgetCachedPermissions();
@@ -72,7 +72,7 @@ class AdminRbacTest extends TestCase
     public function test_role_and_admin_forms_render(): void
     {
         $admin = $this->superAdmin();
-        $role = Role::create(['name' => 'Renderable ' . uniqid(), 'guard_name' => AdminAccess::GUARD]);
+        $role = Role::create(['name' => 'Renderable '.uniqid(), 'guard_name' => AdminAccess::GUARD]);
 
         $this->actingAs($admin, 'admin')->get(route('admin.roles.create'))->assertOk();
         $this->actingAs($admin, 'admin')->get(route('admin.roles.edit', $role))->assertOk();
@@ -126,7 +126,7 @@ class AdminRbacTest extends TestCase
     public function test_super_admin_can_create_a_role_with_permissions(): void
     {
         $admin = $this->superAdmin();
-        $name = 'Order Staff ' . uniqid();
+        $name = 'Order Staff '.uniqid();
 
         $this->actingAs($admin, 'admin')
             ->post(route('admin.roles.store'), [
@@ -146,7 +146,7 @@ class AdminRbacTest extends TestCase
     public function test_role_store_rejects_unknown_permissions(): void
     {
         $admin = $this->superAdmin();
-        $name = 'Sneaky ' . uniqid();
+        $name = 'Sneaky '.uniqid();
 
         $this->actingAs($admin, 'admin')
             ->post(route('admin.roles.store'), [

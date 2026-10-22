@@ -14,10 +14,10 @@ class AdminUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'    => ['required', 'string', 'max:255'],
-            'email'   => ['required', 'email:rfc,dns,filter', 'unique:admins,email,' . $this->route('admin')->id],
-            'status'  => ['required', 'numeric', 'in:0,1'],
-            'roles'   => ['array'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email:rfc,dns,filter', 'unique:admins,email,'.$this->route('admin')->id],
+            'status' => ['required', 'numeric', 'in:0,1'],
+            'roles' => ['array'],
             'roles.*' => ['string', 'exists:roles,name'],
         ];
     }

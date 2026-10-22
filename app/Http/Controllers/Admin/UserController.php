@@ -14,7 +14,8 @@ class UserController extends Controller
 {
     protected $userService;
 
-    public function __construct(UserService $userService){
+    public function __construct(UserService $userService)
+    {
         $this->userService = $userService;
     }
 
@@ -23,12 +24,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::orderBy('id','desc');
+        $users = User::orderBy('id', 'desc');
 
         if (isset($request->q)) {
             $q = strtolower($request->q);
             $users->where(function ($query) use ($q) {
-                $query->whereRaw('LOWER(title) LIKE ?', '%' . $q . '%');
+                $query->whereRaw('LOWER(title) LIKE ?', '%'.$q.'%');
             });
         }
 
@@ -39,12 +40,11 @@ class UserController extends Controller
 
         $users = $users->paginate(10)
             ->appends([
-                'q' => strtolower($request->q??""),
+                'q' => strtolower($request->q ?? ''),
                 'status' => $request->status,
             ]);
 
-
-        return view('admin.sections.users.index',compact('users'));
+        return view('admin.sections.users.index', compact('users'));
     }
 
     /**
@@ -66,9 +66,10 @@ class UserController extends Controller
 
             return redirect()->route('admin.users.edit', ['user' => $user])->with('success', 'User created successfully');
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('admin.users.create')->with('error',$e->getMessage());
+
+            return redirect()->route('admin.users.create')->with('error', $e->getMessage());
         }
     }
 
@@ -85,7 +86,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.sections.users.form',compact('user'));
+        return view('admin.sections.users.form', compact('user'));
     }
 
     /**
@@ -94,41 +95,43 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
         try {
-            $user = $this->userService->updateUser($request,$user);
+            $user = $this->userService->updateUser($request, $user);
 
             return redirect()->route('admin.users.edit', ['user' => $user])->with('success', 'User updated successfully');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
 
-            return redirect()->route('admin.users.edit', ['user' => $user])->with('error',$e->getMessage());
+            return redirect()->route('admin.users.edit', ['user' => $user])->with('error', $e->getMessage());
         }
     }
 
     public function resend_email(User $user)
     {
-        if ($user->email_verified_at == null){
+        if ($user->email_verified_at == null) {
 
             try {
 
                 $this->userService->sendSetPasswordEmail($user);
 
-                return  redirect()->route('admin.users.edit',['user'=>$user])->with('success','Email resend successful');
+                return redirect()->route('admin.users.edit', ['user' => $user])->with('success', 'Email resend successful');
 
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e->getMessage());
-                return redirect()->route('admin.users.edit')->with('error',$e->getMessage());
+
+                return redirect()->route('admin.users.edit')->with('error', $e->getMessage());
             }
         }
 
-        return redirect()->route('admin.users.edit',['user'=>$user])->with('error','This user already verified there email');
+        return redirect()->route('admin.users.edit', ['user' => $user])->with('error', 'This user already verified there email');
     }
 
-    public function verification_toggle(User $user){
+    public function verification_toggle(User $user)
+    {
 
         $message = $this->userService->verification_toggle($user);
 
-        return redirect()->route('admin.users.edit',['user'=>$user])
-            ->with('info',$message);
+        return redirect()->route('admin.users.edit', ['user' => $user])
+            ->with('info', $message);
     }
 
     /**

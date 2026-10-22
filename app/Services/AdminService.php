@@ -11,7 +11,7 @@ class AdminService
     public function storeAdmin(array $data, array $roles = []): Admin
     {
         $admin = Admin::create([
-            'name'  => $data['name'],
+            'name' => $data['name'],
             'email' => $data['email'],
         ]);
 
@@ -30,8 +30,8 @@ class AdminService
     public function updateAdmin(array $data, Admin $admin, ?array $roles = null): Admin
     {
         $admin->update([
-            'name'   => $data['name'],
-            'email'  => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'status' => $data['status'] ?? $admin->status,
         ]);
 
@@ -51,14 +51,14 @@ class AdminService
     public function sendSetPasswordEmail(Admin $admin, string $use_for = 'new_registration'): void
     {
         $token = AdminAccessTokenService::generate($admin->email, 2);
-        $link  = route('admin.set_password', ['token' => $token->token]);
+        $link = route('admin.set_password', ['token' => $token->token]);
 
         ConfirmRegistrationEmailJob::dispatch(
             email: $admin->email,
             link: $link,
             subject: $use_for === 'forget_password'
-                ? 'Reset your admin password【' . config('app.name') . '】'
-                : 'Activate your admin account【' . config('app.name') . '】',
+                ? 'Reset your admin password【'.config('app.name').'】'
+                : 'Activate your admin account【'.config('app.name').'】',
             use_for: $use_for,
         );
     }
@@ -68,7 +68,7 @@ class AdminService
         // Set directly to bypass $fillable (email_verified_at) and avoid double-hashing
         // (password cast is 'hashed', so we pass the plain password)
         $admin->password = $password;
-        if (!$admin->email_verified_at) {
+        if (! $admin->email_verified_at) {
             $admin->email_verified_at = now();
         }
         $admin->save();

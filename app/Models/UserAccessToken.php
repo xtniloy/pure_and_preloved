@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserAccessToken extends Model
 {
-//    use HasFactory;
+    //    use HasFactory;
     use HasUuids;
 
     protected $fillable = [
@@ -39,13 +39,13 @@ class UserAccessToken extends Model
         return ['token'];
     }
 
-    public function getRouteKeyName():string
+    public function getRouteKeyName(): string
     {
         return 'token';
     }
 
-    public function user():BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'email','email');
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }

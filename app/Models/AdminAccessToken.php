@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AdminAccessToken extends Model
 {
     protected $primaryKey = 'email';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

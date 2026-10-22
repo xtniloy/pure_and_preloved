@@ -14,6 +14,7 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::latest()->paginate(10);
+
         return view('admin.sections.pages.index', compact('pages'));
     }
 
@@ -32,7 +33,7 @@ class PageController extends Controller
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => ['required', 'string', 'max:255', new AvailableSlug()],
+            'slug' => ['required', 'string', 'max:255', new AvailableSlug],
             'body' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
@@ -79,6 +80,7 @@ class PageController extends Controller
     {
         $page->delete();
         SitemapCache::clear();
+
         return redirect()->route('admin.pages.index')->with('success', 'Page deleted successfully.');
     }
 }

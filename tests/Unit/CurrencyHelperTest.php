@@ -21,6 +21,7 @@ class CurrencyHelperTest extends TestCase
      * asserted in a fresh process where the static cache starts empty.
      *
      * @runInSeparateProcess
+     *
      * @preserveGlobalState disabled
      */
     public function test_symbol_switches_with_config(): void
@@ -34,6 +35,7 @@ class CurrencyHelperTest extends TestCase
      * An unmapped code falls back to the code itself as a prefix.
      *
      * @runInSeparateProcess
+     *
      * @preserveGlobalState disabled
      */
     public function test_unmapped_code_falls_back_to_the_code(): void

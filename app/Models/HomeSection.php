@@ -134,7 +134,7 @@ class HomeSection extends Model
 
         foreach ($sections as $section) {
             self::walkImageNodes($section->data ?? [], function (array $node) use (&$ids) {
-                if (!empty($node['image_id'])) {
+                if (! empty($node['image_id'])) {
                     $ids[] = (int) $node['image_id'];
                 }
             });
@@ -168,9 +168,9 @@ class HomeSection extends Model
         if (array_key_exists('image_id', $data) || array_key_exists('image_url', $data)) {
             $data['image_src'] = null;
 
-            if (!empty($data['image_id']) && isset($assets[(int) $data['image_id']])) {
+            if (! empty($data['image_id']) && isset($assets[(int) $data['image_id']])) {
                 $data['image_src'] = $assets[(int) $data['image_id']]->public_url;
-            } elseif (!empty($data['image_url'])) {
+            } elseif (! empty($data['image_url'])) {
                 $data['image_src'] = asset($data['image_url']);
             }
         }

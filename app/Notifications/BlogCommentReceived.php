@@ -9,9 +9,7 @@ use Illuminate\Support\Str;
 
 class BlogCommentReceived extends AdminNotification
 {
-    public function __construct(public BlogComment $comment)
-    {
-    }
+    public function __construct(public BlogComment $comment) {}
 
     public function notificationType(): string
     {
@@ -24,9 +22,9 @@ class BlogCommentReceived extends AdminNotification
         $author = $this->comment->user->name ?? 'A customer';
 
         return (new MailMessage)
-            ->subject('New blog comment on "' . ($post->title ?? 'a post') . '" 【' . config('app.name') . '】')
-            ->greeting('Hello ' . ($notifiable->name ?? 'Admin'))
-            ->line($author . ' commented on the blog post "' . ($post->title ?? '') . '".')
+            ->subject('New blog comment on "'.($post->title ?? 'a post').'" 【'.config('app.name').'】')
+            ->greeting('Hello '.($notifiable->name ?? 'Admin'))
+            ->line($author.' commented on the blog post "'.($post->title ?? '').'".')
             ->line('Comment:')
             ->line(Str::limit($this->comment->body, 500))
             ->action('Manage comments', route('admin.blog-comments.index', ['post' => $this->comment->blog_post_id]));
@@ -44,7 +42,7 @@ class BlogCommentReceived extends AdminNotification
             'icon' => 'cil-comment-square',
             'color' => 'info',
             'title' => 'New blog comment',
-            'message' => ($this->comment->user->name ?? 'A customer') . ' commented on "' . Str::limit($this->comment->post->title ?? '', 60) . '"',
+            'message' => ($this->comment->user->name ?? 'A customer').' commented on "'.Str::limit($this->comment->post->title ?? '', 60).'"',
             // Relative path: queue workers don't know the request root, so an
             // absolute URL here would be built from APP_URL and can be wrong.
             'url' => route('admin.blog-comments.index', ['post' => $this->comment->blog_post_id], false),

@@ -31,7 +31,7 @@ class SocialLinkController extends Controller
             $url = trim((string) ($link['url'] ?? ''));
             $platform = $link['platform'] ?? null;
 
-            if ($url === '' || !isset(Socials::PLATFORMS[$platform])) {
+            if ($url === '' || ! isset(Socials::PLATFORMS[$platform])) {
                 continue;
             }
 

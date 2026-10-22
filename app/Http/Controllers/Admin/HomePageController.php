@@ -113,7 +113,7 @@ class HomePageController extends Controller
 
     public function toggle(HomeSection $section)
     {
-        $section->update(['is_active' => !$section->is_active]);
+        $section->update(['is_active' => ! $section->is_active]);
 
         HomeCache::clear();
 
@@ -147,7 +147,7 @@ class HomePageController extends Controller
         foreach ($validated['ids'] as $id) {
             $section = $sections[$id] ?? null;
 
-            if (!$section || $section->isFixed()) {
+            if (! $section || $section->isFixed()) {
                 continue;
             }
 
@@ -243,7 +243,7 @@ class HomePageController extends Controller
             case 'featured_products':
                 return $rules + [
                     'heading' => 'required|string|max:500',
-                    'limit' => 'required|integer|min:1|max:' . \App\Models\Product::FEATURED_MAX_SHOWN,
+                    'limit' => 'required|integer|min:1|max:'.\App\Models\Product::FEATURED_MAX_SHOWN,
                 ];
 
             case 'text_columns':
@@ -263,7 +263,7 @@ class HomePageController extends Controller
             case 'hero_slider':
                 $slides = [];
                 foreach ((array) $request->input('slides', []) as $slide) {
-                    if (!is_array($slide) || !$this->rowHasContent($slide)) {
+                    if (! is_array($slide) || ! $this->rowHasContent($slide)) {
                         continue;
                     }
 
@@ -280,7 +280,7 @@ class HomePageController extends Controller
             case 'module_grid':
                 $items = [];
                 foreach ((array) $request->input('items', []) as $item) {
-                    if (!is_array($item) || !$this->rowHasContent($item)) {
+                    if (! is_array($item) || ! $this->rowHasContent($item)) {
                         continue;
                     }
 
@@ -305,7 +305,7 @@ class HomePageController extends Controller
             case 'feature_strip':
                 $items = [];
                 foreach ((array) $request->input('items', []) as $item) {
-                    if (!is_array($item) || !$this->rowHasContent($item)) {
+                    if (! is_array($item) || ! $this->rowHasContent($item)) {
                         continue;
                     }
 
@@ -374,8 +374,8 @@ class HomePageController extends Controller
     private function imagePair(array $row): array
     {
         return [
-            'image_id' => !empty($row['image_id']) ? (int) $row['image_id'] : null,
-            'image_url' => !empty($row['image_url']) && is_string($row['image_url']) ? trim($row['image_url']) : null,
+            'image_id' => ! empty($row['image_id']) ? (int) $row['image_id'] : null,
+            'image_url' => ! empty($row['image_url']) && is_string($row['image_url']) ? trim($row['image_url']) : null,
         ];
     }
 

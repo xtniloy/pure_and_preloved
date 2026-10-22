@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -38,13 +37,12 @@ class ConfirmRegistrationEmail extends Mailable
      */
     public function content(): Content
     {
-        if ($this->details['use_for'] == "forget_password"){
+        if ($this->details['use_for'] == 'forget_password') {
             return new Content(
                 view: 'email.forget_password_email_template',
                 with: ['details' => $this->details]
             );
-        }
-        else{
+        } else {
             return new Content(
                 view: 'email.confirm_registration_email',
                 with: ['details' => $this->details]

@@ -39,7 +39,7 @@ class UpdatePasswordRequest extends FormRequest
     {
         return [
             'password.regex' => 'Password length should at lest 6 character. It should contain at least one uppercase, one lowercase and one number',
-            'confirm_password' => "The passwords provided do not match each other"
+            'confirm_password' => 'The passwords provided do not match each other',
         ];
     }
 

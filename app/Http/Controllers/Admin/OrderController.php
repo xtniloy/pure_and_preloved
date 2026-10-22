@@ -17,7 +17,7 @@ class OrderController extends Controller
         if ($request->filled('q')) {
             $q = trim($request->q);
             $query->where(function ($sub) use ($q) {
-                $sub->where('reference', 'like', '%' . $q . '%');
+                $sub->where('reference', 'like', '%'.$q.'%');
             });
         }
 
@@ -47,7 +47,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $data = $request->validate([
-            'status' => 'required|string|in:' . implode(',', Order::STATUSES),
+            'status' => 'required|string|in:'.implode(',', Order::STATUSES),
         ]);
 
         $statusChanged = $order->status !== $data['status'];
@@ -62,7 +62,7 @@ class OrderController extends Controller
             try {
                 OrderStatusUpdateEmailJob::dispatch($order);
             } catch (\Throwable $e) {
-                Log::error('Order status update email dispatch failed: ' . $e->getMessage());
+                Log::error('Order status update email dispatch failed: '.$e->getMessage());
             }
         }
 
@@ -73,4 +73,3 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.show', $order)->with('success', $message);
     }
 }
-

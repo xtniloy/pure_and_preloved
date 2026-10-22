@@ -23,7 +23,7 @@ class OrderConfirmationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your order ' . $this->order->reference . ' is confirmed 【' . config('app.name') . '】',
+            subject: 'Your order '.$this->order->reference.' is confirmed 【'.config('app.name').'】',
         );
     }
 

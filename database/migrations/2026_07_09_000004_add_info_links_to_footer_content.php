@@ -14,7 +14,7 @@ return new class extends Migration
     {
         $row = DB::table('settings')->where('key', 'footer_content')->first();
 
-        if (!$row) {
+        if (! $row) {
             return;
         }
 
@@ -28,7 +28,7 @@ return new class extends Migration
             ->where('status', true)
             ->orderBy('title')
             ->get(['title', 'slug'])
-            ->map(fn ($page) => ['label' => $page->title, 'url' => '/' . $page->slug])
+            ->map(fn ($page) => ['label' => $page->title, 'url' => '/'.$page->slug])
             ->values()
             ->all();
 
@@ -44,7 +44,7 @@ return new class extends Migration
     {
         $row = DB::table('settings')->where('key', 'footer_content')->first();
 
-        if (!$row) {
+        if (! $row) {
             return;
         }
 

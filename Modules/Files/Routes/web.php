@@ -27,14 +27,13 @@ Route::middleware(['web', 'auth:admin'])
             ->name('admin.file.thumbnail');
     });
 
-//Route::prefix('files')
+// Route::prefix('files')
 //    ->group(function () {
 //        Route::get('/uploaded_asset/{stored_name}', [FilesController::class, 'uploaded_asset'])
 //            ->name('admin.file.uploaded_asset');
 //        Route::get('/thumbnail/{fileId}', [FilesController::class, 'thumbnail'])
 //            ->name('admin.file.thumbnail');
 //    });
-
 
 /*
 

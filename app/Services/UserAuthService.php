@@ -8,17 +8,16 @@ use App\Jobs\EmailVerificationMailJob;
 use App\Models\User;
 use App\Models\UserAccessToken;
 use App\Repositories\UserRepository;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class UserAuthService
 {
-//    private User $user;
+    //    private User $user;
     private UserRepository $userRepository;
 
     public function __construct(UserRepository $userRepository)
     {
-//        $this->user = $user;
+        //        $this->user = $user;
         $this->userRepository = $userRepository;
     }
 
@@ -39,7 +38,7 @@ class UserAuthService
 
     public function sendEmailVerification(User $user): void
     {
-        $token = $this->getAccessToken($user,'email_verification');
+        $token = $this->getAccessToken($user, 'email_verification');
         $link = route('email_verify', ['token' => $token->token]);
 
         EmailVerificationMailJob::dispatch(email: $user->email, link: $link);
@@ -72,6 +71,7 @@ class UserAuthService
         if ($user->status != 0) {
             \Auth::login($user, $remember);
             $this->userRepository->lastLogin($user);
+
             return true;
         }
 

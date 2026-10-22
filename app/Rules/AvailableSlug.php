@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
  */
 class AvailableSlug implements ValidationRule
 {
-    public function __construct(private ?int $ignoreId = null)
-    {
-    }
+    public function __construct(private ?int $ignoreId = null) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -28,12 +26,13 @@ class AvailableSlug implements ValidationRule
 
         if ($usedByPage) {
             $fail('This URL is already used by another page. Please choose a different slug.');
+
             return;
         }
 
         // 2) Conflict with an existing site route (its first URL segment).
         if (in_array($slug, $this->reservedSegments(), true)) {
-            $fail('"' . $slug . '" is reserved by another part of the site. Please choose a different slug.');
+            $fail('"'.$slug.'" is reserved by another part of the site. Please choose a different slug.');
         }
     }
 

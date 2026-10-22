@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/', function () {
+// Route::get('/', function () {
 //    return view('welcome');
-//});
+// });
 
 // SEO: dynamic sitemap + robots (both contain a dot, so the /{slug} catch-all
 // never matches them, but they are declared up here for clarity).
@@ -25,8 +25,7 @@ Route::get('/robots.txt', [\App\Http\Controllers\Public\SitemapController::class
 Route::get('/', [\App\Http\Controllers\Public\HomeController::class, 'index'])->name('home');
 // Route::get('/product', [\App\Http\Controllers\Public\HomeController::class, 'product'])->name('product'); // Replaced by dynamic route
 
-
-//-------------------------------------------------------------
+// -------------------------------------------------------------
 
 Route::get('/email/success/{user}', [\App\Http\Controllers\User\Auth\AuthController::class, 'email_success'])->name('email.success');
 // Resend verification link
@@ -36,7 +35,7 @@ Route::post('/email/verification-notification/{user}', [\App\Http\Controllers\Us
 Route::middleware('guest')
     ->namespace('App\Http\Controllers\User\Auth')
     ->group(function () {
-//        Route::get('/','AuthController@login_page');
+        //        Route::get('/','AuthController@login_page');
 
         Route::get('/login', 'AuthController@login_page')->name('login');
         Route::post('/login', 'AuthController@login')->name('auth');

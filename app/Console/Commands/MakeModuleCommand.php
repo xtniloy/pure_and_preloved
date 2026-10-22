@@ -8,6 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 class MakeModuleCommand extends Command
 {
     protected $signature = 'make:module {name}';
+
     protected $description = 'Create a new module structure';
 
     protected $files;
@@ -25,6 +26,7 @@ class MakeModuleCommand extends Command
 
         if ($this->files->exists($modulePath)) {
             $this->error("Module {$name} already exists!");
+
             return;
         }
 
@@ -61,7 +63,7 @@ class MakeModuleCommand extends Command
 
     protected function makeController($name, $path)
     {
-        $lower_name =  strtolower($name);
+        $lower_name = strtolower($name);
         $controller = <<<PHP
 <?php
 
@@ -86,7 +88,7 @@ PHP;
 
     protected function makeRoutes($name, $path)
     {
-        $lower_name =  strtolower($name);
+        $lower_name = strtolower($name);
         $web = <<<PHP
 <?php
 
@@ -119,7 +121,7 @@ PHP;
 
     protected function makeServiceProvider($name, $path)
     {
-        $lower_name =  strtolower($name);
+        $lower_name = strtolower($name);
         $provider = <<<PHP
 <?php
 

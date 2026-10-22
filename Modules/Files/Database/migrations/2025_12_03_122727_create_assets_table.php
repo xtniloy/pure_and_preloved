@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
-            $table->string('original_name',255);
-            $table->string('stored_name',255);
-            $table->string('directory',255)->nullable();
-            $table->string('path',511)->nullable();
-//            $table->morphs('fileable');
+            $table->string('original_name', 255);
+            $table->string('stored_name', 255);
+            $table->string('directory', 255)->nullable();
+            $table->string('path', 511)->nullable();
+            //            $table->morphs('fileable');
 
-            $table->string('metadata',255)->nullable();
-            $table->string('mime_type',100)->nullable();
+            $table->string('metadata', 255)->nullable();
+            $table->string('mime_type', 100)->nullable();
             $table->smallInteger('order')->nullable();
-            $table->string('group',100)->nullable();
+            $table->string('group', 100)->nullable();
             $table->unsignedTinyInteger('status');
             $table->unsignedBigInteger('size')->nullable();
             $table->timestamps();

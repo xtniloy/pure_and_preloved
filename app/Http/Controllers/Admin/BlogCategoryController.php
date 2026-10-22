@@ -62,7 +62,7 @@ class BlogCategoryController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:blog_categories,slug' . ($category ? ',' . $category->id : ''),
+            'slug' => 'required|string|max:255|unique:blog_categories,slug'.($category ? ','.$category->id : ''),
             'description' => 'nullable|string|max:1000',
             'status' => 'nullable|boolean',
         ]);

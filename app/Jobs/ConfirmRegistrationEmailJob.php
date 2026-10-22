@@ -3,9 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\ConfirmRegistrationEmail;
-use App\Mail\SetPasswordEmail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,7 +19,7 @@ class ConfirmRegistrationEmailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(string $email, string $link, string $subject = null, string $use_for = "new_registration")
+    public function __construct(string $email, string $link, ?string $subject = null, string $use_for = 'new_registration')
     {
         $this->details['email'] = $email;
         $this->details['link'] = $link;

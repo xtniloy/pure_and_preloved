@@ -35,7 +35,7 @@ class ContactController extends Controller
         try {
             $notifier->notifyAdmins(new ContactMessageReceived($message));
         } catch (\Throwable $e) {
-            Log::error('Contact notification failed: ' . $e->getMessage());
+            Log::error('Contact notification failed: '.$e->getMessage());
         }
 
         return redirect()

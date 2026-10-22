@@ -11,29 +11,29 @@ class UserAccessTokenService
 {
     public static function generate(string $email, ?int $use_for = null): UserAccessToken
     {
-        $token = Uuid::uuid1(); //Time based
+        $token = Uuid::uuid1(); // Time based
 
         $user = User::where('email', $email)->firstOrFail();
 
-        if (!$user) {
+        if (! $user) {
             throw new \Exception("User with email {$email} not found.");
         }
 
         $data = [
-            'user_id'    => $user->id,
-            'email'      => $email,
-            'token'      => $token,
+            'user_id' => $user->id,
+            'email' => $email,
+            'token' => $token,
             'expires_at' => Carbon::now()->addDay(),
-            'use_for'    => $use_for,
+            'use_for' => $use_for,
         ];
 
         $existing_token = UserAccessToken::where('email', $email);
 
-//        Confusing let's fixed later
-//        if ($use_for != null) {
-//            $data = array_merge($data, ['use_for' => $use_for]);
-//            $existing_token->where('use_for', $use_for);
-//        }
+        //        Confusing let's fixed later
+        //        if ($use_for != null) {
+        //            $data = array_merge($data, ['use_for' => $use_for]);
+        //            $existing_token->where('use_for', $use_for);
+        //        }
 
         $existing_token = $existing_token->first();
 

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->json('images')->nullable(); // Stores array of asset IDs or paths
             $table->boolean('status')->default(true);
-            
+
             // SEO Fields
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();

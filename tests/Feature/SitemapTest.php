@@ -26,7 +26,7 @@ class SitemapTest extends TestCase
     {
         $admin = Admin::create([
             'name' => 'Sitemap Admin',
-            'email' => 'sitemap-admin-' . uniqid() . '@example.com',
+            'email' => 'sitemap-admin-'.uniqid().'@example.com',
             'password' => 'secret-password',
             'status' => 1,
         ]);
@@ -47,7 +47,7 @@ class SitemapTest extends TestCase
     {
         return Category::create([
             'name' => 'Rings',
-            'slug' => 'rings-' . uniqid(),
+            'slug' => 'rings-'.uniqid(),
             'gender' => 'women',
             'status' => true,
         ]);
@@ -56,9 +56,9 @@ class SitemapTest extends TestCase
     private function makeProduct(Category $category, array $overrides = []): Product
     {
         $product = Product::create(array_merge([
-            'name' => 'Test Ring ' . uniqid(),
-            'slug' => 'test-ring-' . uniqid(),
-            'sku' => 'SKU-' . strtoupper(uniqid()),
+            'name' => 'Test Ring '.uniqid(),
+            'slug' => 'test-ring-'.uniqid(),
+            'sku' => 'SKU-'.strtoupper(uniqid()),
             'price' => 100,
             'status' => true,
         ], $overrides));
@@ -71,10 +71,10 @@ class SitemapTest extends TestCase
     {
         $category = $this->makeCategory();
         $product = $this->makeProduct($category);
-        $page = Page::create(['title' => 'About', 'slug' => 'about-' . uniqid(), 'status' => true]);
+        $page = Page::create(['title' => 'About', 'slug' => 'about-'.uniqid(), 'status' => true]);
         $post = BlogPost::create([
             'title' => 'Live Post',
-            'slug' => 'live-post-' . uniqid(),
+            'slug' => 'live-post-'.uniqid(),
             'body' => '<p>x</p>',
             'status' => BlogPost::STATUS_PUBLISHED,
             'published_at' => now()->subHour(),
@@ -94,7 +94,7 @@ class SitemapTest extends TestCase
         $response->assertSee(route('shop.index'), false);
         $response->assertSee(route('product.show', ['women', $category->slug, $product->slug]), false);
         $response->assertSee(route('blog.show', $post->slug), false);
-        $response->assertSee(url('/' . $page->slug), false);
+        $response->assertSee(url('/'.$page->slug), false);
     }
 
     public function test_sitemap_excludes_unpublished_content(): void
@@ -103,12 +103,12 @@ class SitemapTest extends TestCase
         $inactiveProduct = $this->makeProduct($category, ['status' => false]);
         $draftPost = BlogPost::create([
             'title' => 'Draft Post',
-            'slug' => 'draft-post-' . uniqid(),
+            'slug' => 'draft-post-'.uniqid(),
             'body' => '<p>x</p>',
             'status' => BlogPost::STATUS_DRAFT,
             'published_at' => null,
         ]);
-        $hiddenPage = Page::create(['title' => 'Hidden', 'slug' => 'hidden-' . uniqid(), 'status' => false]);
+        $hiddenPage = Page::create(['title' => 'Hidden', 'slug' => 'hidden-'.uniqid(), 'status' => false]);
 
         $response = $this->get('/sitemap.xml');
 
@@ -126,7 +126,7 @@ class SitemapTest extends TestCase
 
         $response->assertOk();
         $response->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
-        $response->assertSee('Sitemap: ' . url('/sitemap.xml'), false);
+        $response->assertSee('Sitemap: '.url('/sitemap.xml'), false);
         $response->assertSee('Disallow: /checkout', false);
         $response->assertDontSee("Disallow: /\n", false); // not a blanket block
     }
@@ -150,7 +150,7 @@ class SitemapTest extends TestCase
         // Creating a page through the admin should clear the sitemap cache,
         // so the new page appears on the next request.
         $admin = $this->makeAdmin();
-        $slug = 'fresh-page-' . uniqid();
+        $slug = 'fresh-page-'.uniqid();
 
         $this->actingAs($admin, 'admin')
             ->post(route('admin.pages.store'), [
@@ -163,6 +163,6 @@ class SitemapTest extends TestCase
 
         $this->get('/sitemap.xml')
             ->assertOk()
-            ->assertSee(url('/' . $slug), false);
+            ->assertSee(url('/'.$slug), false);
     }
 }

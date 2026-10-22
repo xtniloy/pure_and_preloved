@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Http\Requests\Admin\AdminProfileUpdateRequest;
 use App\Models\Admin;
 use App\Repositories\Interfaces\AdminProfileInterface;
 

@@ -23,9 +23,9 @@ class UserStoreRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' =>['required','email:rfc,dns,filter', 'unique:users'],
-            'phone' => ['required','numeric', 'digits_between:9,20'],
-//            'status' => 'required|numeric',
+            'email' => ['required', 'email:rfc,dns,filter', 'unique:users'],
+            'phone' => ['required', 'numeric', 'digits_between:9,20'],
+            //            'status' => 'required|numeric',
         ];
     }
 }

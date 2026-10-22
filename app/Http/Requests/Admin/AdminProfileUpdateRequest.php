@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 
 class AdminProfileUpdateRequest extends FormRequest
 {
@@ -24,9 +23,9 @@ class AdminProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:2'],
-            'email' => 'required|email:rfc,dns,filter|unique:users,email,'. auth()->guard('admin')->user()->id,
+            'email' => 'required|email:rfc,dns,filter|unique:users,email,'.auth()->guard('admin')->user()->id,
             'password' => 'nullable|min:8',
-            'confirm_password' => 'required_if:password,|same:password'
+            'confirm_password' => 'required_if:password,|same:password',
         ];
     }
 }

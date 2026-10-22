@@ -13,7 +13,7 @@ return new class extends Migration
     {
         $row = DB::table('settings')->where('key', 'footer_content')->first();
 
-        if (!$row) {
+        if (! $row) {
             return;
         }
 
@@ -54,7 +54,7 @@ return new class extends Migration
     {
         $row = DB::table('settings')->where('key', 'footer_content')->first();
 
-        if (!$row) {
+        if (! $row) {
             return;
         }
 

@@ -18,7 +18,7 @@ class BlogPostController extends Controller
         $query = BlogPost::with(['categories', 'author', 'featuredImage'])->withCount('comments');
 
         if ($search = trim((string) $request->input('q'))) {
-            $query->where('title', 'like', '%' . $search . '%');
+            $query->where('title', 'like', '%'.$search.'%');
         }
 
         if ($status = $request->input('status')) {
@@ -75,10 +75,10 @@ class BlogPostController extends Controller
         $data = $this->validated($request, $blogPost);
 
         // Image pickers submit nothing when cleared.
-        if (!$request->has('featured_image_id')) {
+        if (! $request->has('featured_image_id')) {
             $data['featured_image_id'] = null;
         }
-        if (!$request->has('meta_image_id')) {
+        if (! $request->has('meta_image_id')) {
             $data['meta_image_id'] = null;
         }
 
@@ -118,10 +118,10 @@ class BlogPostController extends Controller
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:blog_posts,slug' . ($post ? ',' . $post->id : ''),
+            'slug' => 'required|string|max:255|unique:blog_posts,slug'.($post ? ','.$post->id : ''),
             'excerpt' => 'nullable|string|max:500',
             'body' => 'nullable|string',
-            'status' => 'required|in:' . implode(',', array_keys(BlogPost::statuses())),
+            'status' => 'required|in:'.implode(',', array_keys(BlogPost::statuses())),
             'published_at' => 'nullable|date',
             'featured_image_id' => 'nullable|exists:assets,id',
             'meta_image_id' => 'nullable|exists:assets,id',

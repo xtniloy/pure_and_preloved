@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::middleware('guest:admin')
     ->namespace('App\Http\Controllers\Admin\Auth')
     ->group(function () {
@@ -31,14 +30,14 @@ Route::middleware('guest:admin')->group(function () {
 });
 
 Route::middleware('auth:admin')->group(function () {
-    Route::get('/logout',[\App\Http\Controllers\Admin\Auth\AuthController::class,'logout'])->name('admin.logout');
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin.dashboard');
-    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class,'home'])->name('admin.home');
+    Route::get('/logout', [\App\Http\Controllers\Admin\Auth\AuthController::class, 'logout'])->name('admin.logout');
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'home'])->name('admin.home');
 });
 
 Route::middleware('auth:admin')->as('admin.')->group(function () {
-    Route::get('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'edit'])->name('profile.view');
-    Route::post('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class,'update'])->name('profile');
+    Route::get('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class, 'edit'])->name('profile.view');
+    Route::post('/profile', [\App\Http\Controllers\Admin\AdminProfileController::class, 'update'])->name('profile');
 
     // Customers (users)
     Route::middleware('permission:manage users,admin')->group(function () {

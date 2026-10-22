@@ -12,15 +12,12 @@ use App\Services\AdminAccessTokenService;
 use App\Services\AdminService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function __construct(protected AdminService $adminService)
-    {
-    }
+    public function __construct(protected AdminService $adminService) {}
 
     public function index(): View
     {
@@ -39,6 +36,7 @@ class AuthController extends Controller
 
             if ((int) $admin->status !== 1) {
                 auth()->guard('admin')->logout();
+
                 return back()->with('error', 'Your account has been deactivated. Contact a super-admin.');
             }
 
@@ -47,7 +45,7 @@ class AuthController extends Controller
 
         // Give a helpful message if account is not activated
         $admin = Admin::where('email', $request->email)->first();
-        if ($admin && !$admin->email_verified_at) {
+        if ($admin && ! $admin->email_verified_at) {
             return back()->with('error', 'Account not yet activated. Please check your email to set your password.');
         }
 
@@ -73,9 +71,10 @@ class AuthController extends Controller
         $admin = Admin::where('email', $request->email)->first();
 
         // 3-minute throttle
-        if (!AdminAccessTokenService::canRequest($admin->email)) {
+        if (! AdminAccessTokenService::canRequest($admin->email)) {
             $remaining = AdminAccessTokenService::remainingSeconds($admin->email);
-            $minutes   = ceil($remaining / 60);
+            $minutes = ceil($remaining / 60);
+
             return back()->with('error', "Please wait {$minutes} minute(s) before requesting another reset email.");
         }
 
@@ -90,13 +89,13 @@ class AuthController extends Controller
     {
         $token = $admin->adminAccessToken;
 
-        if (!$token) {
+        if (! $token) {
             abort(404);
         }
 
-        $now         = Carbon::now();
-        $expiryTime  = $token->updated_at->addMinutes(3);
-        $remaining   = $now->lessThan($expiryTime) ? (int) $now->diffInSeconds($expiryTime) : 0;
+        $now = Carbon::now();
+        $expiryTime = $token->updated_at->addMinutes(3);
+        $remaining = $now->lessThan($expiryTime) ? (int) $now->diffInSeconds($expiryTime) : 0;
 
         return view('admin.auth.email_success', compact('admin', 'remaining'));
     }
@@ -105,7 +104,7 @@ class AuthController extends Controller
     {
         $token = $admin->adminAccessToken;
 
-        if (!$token || now()->lessThan($token->updated_at->addMinutes(3))) {
+        if (! $token || now()->lessThan($token->updated_at->addMinutes(3))) {
             abort(404);
         }
 
@@ -124,22 +123,22 @@ class AuthController extends Controller
 
     // ─── Set Password (used for both account activation & password reset) ───────
 
-    public function set_password(string $token = null): View|RedirectResponse
+    public function set_password(?string $token = null): View|RedirectResponse
     {
         $accessToken = AdminAccessToken::where('token', $token)->where('use_for', 2)->first();
 
-        if (!$accessToken) {
+        if (! $accessToken) {
             return redirect()->route('admin.login')->with('error', 'Invalid or expired token.');
         }
 
         return view('admin.auth.set_password', compact('token'));
     }
 
-    public function save_password(AdminSetPasswordRequest $request, string $token = null): RedirectResponse
+    public function save_password(AdminSetPasswordRequest $request, ?string $token = null): RedirectResponse
     {
         $accessToken = AdminAccessToken::where('token', $token)->where('use_for', 2)->first();
 
-        if (!$accessToken) {
+        if (! $accessToken) {
             return redirect()->route('admin.login')->with('error', 'Invalid or expired token.');
         }
 

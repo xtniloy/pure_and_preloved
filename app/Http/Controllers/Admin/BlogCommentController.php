@@ -31,7 +31,7 @@ class BlogCommentController extends Controller
 
     public function toggle(BlogComment $blogComment)
     {
-        $blogComment->update(['status' => !$blogComment->status]);
+        $blogComment->update(['status' => ! $blogComment->status]);
 
         return back()->with('success', $blogComment->status ? 'Comment is now visible.' : 'Comment hidden from the site.');
     }

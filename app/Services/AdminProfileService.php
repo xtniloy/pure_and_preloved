@@ -22,7 +22,7 @@ class AdminProfileService
 
         $data = $request->safe()->except('confirm_password');
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
@@ -30,5 +30,4 @@ class AdminProfileService
 
         return $this->adminProfileRepository->update_profile($data, $admin);
     }
-
 }

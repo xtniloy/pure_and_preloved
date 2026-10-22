@@ -107,7 +107,7 @@ class CategoryController extends Controller
             // Can't add a child under a category that's already at the deepest level.
             if ($this->parentTooDeep($parent_id)) {
                 return redirect($this->listUrlFor($parent->parent_id, $parent->gender))
-                    ->with('error', 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.');
+                    ->with('error', 'Categories can only be nested up to '.Category::MAX_DEPTH.' levels under a gender.');
             }
 
             // Gender is dictated by the parent — there is no choice to make.
@@ -123,10 +123,11 @@ class CategoryController extends Controller
     /** True when nesting under $parentId would exceed the allowed depth. */
     private function parentTooDeep($parentId): bool
     {
-        if (!$parentId) {
+        if (! $parentId) {
             return false;
         }
         $parent = Category::find($parentId);
+
         return $parent && $parent->depth() >= Category::MAX_DEPTH;
     }
 
@@ -151,7 +152,7 @@ class CategoryController extends Controller
         ]);
 
         if ($this->parentTooDeep($request->parent_id)) {
-            return back()->withErrors(['parent_id' => 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.'])->withInput();
+            return back()->withErrors(['parent_id' => 'Categories can only be nested up to '.Category::MAX_DEPTH.' levels under a gender.'])->withInput();
         }
 
         // A child always inherits its parent's gender; a root uses the chosen gender.
@@ -190,10 +191,10 @@ class CategoryController extends Controller
         $category->load('parent');
 
         return view('admin.sections.categories.form', [
-            'category'  => $category,
-            'parent'    => $category->parent,
+            'category' => $category,
+            'parent' => $category->parent,
             'parent_id' => $category->parent_id,
-            'gender'    => $category->gender,
+            'gender' => $category->gender,
         ]);
     }
 
@@ -207,7 +208,7 @@ class CategoryController extends Controller
         ]);
 
         if ($this->parentTooDeep($request->parent_id)) {
-            return back()->withErrors(['parent_id' => 'Categories can only be nested up to ' . Category::MAX_DEPTH . ' levels under a gender.'])->withInput();
+            return back()->withErrors(['parent_id' => 'Categories can only be nested up to '.Category::MAX_DEPTH.' levels under a gender.'])->withInput();
         }
 
         // A child always inherits its parent's gender; a root uses the chosen gender.
@@ -255,6 +256,7 @@ class CategoryController extends Controller
             if ($this->isSlugUnique($baseSlug, $excludeId)) {
                 return $baseSlug;
             }
+
             return $this->generateUniqueSlug($name, $parentId, $excludeId, 2);
         }
 
@@ -262,13 +264,15 @@ class CategoryController extends Controller
             if ($parentId) {
                 $parent = Category::find($parentId);
                 if ($parent) {
-                    $prefixedSlug = Str::slug($parent->slug . '-' . $name);
+                    $prefixedSlug = Str::slug($parent->slug.'-'.$name);
                     if ($this->isSlugUnique($prefixedSlug, $excludeId)) {
                         return $prefixedSlug;
                     }
+
                     return $this->generateUniqueSlug($name, $parentId, $excludeId, 3, 1);
                 }
             }
+
             return $this->generateUniqueSlug($name, $parentId, $excludeId, 3, 1);
         }
 
@@ -277,11 +281,11 @@ class CategoryController extends Controller
         if ($parentId) {
             $parent = Category::find($parentId);
             if ($parent) {
-                $base = Str::slug($parent->slug . '-' . $name);
+                $base = Str::slug($parent->slug.'-'.$name);
             }
         }
 
-        $slugWithNumber = $base . '-' . $counter;
+        $slugWithNumber = $base.'-'.$counter;
         if ($this->isSlugUnique($slugWithNumber, $excludeId)) {
             return $slugWithNumber;
         }
@@ -295,6 +299,7 @@ class CategoryController extends Controller
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
+
         return $query->count() === 0;
     }
 }

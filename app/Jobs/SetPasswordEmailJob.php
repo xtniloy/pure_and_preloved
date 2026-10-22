@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Mail\SetPasswordEmail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,7 +19,7 @@ class SetPasswordEmailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(string $email, string $link, string $subject = null)
+    public function __construct(string $email, string $link, ?string $subject = null)
     {
         $this->details['email'] = $email;
         $this->details['link'] = $link;

@@ -37,15 +37,15 @@ class SitemapController extends Controller
         if (config('seo.indexing', false)) {
             // Keep private / transactional areas out of the index.
             foreach (['/cart', '/checkout', '/wishlist', '/account', '/login', '/registration', '/forget-password', '/set-password', '/order-success'] as $path) {
-                $lines[] = 'Disallow: ' . $path;
+                $lines[] = 'Disallow: '.$path;
             }
             $lines[] = '';
-            $lines[] = 'Sitemap: ' . url('/sitemap.xml');
+            $lines[] = 'Sitemap: '.url('/sitemap.xml');
         } else {
             $lines[] = 'Disallow: /';
         }
 
-        return response(implode("\n", $lines) . "\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        return response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }
 
     /**
@@ -57,7 +57,7 @@ class SitemapController extends Controller
             ['loc' => route('home'),         'changefreq' => 'daily',   'priority' => '1.0'],
             ['loc' => route('shop.index'),   'changefreq' => 'daily',   'priority' => '0.9'],
             ['loc' => route('blog.index'),   'changefreq' => 'weekly',  'priority' => '0.6'],
-            ['loc' => route('contact.index'),'changefreq' => 'monthly', 'priority' => '0.4'],
+            ['loc' => route('contact.index'), 'changefreq' => 'monthly', 'priority' => '0.4'],
         ];
 
         // Active products — URL is /product/{gender}/{category}/{slug}
@@ -69,13 +69,13 @@ class SitemapController extends Controller
                 }
                 $urls[] = [
                     'loc' => route('product.show', [
-                        'gender'   => $category->gender ?: 'women',
+                        'gender' => $category->gender ?: 'women',
                         'category' => $category->slug,
-                        'product'  => $product->slug,
+                        'product' => $product->slug,
                     ]),
-                    'lastmod'    => optional($product->updated_at)->toAtomString(),
+                    'lastmod' => optional($product->updated_at)->toAtomString(),
                     'changefreq' => 'weekly',
-                    'priority'   => '0.8',
+                    'priority' => '0.8',
                 ];
             });
 
@@ -86,10 +86,10 @@ class SitemapController extends Controller
                     return;
                 }
                 $urls[] = [
-                    'loc'        => route('blog.show', $post->slug),
-                    'lastmod'    => optional($post->updated_at ?? $post->published_at)->toAtomString(),
+                    'loc' => route('blog.show', $post->slug),
+                    'lastmod' => optional($post->updated_at ?? $post->published_at)->toAtomString(),
                     'changefreq' => 'weekly',
-                    'priority'   => '0.5',
+                    'priority' => '0.5',
                 ];
             });
 
@@ -100,10 +100,10 @@ class SitemapController extends Controller
                     return;
                 }
                 $urls[] = [
-                    'loc'        => url('/' . $page->slug),
-                    'lastmod'    => optional($page->updated_at)->toAtomString(),
+                    'loc' => url('/'.$page->slug),
+                    'lastmod' => optional($page->updated_at)->toAtomString(),
                     'changefreq' => 'monthly',
-                    'priority'   => '0.5',
+                    'priority' => '0.5',
                 ];
             });
 
@@ -115,20 +115,20 @@ class SitemapController extends Controller
      */
     private function render(array $urls): string
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 
         foreach ($urls as $u) {
             $xml .= "    <url>\n";
-            $xml .= '        <loc>' . htmlspecialchars($u['loc'], ENT_XML1) . "</loc>\n";
+            $xml .= '        <loc>'.htmlspecialchars($u['loc'], ENT_XML1)."</loc>\n";
             if (! empty($u['lastmod'])) {
-                $xml .= '        <lastmod>' . $u['lastmod'] . "</lastmod>\n";
+                $xml .= '        <lastmod>'.$u['lastmod']."</lastmod>\n";
             }
-            $xml .= '        <changefreq>' . $u['changefreq'] . "</changefreq>\n";
-            $xml .= '        <priority>' . $u['priority'] . "</priority>\n";
+            $xml .= '        <changefreq>'.$u['changefreq']."</changefreq>\n";
+            $xml .= '        <priority>'.$u['priority']."</priority>\n";
             $xml .= "    </url>\n";
         }
 
-        return $xml . '</urlset>';
+        return $xml.'</urlset>';
     }
 }

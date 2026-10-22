@@ -16,6 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('categories')->latest()->paginate(10);
+
         return view('admin.sections.products.index', compact('products'));
     }
 
@@ -23,6 +24,7 @@ class ProductController extends Controller
     {
         // Load categories with parents to build hierarchy names if needed
         $categories = Category::with('parent')->get();
+
         return view('admin.sections.products.form', compact('categories'));
     }
 
@@ -54,7 +56,7 @@ class ProductController extends Controller
         $slug = Str::slug($request->name);
         $count = Product::where('slug', $slug)->count();
         if ($count > 0) {
-            $slug = $slug . '-' . ($count + 1);
+            $slug = $slug.'-'.($count + 1);
         }
 
         $data = $request->except(['categories']);
@@ -75,6 +77,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::with('parent')->get();
+
         return view('admin.sections.products.form', compact('product', 'categories'));
     }
 
@@ -82,7 +85,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products,sku,' . $product->id,
+            'sku' => 'required|string|unique:products,sku,'.$product->id,
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric|lt:price',
             'stock' => 'nullable|integer|min:0',
@@ -105,10 +108,10 @@ class ProductController extends Controller
 
         $slug = Str::slug($request->name);
         if ($slug != $product->slug) {
-             $count = Product::where('slug', $slug)->where('id', '!=', $product->id)->count();
-             if ($count > 0) {
-                 $slug = $slug . '-' . ($count + 1);
-             }
+            $count = Product::where('slug', $slug)->where('id', '!=', $product->id)->count();
+            if ($count > 0) {
+                $slug = $slug.'-'.($count + 1);
+            }
         }
 
         $data = $request->except(['categories']);
@@ -117,13 +120,13 @@ class ProductController extends Controller
         $data['stock'] = (int) $request->input('stock', 0);
 
         // Handle images if not present in request (clearing them)
-        if (!$request->has('images')) {
+        if (! $request->has('images')) {
             $data['images'] = null;
         }
-        if (!$request->has('thumbnail_image_id')) {
+        if (! $request->has('thumbnail_image_id')) {
             $data['thumbnail_image_id'] = null;
         }
-        if (!$request->has('meta_image_id')) {
+        if (! $request->has('meta_image_id')) {
             $data['meta_image_id'] = null;
         }
 

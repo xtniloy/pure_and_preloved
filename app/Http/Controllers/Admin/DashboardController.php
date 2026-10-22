@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('admin.sections.dashboard.index');
     }
 
-    public function home(){
+    public function home()
+    {
         return redirect()->route('admin.dashboard');
     }
 }

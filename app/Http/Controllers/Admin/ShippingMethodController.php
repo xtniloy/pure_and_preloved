@@ -11,6 +11,7 @@ class ShippingMethodController extends Controller
     public function index()
     {
         $shippingMethods = ShippingMethod::latest()->paginate(10);
+
         return view('admin.sections.shipping_methods.index', compact('shippingMethods'));
     }
 
@@ -61,6 +62,7 @@ class ShippingMethodController extends Controller
     public function destroy(ShippingMethod $shippingMethod)
     {
         $shippingMethod->delete();
+
         return redirect()->route('admin.shipping_methods.index')->with('success', 'Shipping method deleted successfully.');
     }
 }

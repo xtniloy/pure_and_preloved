@@ -11,7 +11,7 @@ class UserRepository implements UserRepositoryInterface
     public function storeUser(array $data): User
     {
         return User::create([
-            'name'  => $data['name'],
+            'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
         ]);
@@ -20,9 +20,9 @@ class UserRepository implements UserRepositoryInterface
     public function updateUser(array $data, User $user): User
     {
         $user->update([
-            'name'   => $data['name'] ?? $user->name,
-            'email'  => $data['email'] ?? $user->email,
-            'phone'  => $data['phone'] ?? $user->phone,
+            'name' => $data['name'] ?? $user->name,
+            'email' => $data['email'] ?? $user->email,
+            'phone' => $data['phone'] ?? $user->phone,
             'status' => $data['status'] ?? $user->status,
             'verified_by' => $data['verified_by'] ?? $user->verified_by,
         ]);
@@ -32,9 +32,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function updateUserPassword(string $hashedPassword, User $user): User
     {
-//        if (!$user->email_verified_at) {
-//            $user->email_verified_at = Carbon::now();
-//        }
+        //        if (!$user->email_verified_at) {
+        //            $user->email_verified_at = Carbon::now();
+        //        }
 
         $user->password = $hashedPassword;
         $user->save();
@@ -44,16 +44,19 @@ class UserRepository implements UserRepositoryInterface
 
     public function email_verified_at(User $user): bool
     {
-        if (!$user->email_verified_at) {
+        if (! $user->email_verified_at) {
             $user->email_verified_at = Carbon::now();
+
             return true;
         }
+
         return false;
     }
 
     public function lastLogin(User $user): bool
     {
         $user->last_login = Carbon::now();
+
         return $user->save();
     }
 
@@ -62,13 +65,12 @@ class UserRepository implements UserRepositoryInterface
         $user->delete();
     }
 
-    public function verification_toggle(User $user):bool
+    public function verification_toggle(User $user): bool
     {
-        if ($user->verified_by == null){
+        if ($user->verified_by == null) {
             $user->verified_by = auth()->guard('admin')->user()->id;
             $result = true;
-        }
-        else{
+        } else {
             $user->verified_by = null;
             $result = false;
         }
