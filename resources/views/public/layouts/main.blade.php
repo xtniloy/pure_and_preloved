@@ -10,8 +10,7 @@
     <meta name="description" content="@yield('meta_description', '')">
     @yield('meta')
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon/favicon.png') }}">
+    @include('partials.favicon')
 
     <!-- Google Fonts: preconnect + one combined request (unused weights are never downloaded) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

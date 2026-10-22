@@ -7,7 +7,7 @@
     <meta name="robots" content="{{ seo_robots() }}">
     <title>@yield('title', 'Account') — Pure &amp; Preloved</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('assets/images/favicon/favicon.png') }}">
+    @include('partials.favicon')
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

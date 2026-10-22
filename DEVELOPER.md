@@ -12,6 +12,7 @@ Pure and Preloved is a jewelry e-commerce site with a custom admin panel, built 
 
 | Area | Highlights |
 |---|---|
+| 2026-10-23 | Unified favicon set: shared `partials.favicon` include across storefront, account, admin and file-uploader layouts |
 | Storefront | Home page builder sections, shop with filters, product pages, quick view, cart, wishlist, checkout (guest + logged-in), CMS pages, blog, contact form |
 | Customer account | Registration + email verification, profile, addresses, password change, order history |
 | Admin panel (`/admin`) | Products, categories, featured products, orders, shipping methods, customers, staff, roles, CMS pages, homepage, footer, social links, blog, contact messages, notification settings, cache |
@@ -104,6 +105,7 @@ resources/views/{admin,public,user,email,partials}
 - **Validation** lives in Form Requests (`app/Http/Requests`).
 - **Emails** are sent via jobs in `app/Jobs` (never `Mail::send` inline in controllers).
 - Run `vendor/bin/pint --dirty` before committing.
+- **Favicons**: every layout includes `resources/views/partials/favicon.blade.php`; the icon set and `site.webmanifest` live in `public/assets/images/favicon/` (keep `public/favicon.ico` in sync). Replace the files there to rebrand.
 
 ### Global helpers (`app/helpers.php`)
 

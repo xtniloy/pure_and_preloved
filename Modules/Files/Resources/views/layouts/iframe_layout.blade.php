@@ -9,11 +9,7 @@
     <meta name="author" content="Shahriar Parvez">
     <meta name="keyword" content="Bootstrap,Admin,Template,SCSS,HTML,RWD,Dashboard">
     <title>File Uploader</title>
-    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('panel/assets/favicon/apple-icon-57x57.png') }}">
-    <link rel="manifest" href="{{ asset('panel/assets/favicon/manifest.json') }}">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="{{ asset('panel/assets/favicon/ms-icon-144x144.png') }}">
-    <meta name="theme-color" content="#ffffff">
+    @include('partials.favicon')
     <!-- Vendors styles-->
     <link rel="stylesheet" href="{{ asset('panel/assets/vendors/simplebar/css/simplebar.css') }}">
     <!-- Main styles for this application-->
